@@ -2,10 +2,17 @@
 
 namespace CaptchaSharp.Models
 {
-    public struct TextCaptchaOptions
+    public class TextCaptchaOptions
     {
-        public CaptchaLanguageGroup LanguageGroup;
+        public CaptchaLanguageGroup LanguageGroup { get; set; } = CaptchaLanguageGroup.NotSpecified;
 
-        public CaptchaLanguage Language;
+        public CaptchaLanguage Language { get; set; } = CaptchaLanguage.NotSpecified;
+
+        public override int GetHashCode()
+        {
+            return
+                LanguageGroup.GetHashCode() +
+                Language.GetHashCode();
+        }
     }
 }

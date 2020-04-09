@@ -8,7 +8,7 @@
         Title="Solver Tester" Height="450" Width="300">
     <StackPanel>
         <!-- SERVICE SELECTION -->
-        <ComboBox x:Name="serviceCombobox" Width="150" SelectionChanged="serviceCombobox_SelectionChanged"></ComboBox>
+        <ComboBox x:Name="serviceCombobox" HorizontalAlignment="Stretch" SelectionChanged="serviceCombobox_SelectionChanged" ></ComboBox>
         
         <!-- AUTHENTICATION TAB CONTROL -->
         <TabControl x:Name="authTabControl">
@@ -43,7 +43,7 @@
         <Button x:Name="checkBalanceButton" Content="Check Balance" Click="checkBalanceButton_Click" />
 
         <!-- CAPTCHA TYPE SELECTION -->
-        <ComboBox x:Name="captchaTypeCombobox" Width="150" SelectionChanged="captchaTypeCombobox_SelectionChanged"></ComboBox>
+        <ComboBox x:Name="captchaTypeCombobox" Margin="0 10 0 0" HorizontalAlignment="Stretch" SelectionChanged="captchaTypeCombobox_SelectionChanged"></ComboBox>
 
         <!-- CAPTCHA PARAMETERS TAB CONTROL -->
         <TabControl x:Name="paramsTabControl">
@@ -57,6 +57,14 @@
                     <DockPanel>
                         <TextBlock>Text</TextBlock>
                         <TextBox Text="{Binding Text}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Language Group</TextBlock>
+                        <ComboBox x:Name="textLanguageGroupCombobox" Width="150" SelectionChanged="textLanguageGroupCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Language</TextBlock>
+                        <ComboBox x:Name="textLanguageCombobox" Width="150" SelectionChanged="textLanguageCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
                     </DockPanel>
                 </StackPanel>
             </TabItem>

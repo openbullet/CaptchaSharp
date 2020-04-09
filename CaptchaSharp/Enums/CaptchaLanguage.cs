@@ -2,6 +2,7 @@
 {
     public enum CaptchaLanguage
     {
+        NotSpecified,
         English,
         Russian,
         Spanish,

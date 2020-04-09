@@ -21,8 +21,10 @@ namespace SolverTester
         public string Username { get; set; }
         public string Password { get; set; }
 
-        // TextCaptcha
+        // TextCaptcha / ImageCaptcha
         public string Text { get; set; }
+        public CaptchaLanguageGroup CaptchaLanguageGroup { get; set; } = CaptchaLanguageGroup.NotSpecified;
+        public CaptchaLanguage CaptchaLanguage { get; set; } = CaptchaLanguage.NotSpecified;
 
         // RecaptchaV2 / RecaptchaV3 / HCaptcha
         public string SiteKey { get; set; }
@@ -47,6 +49,16 @@ namespace SolverTester
                 captchaTypeCombobox.Items.Add(c);
 
             captchaTypeCombobox.SelectedIndex = (int)CaptchaType;
+
+            foreach (var g in Enum.GetNames(typeof(CaptchaLanguageGroup)))
+                textLanguageGroupCombobox.Items.Add(g);
+
+            textLanguageGroupCombobox.SelectedIndex = (int)CaptchaLanguageGroup;
+
+            foreach (var l in Enum.GetNames(typeof(CaptchaLanguage)))
+                textLanguageCombobox.Items.Add(l);
+
+            textLanguageCombobox.SelectedIndex = (int)CaptchaLanguage;
         }
 
         private void serviceCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -130,6 +142,16 @@ namespace SolverTester
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");
+        }
+
+        private void textLanguageGroupCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CaptchaLanguageGroup = (CaptchaLanguageGroup)((ComboBox)e.OriginalSource).SelectedIndex;
+        }
+
+        private void textLanguageCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CaptchaLanguage = (CaptchaLanguage)((ComboBox)e.OriginalSource).SelectedIndex;
         }
     }
 }

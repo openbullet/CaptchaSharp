@@ -1,7 +1,9 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,13 +22,13 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveTextCaptchaAsync
-            (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
+            (string text, TextCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
-            (Bitmap image, ImageCaptchaOptions options = default, CancellationToken cancellationToken = default)
+            (Bitmap image, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
@@ -86,6 +88,16 @@ namespace CaptchaSharp
 
         protected virtual Task<CaptchaResponse> CheckResult
             (CaptchaTask task, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual IEnumerable<(string, string)> ConvertCapabilities(TextCaptchaOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
         {
             throw new NotImplementedException();
         }

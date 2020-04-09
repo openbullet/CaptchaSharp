@@ -2,24 +2,38 @@
 
 namespace CaptchaSharp.Models
 {
-    public struct ImageCaptchaOptions
+    public class ImageCaptchaOptions
     {
-        public bool IsPhrase;
+        public bool IsPhrase { get; set; } = false;
 
-        public bool CaseSensitive;
+        public bool CaseSensitive { get; set; } = false;
 
-        public CharacterSet CharactersType;
+        public CharacterSet CharactersType { get; set; } = CharacterSet.NotSpecified;
 
-        public bool RequiresCalculation;
+        public bool RequiresCalculation { get; set; } = false;
 
-        public int MinLength;
+        public int MinLength { get; set; } = 0;
 
-        public int MaxLength;
+        public int MaxLength { get; set; } = 0;
 
-        public CaptchaLanguageGroup LanguageGroup;
+        public CaptchaLanguageGroup LanguageGroup = CaptchaLanguageGroup.NotSpecified;
 
-        public CaptchaLanguage Language;
+        public CaptchaLanguage Language = CaptchaLanguage.NotSpecified;
 
-        public string Instructions;
+        public string TextInstructions = "";
+
+        public override int GetHashCode()
+        {
+            return
+                IsPhrase.GetHashCode() +
+                CaseSensitive.GetHashCode() +
+                CharactersType.GetHashCode() +
+                RequiresCalculation.GetHashCode() +
+                MinLength.GetHashCode() +
+                MaxLength.GetHashCode() +
+                LanguageGroup.GetHashCode() +
+                Language.GetHashCode() +
+                TextInstructions.GetHashCode();
+        }
     }
 }
