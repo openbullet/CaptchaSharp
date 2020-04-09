@@ -1,6 +1,6 @@
 ﻿namespace CaptchaSharp.Enums
 {
-    public enum CharactersType
+    public enum CharacterSet
     {
         NotSpecified = 0,
         OnlyNumbers = 1,

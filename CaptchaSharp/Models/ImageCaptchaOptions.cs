@@ -8,7 +8,7 @@ namespace CaptchaSharp.Models
 
         public bool CaseSensitive;
 
-        public CharactersType CharactersType;
+        public CharacterSet CharactersType;
 
         public bool RequiresCalculation;
 

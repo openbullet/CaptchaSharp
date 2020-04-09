@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 
@@ -9,6 +10,17 @@ namespace CaptchaSharp.Services
 {
     public class TwoCaptchaService : CaptchaService
     {
+        public new CaptchaServiceCapabilities Capabilities =
+            CaptchaServiceCapabilities.LanguageGroup |
+            CaptchaServiceCapabilities.Language |
+            CaptchaServiceCapabilities.Phrases |
+            CaptchaServiceCapabilities.CaseSensitivity |
+            CaptchaServiceCapabilities.CharacterSets |
+            CaptchaServiceCapabilities.Calculations |
+            CaptchaServiceCapabilities.MinLength |
+            CaptchaServiceCapabilities.MaxLength |
+            CaptchaServiceCapabilities.Instructions;
+
         public string ApiKey { get; set; }
 
         private HttpClient httpClient;
