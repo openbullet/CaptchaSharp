@@ -3,6 +3,7 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using CaptchaSharp.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,9 @@ namespace SolverTester
         public string ApiKey { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+
+        // TextCaptcha
+        public string Text { get; set; }
 
         // RecaptchaV2
         public string SiteKey { get; set; }
@@ -55,12 +59,13 @@ namespace SolverTester
         {
             CaptchaType = (CaptchaType)((ComboBox)e.OriginalSource).SelectedIndex;
 
-            switch (CaptchaType)
+            var dict = new Dictionary<CaptchaType, int>
             {
-                case CaptchaType.ReCaptchaV2:
-                    authTabControl.SelectedIndex = 0;
-                    break;
-            }
+                { CaptchaType.TextCaptcha, 0 },
+                { CaptchaType.ReCaptchaV2, 1 }
+            };
+
+            paramsTabControl.SelectedIndex = dict[CaptchaType];
         }
 
         private async void checkBalanceButton_Click(object sender, RoutedEventArgs e)
@@ -103,6 +108,9 @@ namespace SolverTester
         {
             switch (captchaType)
             {
+                case CaptchaType.TextCaptcha:
+                    return await service.SolveTextCaptchaAsync(Text);
+
                 case CaptchaType.ReCaptchaV2:
                     return await service.SolveRecaptchaV2Async(SiteKey, Url);
             }

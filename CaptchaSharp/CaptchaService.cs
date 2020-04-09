@@ -20,13 +20,13 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveTextCaptchaAsync
-            (string text, TextCaptchaOptions options, CancellationToken cancellationToken = default)
+            (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
-            (Bitmap image, ImageCaptchaOptions options, CancellationToken cancellationToken = default)
+            (Bitmap image, ImageCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
@@ -60,8 +60,8 @@ namespace CaptchaSharp
             var start = DateTime.Now;
             CaptchaResponse result;
 
-            // Initial 10s delay
-            await Delay(10000);
+            // Initial 5s delay
+            await Delay(5000);
 
             do
             {

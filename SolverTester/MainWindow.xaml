@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SolverTester"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="300">
+        Title="Solver Tester" Height="450" Width="300">
     <StackPanel>
         <!-- SERVICE SELECTION -->
         <ComboBox x:Name="serviceCombobox" Width="150" SelectionChanged="serviceCombobox_SelectionChanged"></ComboBox>
@@ -52,6 +52,14 @@
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </Style>
             </TabControl.ItemContainerStyle>
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Text</TextBlock>
+                        <TextBox Text="{Binding Text}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
             <TabItem>
                 <StackPanel>
                     <DockPanel>

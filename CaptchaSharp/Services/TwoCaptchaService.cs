@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,11 +51,26 @@ namespace CaptchaSharp.Services
             return decimal.Parse(response.Request, CultureInfo.InvariantCulture);
         }
 
+        public async override Task<CaptchaResponse> SolveTextCaptchaAsync(string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
+                ($"http://2captcha.com/in.php",
+                new (string, string)[] { ("key", ApiKey), ("textcaptcha", text), ("json", "1") },
+                cancellationToken);
+
+            return await TryGetResult(response, cancellationToken);
+        }
+
         public async override Task<CaptchaResponse> SolveRecaptchaV2Async(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
                 ($"http://2captcha.com/in.php?key={ApiKey}&method=userrecaptcha&googlekey={siteKey}&pageurl={siteUrl}&json=1", cancellationToken);
 
+            return await TryGetResult(response, cancellationToken);
+        }
+
+        private async Task<CaptchaResponse> TryGetResult(TwoCaptchaResponse response, CancellationToken cancellationToken = default)
+        {
             if (response.IsErrorCode)
                 throw new TaskCreationException(response.Request);
 
