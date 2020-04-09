@@ -1,0 +1,72 @@
+﻿<Window x:Class="SolverTester.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SolverTester"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="300">
+    <StackPanel>
+        <!-- SERVICE SELECTION -->
+        <ComboBox x:Name="serviceCombobox" Width="150" SelectionChanged="serviceCombobox_SelectionChanged"></ComboBox>
+        
+        <!-- AUTHENTICATION TAB CONTROL -->
+        <TabControl x:Name="authTabControl">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Api Key</TextBlock>
+                        <TextBox Text="{Binding ApiKey}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Username</TextBlock>
+                        <TextBox Text="{Binding Username}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Password</TextBlock>
+                        <TextBox Text="{Binding Password}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        
+        <!-- BALANCE CHECK -->
+        <Button x:Name="checkBalanceButton" Content="Check Balance" Click="checkBalanceButton_Click" />
+
+        <!-- CAPTCHA TYPE SELECTION -->
+        <ComboBox x:Name="captchaTypeCombobox" Width="150" SelectionChanged="captchaTypeCombobox_SelectionChanged"></ComboBox>
+
+        <!-- CAPTCHA PARAMETERS TAB CONTROL -->
+        <TabControl x:Name="paramsTabControl">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Site Key</TextBlock>
+                        <TextBox Text="{Binding SiteKey}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Url</TextBlock>
+                        <TextBox Text="{Binding Url}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        
+        <!-- SOLVE -->
+        <Button x:Name="solveButton" Content="Solve" Click="solveButton_Click" />
+    </StackPanel>
+</Window>
