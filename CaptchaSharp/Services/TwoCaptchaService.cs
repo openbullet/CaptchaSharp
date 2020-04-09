@@ -60,15 +60,21 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task<CaptchaResponse> SolveImageCaptchaAsync
+        public override Task<CaptchaResponse> SolveImageCaptchaAsync
             (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
+        {
+            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, cancellationToken);
+        }
+
+        public async override Task<CaptchaResponse> SolveImageCaptchaAsync
+            (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
                 ($"http://2captcha.com/in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "base64"),
-                    ("body", image.ToBase64(format ?? ImageFormat.Jpeg)),
+                    ("body", base64),
                     ("json", "1") }
                 .Concat(ConvertCapabilities(options))
                 .ToMultipartFormDataContent(),

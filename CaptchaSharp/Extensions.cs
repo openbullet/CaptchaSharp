@@ -29,11 +29,6 @@ namespace CaptchaSharp
             return Convert.ToBase64String(imageBytes);
         }
 
-        public static Bitmap ToBitmap(this string base64, ImageFormat format)
-        {
-            throw new NotImplementedException();
-        }
-
         // <summary>
         /// Gets a memory stream from an image.
         /// </summary>
