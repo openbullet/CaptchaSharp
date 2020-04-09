@@ -38,7 +38,7 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action, float minScore = 0.3F, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action, float minScore, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
@@ -50,7 +50,7 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveHCaptchaAsync
-            ()
+            (string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

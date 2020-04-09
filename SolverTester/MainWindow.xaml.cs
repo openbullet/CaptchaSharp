@@ -24,7 +24,7 @@ namespace SolverTester
         // TextCaptcha
         public string Text { get; set; }
 
-        // RecaptchaV2
+        // RecaptchaV2 / RecaptchaV3 / HCaptcha
         public string SiteKey { get; set; }
         public string Url { get; set; }
         public bool Invisible { get; set; }
@@ -67,9 +67,10 @@ namespace SolverTester
 
             var dict = new Dictionary<CaptchaType, int>
             {
-                { CaptchaType.TextCaptcha, 0 },
-                { CaptchaType.ReCaptchaV2, 1 },
-                { CaptchaType.ReCaptchaV3, 2 }
+                { CaptchaType.TextCaptcha,  0 },
+                { CaptchaType.ReCaptchaV2,  1 },
+                { CaptchaType.HCaptcha,     1 },
+                { CaptchaType.ReCaptchaV3,  2 }
             };
 
             paramsTabControl.SelectedIndex = dict[CaptchaType];
@@ -123,6 +124,9 @@ namespace SolverTester
 
                 case CaptchaType.ReCaptchaV3:
                     return await service.SolveRecaptchaV3Async(SiteKey, Url, Action, float.Parse(MinScore, CultureInfo.InvariantCulture));
+
+                case CaptchaType.HCaptcha:
+                    return await service.SolveHCaptchaAsync(SiteKey, Url);
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");

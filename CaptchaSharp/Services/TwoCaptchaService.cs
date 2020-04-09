@@ -83,7 +83,7 @@ namespace CaptchaSharp.Services
         }
 
         public async override Task<CaptchaResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action, float minScore = 0.3F, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
                 ($"http://2captcha.com/in.php",
@@ -95,6 +95,21 @@ namespace CaptchaSharp.Services
                     ("pageurl", siteUrl),
                     ("action", action),
                     ("min_score", minScore.ToString("0.0")),
+                    ("json", "1") },
+                cancellationToken);
+
+            return await TryGetResult(response, cancellationToken);
+        }
+
+        public async override Task<CaptchaResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
+                ($"http://2captcha.com/in.php",
+                new (string, string)[] {
+                    ("key", ApiKey),
+                    ("method", "hcaptcha"),
+                    ("sitekey", siteKey),
+                    ("pageurl", siteUrl),
                     ("json", "1") },
                 cancellationToken);
 
