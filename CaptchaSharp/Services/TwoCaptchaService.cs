@@ -8,6 +8,9 @@ using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Services.TwoCaptcha;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace CaptchaSharp.Services
 {
@@ -49,10 +52,30 @@ namespace CaptchaSharp.Services
                     ("key", ApiKey),
                     ("textcaptcha", text),
                     ("json", "1") }
-                .Concat(ConvertCapabilities(options)),
-                cancellationToken);
+                .Concat(ConvertCapabilities(options))
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
 
-            return await TryGetResult(response, cancellationToken);
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async override Task<CaptchaResponse> SolveImageCaptchaAsync
+            (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
+                ($"http://2captcha.com/in.php",
+                new (string, string)[] {
+                    ("key", ApiKey),
+                    ("method", "base64"),
+                    ("body", image.ToBase64(format ?? ImageFormat.Jpeg)),
+                    ("json", "1") }
+                .Concat(ConvertCapabilities(options))
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<CaptchaResponse> SolveRecaptchaV2Async
@@ -66,10 +89,12 @@ namespace CaptchaSharp.Services
                     ("googlekey", siteKey),
                     ("pageurl", siteUrl),
                     ("invisible", invisible.ToInt().ToString()),
-                    ("json", "1") },
-                cancellationToken);
+                    ("json", "1") }
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
 
-            return await TryGetResult(response, cancellationToken);
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<CaptchaResponse> SolveRecaptchaV3Async
@@ -85,10 +110,12 @@ namespace CaptchaSharp.Services
                     ("pageurl", siteUrl),
                     ("action", action),
                     ("min_score", minScore.ToString("0.0")),
-                    ("json", "1") },
-                cancellationToken);
+                    ("json", "1") }
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
 
-            return await TryGetResult(response, cancellationToken);
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<CaptchaResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
@@ -100,10 +127,12 @@ namespace CaptchaSharp.Services
                     ("method", "hcaptcha"),
                     ("sitekey", siteKey),
                     ("pageurl", siteUrl),
-                    ("json", "1") },
-                cancellationToken);
+                    ("json", "1") }
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
 
-            return await TryGetResult(response, cancellationToken);
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<CaptchaResponse> TryGetResult
@@ -114,13 +143,13 @@ namespace CaptchaSharp.Services
 
             var task = new CaptchaTask(response.Request);
 
-            return await TryGetResult(task, cancellationToken);
+            return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
         protected async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken);
+                ($"http://2captcha.com/res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken).ConfigureAwait(false);
 
             if (!response.Success && response.Request == "CAPCHA_NOT_READY")
                 return default;
@@ -154,10 +183,10 @@ namespace CaptchaSharp.Services
             var capabilities = new List<(string, string)>();
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.LanguageGroup))
-                capabilities.Add(("language", ((int)options.LanguageGroup).ToString()));
+                capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language))
-                capabilities.Add(("lang", GetLanguageCode(options.Language)));
+                capabilities.Add(("lang", GetLanguageCode(options.CaptchaLanguage)));
 
             return capabilities;
         }
@@ -177,7 +206,7 @@ namespace CaptchaSharp.Services
                 capabilities.Add(("regsense", options.CaseSensitive.ToInt().ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.CharacterSets))
-                capabilities.Add(("numeric", ((int)options.CharactersType).ToString()));
+                capabilities.Add(("numeric", ((int)options.CharacterSet).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.Calculations))
                 capabilities.Add(("calc", options.RequiresCalculation.ToInt().ToString()));
@@ -192,19 +221,19 @@ namespace CaptchaSharp.Services
                 capabilities.Add(("textinstructions", options.TextInstructions));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.LanguageGroup))
-                capabilities.Add(("language", ((int)options.LanguageGroup).ToString()));
+                capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language))
-                capabilities.Add(("lang", GetLanguageCode(options.Language)));
+                capabilities.Add(("lang", GetLanguageCode(options.CaptchaLanguage)));
 
             return capabilities;
         }
         
-
         private string GetLanguageCode(CaptchaLanguage language)
         {
             var dict = new Dictionary<CaptchaLanguage, string>
             {
+                { CaptchaLanguage.NotSpecified, "en" },
                 { CaptchaLanguage.English,      "en" },
                 { CaptchaLanguage.Russian,      "ru" },
                 { CaptchaLanguage.Spanish,      "es" },

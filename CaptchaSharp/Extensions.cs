@@ -63,7 +63,8 @@ namespace CaptchaSharp
         public static async Task<T> GetJsonAsync<T>
             (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
         {
-            var obj = JsonConvert.DeserializeObject<T>(await GetStringAsync(httpClient, url, cancellationToken));
+            var json = await GetStringAsync(httpClient, url, cancellationToken).ConfigureAwait(false);
+            var obj = JsonConvert.DeserializeObject<T>(json);
 
             if (obj == null)
                 throw new JsonException($"Error while deserializing the response to type {typeof(T)}");
@@ -74,14 +75,15 @@ namespace CaptchaSharp
         public static async Task<string> GetStringAsync
             (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.GetAsync(url, cancellationToken);
-            return await response.Content.ReadAsStringAsync();
+            var response = await httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
         public static async Task<T> PostMultipartJsonAsync<T>
-            (this HttpClient httpClient, string url, IEnumerable<(string, string)> parameters, CancellationToken cancellationToken = default)
+            (this HttpClient httpClient, string url, MultipartFormDataContent content, CancellationToken cancellationToken = default)
         {
-            var obj = JsonConvert.DeserializeObject<T>(await PostMultipartAsync(httpClient, url, parameters, cancellationToken));
+            var json = await PostMultipartAsync(httpClient, url, content, cancellationToken).ConfigureAwait(false);
+            var obj = JsonConvert.DeserializeObject<T>(json);
 
             if (obj == null)
                 throw new JsonException($"Error while deserializing the response to type {typeof(T)}");
@@ -90,15 +92,19 @@ namespace CaptchaSharp
         }
 
         public static async Task<string> PostMultipartAsync
-            (this HttpClient httpClient, string url, IEnumerable<(string, string)> parameters, CancellationToken cancellationToken = default)
+            (this HttpClient httpClient, string url, MultipartFormDataContent content, CancellationToken cancellationToken = default)
         {
-            var data = new MultipartFormDataContent();
+            var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
 
-            parameters.ToList()
-                .ForEach(p => data.Add(new StringContent(p.Item2, Encoding.UTF8), p.Item1));
+        public static async Task<Bitmap> DownloadBitmapAsync
+            (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+            var imageStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var response = await httpClient.PostAsync(url, data, cancellationToken);
-            return await response.Content.ReadAsStringAsync();
+            return new Bitmap(imageStream);
         }
     }
 
@@ -107,6 +113,19 @@ namespace CaptchaSharp
         public static int ToInt(this bool boolean)
         {
             return boolean ? 1 : 0;
+        }
+    }
+
+    public static class IEnumerableExtensions
+    {
+        public static MultipartFormDataContent ToMultipartFormDataContent(this IEnumerable<(string, string)> stringContents)
+        {
+            var content = new MultipartFormDataContent();
+
+            stringContents.ToList()
+                .ForEach(p => content.Add(new StringContent(p.Item2, Encoding.UTF8), p.Item1));
+
+            return content;
         }
     }
 }

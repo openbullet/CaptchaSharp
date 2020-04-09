@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SolverTester"
         mc:Ignorable="d"
-        Title="Solver Tester" Height="450" Width="300">
+        Title="Solver Tester" Height="500" Width="300">
     <StackPanel>
         <!-- SERVICE SELECTION -->
         <ComboBox x:Name="serviceCombobox" HorizontalAlignment="Stretch" SelectionChanged="serviceCombobox_SelectionChanged" ></ComboBox>
@@ -60,11 +60,48 @@
                     </DockPanel>
                     <DockPanel>
                         <TextBlock>Language Group</TextBlock>
-                        <ComboBox x:Name="textLanguageGroupCombobox" Width="150" SelectionChanged="textLanguageGroupCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
+                        <ComboBox x:Name="textLanguageGroupCombobox" Width="150" SelectionChanged="languageGroupCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock>Language</TextBlock>
-                        <ComboBox x:Name="textLanguageCombobox" Width="150" SelectionChanged="textLanguageCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
+                        <ComboBox x:Name="textLanguageCombobox" Width="150" SelectionChanged="languageCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Url</TextBlock>
+                        <TextBox x:Name="captchaImageUrlTextbox" Text=""></TextBox>
+                    </DockPanel>
+                    <Button x:Name="downloadImageButton" Content="Download Image" Click="downloadImageButton_Click" />
+                    <Image x:Name="captchaImage" HorizontalAlignment="Stretch" Height="100"></Image>
+                    <DockPanel>
+                        <TextBlock>Language Group</TextBlock>
+                        <ComboBox x:Name="imageLanguageGroupCombobox" Width="150" SelectionChanged="languageGroupCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Language</TextBlock>
+                        <ComboBox x:Name="imageLanguageCombobox" Width="150" SelectionChanged="languageCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
+                    </DockPanel>
+                    <CheckBox Content="Is Phrase" IsChecked="{Binding IsPhrase}" />
+                    <CheckBox Content="Case Sensitive" IsChecked="{Binding CaseSensitive}" />
+                    <DockPanel>
+                        <TextBlock>Allowed Characters</TextBlock>
+                        <ComboBox x:Name="imageCharacterSetCombobox" Width="150" SelectionChanged="imageCharacterSetCombobox_SelectionChanged" HorizontalAlignment="Left"></ComboBox>
+                    </DockPanel>
+                    <CheckBox Content="Requires Calculations" IsChecked="{Binding RequiresCalculation}" />
+                    <DockPanel>
+                        <TextBlock>Min Length (1 to 20, 0 = any)</TextBlock>
+                        <TextBox Text="{Binding MinLength}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Max Length (1 to 20, 0 = any)</TextBlock>
+                        <TextBox Text="{Binding MaxLength}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Additional instructions</TextBlock>
+                        <TextBox Text="{Binding TextInstructions}"></TextBox>
                     </DockPanel>
                 </StackPanel>
             </TabItem>

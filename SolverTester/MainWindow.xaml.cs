@@ -4,10 +4,15 @@ using CaptchaSharp.Models;
 using CaptchaSharp.Services;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SolverTester
 {
@@ -15,24 +20,34 @@ namespace SolverTester
     {
         public CaptchaServiceType ServiceType { get; set; } = CaptchaServiceType.TwoCaptcha;
         public CaptchaType CaptchaType { get; set; } = CaptchaType.ReCaptchaV2;
+        public Bitmap CaptchaImage { get; set; } = null;
 
         // Authentication
-        public string ApiKey { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string ApiKey { get; set; } = "";
+        public string Username { get; set; } = "";
+        public string Password { get; set; } = "";
 
         // TextCaptcha / ImageCaptcha
         public string Text { get; set; }
         public CaptchaLanguageGroup CaptchaLanguageGroup { get; set; } = CaptchaLanguageGroup.NotSpecified;
         public CaptchaLanguage CaptchaLanguage { get; set; } = CaptchaLanguage.NotSpecified;
 
+        // ImageCaptcha
+        public bool IsPhrase { get; set; } = false;
+        public bool CaseSensitive { get; set; } = true;
+        public CharacterSet CharacterSet { get; set; } = CharacterSet.NotSpecified;
+        public bool RequiresCalculation { get; set; } = false;
+        public string MinLength { get; set; } = "0";
+        public string MaxLength { get; set; } = "0";
+        public string TextInstructions { get; set; } = "";
+
         // RecaptchaV2 / RecaptchaV3 / HCaptcha
-        public string SiteKey { get; set; }
-        public string Url { get; set; }
-        public bool Invisible { get; set; }
+        public string SiteKey { get; set; } = "";
+        public string Url { get; set; } = "";
+        public bool Invisible { get; set; } = false;
 
         // RecaptchaV3
-        public string Action { get; set; }
+        public string Action { get; set; } = "";
         public string MinScore { get; set; } = "0.3";
 
         public MainWindow()
@@ -52,14 +67,27 @@ namespace SolverTester
             captchaTypeCombobox.SelectedIndex = (int)CaptchaType;
 
             foreach (var g in Enum.GetNames(typeof(CaptchaLanguageGroup)))
+            {
                 textLanguageGroupCombobox.Items.Add(g);
+                imageLanguageGroupCombobox.Items.Add(g);
+            }
 
             textLanguageGroupCombobox.SelectedIndex = (int)CaptchaLanguageGroup;
+            imageLanguageGroupCombobox.SelectedIndex = (int)CaptchaLanguageGroup;
 
             foreach (var l in Enum.GetNames(typeof(CaptchaLanguage)))
+            {
                 textLanguageCombobox.Items.Add(l);
-
+                imageLanguageCombobox.Items.Add(l);
+            }
+                
             textLanguageCombobox.SelectedIndex = (int)CaptchaLanguage;
+            imageLanguageCombobox.SelectedIndex = (int)CaptchaLanguage;
+
+            foreach (var s in Enum.GetNames(typeof(CharacterSet)))
+                imageCharacterSetCombobox.Items.Add(s);
+
+            imageCharacterSetCombobox.SelectedIndex = (int)CharacterSet;
             #endregion
         }
 
@@ -82,9 +110,10 @@ namespace SolverTester
             var dict = new Dictionary<CaptchaType, int>
             {
                 { CaptchaType.TextCaptcha,  0 },
-                { CaptchaType.ReCaptchaV2,  1 },
-                { CaptchaType.HCaptcha,     1 },
-                { CaptchaType.ReCaptchaV3,  2 }
+                { CaptchaType.ImageCaptcha, 1 },
+                { CaptchaType.ReCaptchaV2,  2 },
+                { CaptchaType.HCaptcha,     2 },
+                { CaptchaType.ReCaptchaV3,  3 }
             };
 
             paramsTabControl.SelectedIndex = dict[CaptchaType];
@@ -133,10 +162,25 @@ namespace SolverTester
                 case CaptchaType.TextCaptcha:
                     var textOptions = new TextCaptchaOptions()
                     {
-                        LanguageGroup = CaptchaLanguageGroup,
-                        Language = CaptchaLanguage
+                        CaptchaLanguageGroup = CaptchaLanguageGroup,
+                        CaptchaLanguage = CaptchaLanguage
                     };
                     return await service.SolveTextCaptchaAsync(Text, textOptions);
+
+                case CaptchaType.ImageCaptcha:
+                    var imageOptions = new ImageCaptchaOptions()
+                    {
+                        IsPhrase = IsPhrase,
+                        CaseSensitive = CaseSensitive,
+                        CharacterSet = CharacterSet,
+                        RequiresCalculation = RequiresCalculation,
+                        MinLength = int.Parse(MinLength),
+                        MaxLength = int.Parse(MaxLength),
+                        CaptchaLanguageGroup = CaptchaLanguageGroup,
+                        CaptchaLanguage = CaptchaLanguage,
+                        TextInstructions = TextInstructions
+                    };
+                    return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions);
 
                 case CaptchaType.ReCaptchaV2:
                     return await service.SolveRecaptchaV2Async(SiteKey, Url, Invisible);
@@ -151,15 +195,42 @@ namespace SolverTester
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");
         }
 
+        private async void downloadImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            CaptchaImage = await new HttpClient().DownloadBitmapAsync(captchaImageUrlTextbox.Text);
+            captchaImage.Source = BitmapToImageSource(CaptchaImage);
+        }
+
+        private BitmapImage BitmapToImageSource(Bitmap bitmap)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                return bitmapimage;
+            }
+        }
+
         #region Combo Boxes SelectionChanged events
-        private void textLanguageGroupCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void languageGroupCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CaptchaLanguageGroup = (CaptchaLanguageGroup)((ComboBox)e.OriginalSource).SelectedIndex;
         }
 
-        private void textLanguageCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void languageCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CaptchaLanguage = (CaptchaLanguage)((ComboBox)e.OriginalSource).SelectedIndex;
+        }
+
+        private void imageCharacterSetCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CharacterSet = (CharacterSet)((ComboBox)e.OriginalSource).SelectedIndex;
         }
         #endregion
     }

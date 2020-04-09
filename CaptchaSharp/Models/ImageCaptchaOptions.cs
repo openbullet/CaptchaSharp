@@ -6,9 +6,9 @@ namespace CaptchaSharp.Models
     {
         public bool IsPhrase { get; set; } = false;
 
-        public bool CaseSensitive { get; set; } = false;
+        public bool CaseSensitive { get; set; } = true;
 
-        public CharacterSet CharactersType { get; set; } = CharacterSet.NotSpecified;
+        public CharacterSet CharacterSet { get; set; } = CharacterSet.NotSpecified;
 
         public bool RequiresCalculation { get; set; } = false;
 
@@ -16,10 +16,10 @@ namespace CaptchaSharp.Models
 
         public int MaxLength { get; set; } = 0;
 
-        public CaptchaLanguageGroup LanguageGroup = CaptchaLanguageGroup.NotSpecified;
+        public CaptchaLanguageGroup CaptchaLanguageGroup { get; set; } = CaptchaLanguageGroup.NotSpecified;
 
-        public CaptchaLanguage Language = CaptchaLanguage.NotSpecified;
+        public CaptchaLanguage CaptchaLanguage { get; set; } = CaptchaLanguage.NotSpecified;
 
-        public string TextInstructions = "";
+        public string TextInstructions { get; set; } = "";
     }
 }

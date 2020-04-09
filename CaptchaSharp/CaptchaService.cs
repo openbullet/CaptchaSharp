@@ -3,7 +3,8 @@ using CaptchaSharp.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Reflection;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
-            (Bitmap image, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
+            (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
