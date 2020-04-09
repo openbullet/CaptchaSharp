@@ -70,6 +70,7 @@
                         <TextBlock>Url</TextBlock>
                         <TextBox Text="{Binding Url}"></TextBox>
                     </DockPanel>
+                    <CheckBox Content="Invisible" IsChecked="{Binding Invisible}" />
                 </StackPanel>
             </TabItem>
         </TabControl>

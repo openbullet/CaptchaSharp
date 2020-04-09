@@ -26,6 +26,7 @@ namespace SolverTester
         // RecaptchaV2
         public string SiteKey { get; set; }
         public string Url { get; set; }
+        public bool Invisible { get; set; }
 
         public MainWindow()
         {
@@ -112,7 +113,7 @@ namespace SolverTester
                     return await service.SolveTextCaptchaAsync(Text);
 
                 case CaptchaType.ReCaptchaV2:
-                    return await service.SolveRecaptchaV2Async(SiteKey, Url);
+                    return await service.SolveRecaptchaV2Async(SiteKey, Url, Invisible);
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");

@@ -32,7 +32,7 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, bool invisible = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
