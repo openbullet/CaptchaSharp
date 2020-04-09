@@ -1,10 +1,12 @@
-﻿using System;
+﻿using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
+using CaptchaSharp.Services.TwoCaptcha;
+using Newtonsoft.Json;
 
 namespace CaptchaSharp.Services
 {
@@ -39,48 +41,42 @@ namespace CaptchaSharp.Services
 
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
-            var content = await GetRemoteString
+            var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
                 ($"http://2captcha.com/res.php?key={ApiKey}&action=getbalance&json=1", cancellationToken);
 
-            if (decimal.TryParse(content, out decimal balance))
-                return balance;
+            if (response.IsErrorCode)
+                throw new BadAuthenticationException(response.Request);
 
-            throw new BadAuthenticationException(content);
+            return decimal.Parse(response.Request, CultureInfo.InvariantCulture);
         }
 
         public async override Task<CaptchaResponse> SolveRecaptchaV2Async(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
-            var content = await GetRemoteString
+            var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
                 ($"http://2captcha.com/in.php?key={ApiKey}&method=userrecaptcha&googlekey={siteKey}&pageurl={siteUrl}&json=1", cancellationToken);
 
-            if (!content.StartsWith("OK"))
-                throw new TaskCreationException(content);
+            if (response.IsErrorCode)
+                throw new TaskCreationException(response.Request);
 
-            var task = new CaptchaTask(content.Split('|')[1]);
+            var task = new CaptchaTask(response.Request);
 
             return await TryGetResult(task, cancellationToken);
         }
 
         protected async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
         {
-            var content = await GetRemoteString
+            var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
                 ($"http://2captcha.com/res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken);
 
-            if (content.Contains("NOT_READY"))
+            if (!response.Success && response.Request.Contains("NOT_READY"))
                 return default;
 
             task.Completed = true;
 
-            if (content.Contains("ERROR"))
-                throw new TaskSolutionException(content);
+            if (response.IsErrorCode)
+                throw new TaskSolutionException(response.Request);
 
-            return new CaptchaResponse(task.Id, content.Split('|')[1]);
-        }
-
-        private async Task<string> GetRemoteString(string url, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.GetAsync(url, cancellationToken);
-            return await response.Content.ReadAsStringAsync();
+            return new CaptchaResponse(task.Id, response.Request);
         }
     }
 }

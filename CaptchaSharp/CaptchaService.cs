@@ -1,11 +1,7 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,8 +60,8 @@ namespace CaptchaSharp
             var start = DateTime.Now;
             CaptchaResponse result;
 
-            // Initial 5s delay
-            await Delay(5000);
+            // Initial 10s delay
+            await Delay(10000);
 
             do
             {

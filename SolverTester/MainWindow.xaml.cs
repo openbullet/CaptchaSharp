@@ -79,7 +79,8 @@ namespace SolverTester
         {
             try
             {
-                MessageBox.Show($"The captcha was solved successfully! Response: {await Solve(GetService(ServiceType), CaptchaType)}");
+                var solution = await Solve(GetService(ServiceType), CaptchaType);
+                MessageBox.Show($"The captcha was solved successfully! Response: {solution.Response}");
             }
             catch (Exception ex)
             {
