@@ -117,7 +117,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
                 ($"http://2captcha.com/res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken);
 
-            if (!response.Success && response.Request.Contains("NOT_READY"))
+            if (!response.Success && response.Request == "CAPCHA_NOT_READY")
                 return default;
 
             task.Completed = true;

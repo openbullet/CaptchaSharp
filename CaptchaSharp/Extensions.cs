@@ -63,7 +63,12 @@ namespace CaptchaSharp
         public static async Task<T> GetJsonAsync<T>
             (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
         {
-            return JsonConvert.DeserializeObject<T>(await GetStringAsync(httpClient, url, cancellationToken));
+            var obj = JsonConvert.DeserializeObject<T>(await GetStringAsync(httpClient, url, cancellationToken));
+
+            if (obj == null)
+                throw new JsonException($"Error while deserializing the response to type {typeof(T)}");
+
+            return obj;
         }
 
         public static async Task<string> GetStringAsync
@@ -76,7 +81,12 @@ namespace CaptchaSharp
         public static async Task<T> PostMultipartJsonAsync<T>
             (this HttpClient httpClient, string url, IEnumerable<(string, string)> parameters, CancellationToken cancellationToken = default)
         {
-            return JsonConvert.DeserializeObject<T>(await PostMultipartAsync(httpClient, url, parameters, cancellationToken));
+            var obj = JsonConvert.DeserializeObject<T>(await PostMultipartAsync(httpClient, url, parameters, cancellationToken));
+
+            if (obj == null)
+                throw new JsonException($"Error while deserializing the response to type {typeof(T)}");
+
+            return obj;
         }
 
         public static async Task<string> PostMultipartAsync
