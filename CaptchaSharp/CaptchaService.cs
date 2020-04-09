@@ -38,7 +38,7 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action, float minScore = 0.3F, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
@@ -55,7 +55,13 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
-        protected async Task<CaptchaResponse> TryGetResult(CaptchaTask task, CancellationToken cancellationToken = default)
+        public virtual Task ReportIncorrectSolution(string taskId)
+        {
+            throw new NotSupportedException();
+        }
+
+        protected async Task<CaptchaResponse> TryGetResult
+            (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var start = DateTime.Now;
             CaptchaResponse result;
@@ -78,7 +84,8 @@ namespace CaptchaSharp
             return result;
         }
 
-        protected virtual Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
+        protected virtual Task<CaptchaResponse> CheckResult
+            (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

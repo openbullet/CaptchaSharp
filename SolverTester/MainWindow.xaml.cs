@@ -4,6 +4,7 @@ using CaptchaSharp.Models;
 using CaptchaSharp.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +28,10 @@ namespace SolverTester
         public string SiteKey { get; set; }
         public string Url { get; set; }
         public bool Invisible { get; set; }
+
+        // RecaptchaV3
+        public string Action { get; set; }
+        public string MinScore { get; set; } = "0.3";
 
         public MainWindow()
         {
@@ -63,7 +68,8 @@ namespace SolverTester
             var dict = new Dictionary<CaptchaType, int>
             {
                 { CaptchaType.TextCaptcha, 0 },
-                { CaptchaType.ReCaptchaV2, 1 }
+                { CaptchaType.ReCaptchaV2, 1 },
+                { CaptchaType.ReCaptchaV3, 2 }
             };
 
             paramsTabControl.SelectedIndex = dict[CaptchaType];
@@ -114,6 +120,9 @@ namespace SolverTester
 
                 case CaptchaType.ReCaptchaV2:
                     return await service.SolveRecaptchaV2Async(SiteKey, Url, Invisible);
+
+                case CaptchaType.ReCaptchaV3:
+                    return await service.SolveRecaptchaV3Async(SiteKey, Url, Action, float.Parse(MinScore, CultureInfo.InvariantCulture));
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");

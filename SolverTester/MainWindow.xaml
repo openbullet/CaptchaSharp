@@ -73,6 +73,26 @@
                     <CheckBox Content="Invisible" IsChecked="{Binding Invisible}" />
                 </StackPanel>
             </TabItem>
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Site Key</TextBlock>
+                        <TextBox Text="{Binding SiteKey}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Url</TextBlock>
+                        <TextBox Text="{Binding Url}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Action</TextBlock>
+                        <TextBox Text="{Binding Action}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Min Score</TextBlock>
+                        <TextBox Text="{Binding MinScore}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
         </TabControl>
         
         <!-- SOLVE -->
