@@ -40,6 +40,7 @@ namespace SolverTester
             InitializeComponent();
             DataContext = this;
 
+            #region Setup Combo Boxes
             foreach (var s in Enum.GetNames(typeof(CaptchaServiceType)))
                 serviceCombobox.Items.Add(s);
 
@@ -59,6 +60,7 @@ namespace SolverTester
                 textLanguageCombobox.Items.Add(l);
 
             textLanguageCombobox.SelectedIndex = (int)CaptchaLanguage;
+            #endregion
         }
 
         private void serviceCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -149,6 +151,7 @@ namespace SolverTester
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");
         }
 
+        #region Combo Boxes SelectionChanged events
         private void textLanguageGroupCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CaptchaLanguageGroup = (CaptchaLanguageGroup)((ComboBox)e.OriginalSource).SelectedIndex;
@@ -158,5 +161,6 @@ namespace SolverTester
         {
             CaptchaLanguage = (CaptchaLanguage)((ComboBox)e.OriginalSource).SelectedIndex;
         }
+        #endregion
     }
 }

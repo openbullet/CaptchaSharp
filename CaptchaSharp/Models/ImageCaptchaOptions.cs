@@ -21,19 +21,5 @@ namespace CaptchaSharp.Models
         public CaptchaLanguage Language = CaptchaLanguage.NotSpecified;
 
         public string TextInstructions = "";
-
-        public override int GetHashCode()
-        {
-            return
-                IsPhrase.GetHashCode() +
-                CaseSensitive.GetHashCode() +
-                CharactersType.GetHashCode() +
-                RequiresCalculation.GetHashCode() +
-                MinLength.GetHashCode() +
-                MaxLength.GetHashCode() +
-                LanguageGroup.GetHashCode() +
-                Language.GetHashCode() +
-                TextInstructions.GetHashCode();
-        }
     }
 }

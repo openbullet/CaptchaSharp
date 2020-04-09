@@ -7,12 +7,5 @@ namespace CaptchaSharp.Models
         public CaptchaLanguageGroup LanguageGroup { get; set; } = CaptchaLanguageGroup.NotSpecified;
 
         public CaptchaLanguage Language { get; set; } = CaptchaLanguage.NotSpecified;
-
-        public override int GetHashCode()
-        {
-            return
-                LanguageGroup.GetHashCode() +
-                Language.GetHashCode();
-        }
     }
 }
