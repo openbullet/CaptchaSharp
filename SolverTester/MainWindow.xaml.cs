@@ -129,7 +129,12 @@ namespace SolverTester
             switch (captchaType)
             {
                 case CaptchaType.TextCaptcha:
-                    return await service.SolveTextCaptchaAsync(Text);
+                    var textOptions = new TextCaptchaOptions()
+                    {
+                        LanguageGroup = CaptchaLanguageGroup,
+                        Language = CaptchaLanguage
+                    };
+                    return await service.SolveTextCaptchaAsync(Text, textOptions);
 
                 case CaptchaType.ReCaptchaV2:
                     return await service.SolveRecaptchaV2Async(SiteKey, Url, Invisible);
