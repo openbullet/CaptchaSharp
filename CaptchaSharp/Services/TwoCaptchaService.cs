@@ -18,7 +18,8 @@ namespace CaptchaSharp.Services
     {
         public string ApiKey { get; set; }
         public string Domain { get; set; } = "2captcha.com";
-
+        public bool UseSSL { get; set; } = false;
+        
         private HttpClient httpClient;
 
         public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
@@ -30,13 +31,15 @@ namespace CaptchaSharp.Services
 
         private void SetupHttpClient()
         {
+            // Use 2captcha.com as host header to simulate an entry in the hosts file
             httpClient.DefaultRequestHeaders.Host = "2captcha.com";
+            httpClient.BaseAddress = new Uri((UseSSL ? "https" : "http") + $"://{Domain}/");
         }
 
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/res.php?key={ApiKey}&action=getbalance&json=1", cancellationToken);
+                ($"res.php?key={ApiKey}&action=getbalance&json=1", cancellationToken);
 
             if (response.IsErrorCode)
                 throw new BadAuthenticationException(response.Request);
@@ -48,7 +51,7 @@ namespace CaptchaSharp.Services
             (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("textcaptcha", text),
@@ -71,7 +74,7 @@ namespace CaptchaSharp.Services
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "base64"),
@@ -89,7 +92,7 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, bool invisible = false, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "userrecaptcha"),
@@ -108,7 +111,7 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "userrecaptcha"),
@@ -129,7 +132,7 @@ namespace CaptchaSharp.Services
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "funcaptcha"),
@@ -148,7 +151,7 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "hcaptcha"),
@@ -166,7 +169,7 @@ namespace CaptchaSharp.Services
             (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "keycaptcha"),
@@ -187,7 +190,7 @@ namespace CaptchaSharp.Services
             (string gt, string challenge, string apiServer, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/in.php",
+                ("in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "geetest"),
@@ -217,7 +220,7 @@ namespace CaptchaSharp.Services
         protected async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken).ConfigureAwait(false);
+                ("res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken).ConfigureAwait(false);
 
             if (!response.Success && response.Request == "CAPCHA_NOT_READY")
                 return default;
@@ -235,7 +238,7 @@ namespace CaptchaSharp.Services
             var action = correct ? "reportgood" : "reportbad";
 
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
-                ($"http://{Domain}/res.php?key={ApiKey}&action={action}&id={taskId}&json=1", cancellationToken).ConfigureAwait(false);
+                ("res.php?key={ApiKey}&action={action}&id={taskId}&json=1", cancellationToken).ConfigureAwait(false);
 
             if (response.IsErrorCode)
                 throw new TaskReportException(response.Request);
