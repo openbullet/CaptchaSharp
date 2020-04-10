@@ -232,7 +232,7 @@ namespace CaptchaSharp.Services
         protected async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
-                ("res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken).ConfigureAwait(false);
+                ($"res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken).ConfigureAwait(false);
 
             if (!response.Success && response.Request == "CAPCHA_NOT_READY")
                 return default;
@@ -250,7 +250,7 @@ namespace CaptchaSharp.Services
             var action = correct ? "reportgood" : "reportbad";
 
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
-                ("res.php?key={ApiKey}&action={action}&id={taskId}&json=1", cancellationToken).ConfigureAwait(false);
+                ($"res.php?key={ApiKey}&action={action}&id={taskId}&json=1", cancellationToken).ConfigureAwait(false);
 
             if (response.IsErrorCode)
                 throw new TaskReportException(response.Request);
