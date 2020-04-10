@@ -168,6 +168,9 @@ namespace SolverTester
                     return await service.SolveTextCaptchaAsync(Text, textOptions);
 
                 case CaptchaType.ImageCaptcha:
+                    if (CaptchaImage == null)
+                        throw new ArgumentNullException("You must download an image first!");
+
                     var imageOptions = new ImageCaptchaOptions()
                     {
                         IsPhrase = IsPhrase,
