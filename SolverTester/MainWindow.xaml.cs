@@ -41,7 +41,7 @@ namespace SolverTester
         public string MaxLength { get; set; } = "0";
         public string TextInstructions { get; set; } = "";
 
-        // RecaptchaV2 / RecaptchaV3 / HCaptcha / FunCaptcha
+        // RecaptchaV2 / RecaptchaV3 / HCaptcha / FunCaptcha / KeyCaptcha / GeeTest
         public string SiteKey { get; set; } = "";
 
         // RecaptchaV2 / RecaptchaV3 / HCaptcha
@@ -58,6 +58,17 @@ namespace SolverTester
         public string PublicKey { get; set; } = "";
         public string ServiceUrl { get; set; } = "";
         public bool NoJS { get; set; } = false;
+
+        // KeyCaptcha
+        public string UserId { get; set; } = "";
+        public string SessionId { get; set; } = "";
+        public string WebServerSign1 { get; set; } = "";
+        public string WebServerSign2 { get; set; } = "";
+
+        // GeeTest
+        public string GT { get; set; } = "";
+        public string Challenge { get; set; } = "";
+        public string ApiServer { get; set; } = "";
 
         public MainWindow()
         {
@@ -123,7 +134,9 @@ namespace SolverTester
                 { CaptchaType.ReCaptchaV2,  2 },
                 { CaptchaType.ReCaptchaV3,  3 },
                 { CaptchaType.FunCaptcha,   4 },
-                { CaptchaType.HCaptcha,     5 }
+                { CaptchaType.HCaptcha,     5 },
+                { CaptchaType.KeyCaptcha,   6 },
+                { CaptchaType.GeeTest,      7 }
             };
 
             paramsTabControl.SelectedIndex = dict[CaptchaType];
@@ -206,6 +219,12 @@ namespace SolverTester
 
                 case CaptchaType.HCaptcha:
                     return await service.SolveHCaptchaAsync(SiteKey, SiteUrl);
+
+                case CaptchaType.KeyCaptcha:
+                    return await service.SolveKeyCaptchaAsync(UserId, SessionId, WebServerSign1, WebServerSign2, SiteUrl);
+
+                case CaptchaType.GeeTest:
+                    return await service.SolveGeeTestAsync(GT, Challenge, ApiServer, SiteUrl);
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");

@@ -9,7 +9,6 @@ using CaptchaSharp.Models;
 using CaptchaSharp.Services.TwoCaptcha;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Drawing.Imaging;
 
 namespace CaptchaSharp.Services
@@ -17,6 +16,7 @@ namespace CaptchaSharp.Services
     public class TwoCaptchaService : CaptchaService
     {
         public string ApiKey { get; set; }
+        public string Domain { get; set; } = "2captcha.com";
 
         private HttpClient httpClient;
 
@@ -47,7 +47,7 @@ namespace CaptchaSharp.Services
             (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/in.php",
+                ($"http://{Domain}/in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("textcaptcha", text),
@@ -70,7 +70,7 @@ namespace CaptchaSharp.Services
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/in.php",
+                ($"http://{Domain}/in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "base64"),
@@ -88,7 +88,7 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, bool invisible = false, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/in.php",
+                ($"http://{Domain}/in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "userrecaptcha"),
@@ -107,7 +107,7 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/in.php",
+                ($"http://{Domain}/in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "userrecaptcha"),
@@ -128,7 +128,7 @@ namespace CaptchaSharp.Services
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/in.php",
+                ($"http://{Domain}/in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "funcaptcha"),
@@ -147,11 +147,52 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/in.php",
+                ($"http://{Domain}/in.php",
                 new (string, string)[] {
                     ("key", ApiKey),
                     ("method", "hcaptcha"),
                     ("sitekey", siteKey),
+                    ("pageurl", siteUrl),
+                    ("json", "1") }
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async override Task<CaptchaResponse> SolveKeyCaptchaAsync
+            (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
+                ($"http://{Domain}/in.php",
+                new (string, string)[] {
+                    ("key", ApiKey),
+                    ("method", "keycaptcha"),
+                    ("s_s_c_user_id", userId),
+                    ("s_s_c_session_id", sessionId),
+                    ("s_s_c_web_server_sign", webServerSign1),
+                    ("s_s_c_web_server_sign2", webServerSign2),
+                    ("pageurl", siteUrl),
+                    ("json", "1") }
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async override Task<CaptchaResponse> SolveGeeTestAsync
+            (string gt, string challenge, string apiServer, string siteUrl, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
+                ($"http://{Domain}/in.php",
+                new (string, string)[] {
+                    ("key", ApiKey),
+                    ("method", "geetest"),
+                    ("gt", gt),
+                    ("challenge", challenge),
+                    ("api_server", apiServer),
                     ("pageurl", siteUrl),
                     ("json", "1") }
                 .ToMultipartFormDataContent(),
@@ -175,7 +216,7 @@ namespace CaptchaSharp.Services
         protected async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
-                ($"http://2captcha.com/res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken).ConfigureAwait(false);
+                ($"http://{Domain}/res.php?key={ApiKey}&action=get&id={task.Id}&json=1", cancellationToken).ConfigureAwait(false);
 
             if (!response.Success && response.Request == "CAPCHA_NOT_READY")
                 return default;

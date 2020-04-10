@@ -7,6 +7,8 @@
         FunCaptcha,
         ReCaptchaV2,
         ReCaptchaV3,
-        HCaptcha
+        HCaptcha,
+        KeyCaptcha,
+        GeeTest
     }
 }

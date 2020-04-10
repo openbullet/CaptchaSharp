@@ -173,6 +173,52 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
+            <!-- KEYCAPTCHA -->
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>User ID</TextBlock>
+                        <TextBox Text="{Binding UserId}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Session ID</TextBlock>
+                        <TextBox Text="{Binding SessionId}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>WebServer Sign 1</TextBlock>
+                        <TextBox Text="{Binding WebServerSign1}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>WebServer Sign 2</TextBlock>
+                        <TextBox Text="{Binding WebServerSign2}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Url</TextBlock>
+                        <TextBox Text="{Binding SiteUrl}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <!-- GEE TEST -->
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>GT</TextBlock>
+                        <TextBox Text="{Binding GT}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Challenge</TextBlock>
+                        <TextBox Text="{Binding Challenge}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Api Server</TextBlock>
+                        <TextBox Text="{Binding ApiServer}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Url</TextBlock>
+                        <TextBox Text="{Binding SiteUrl}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
         </TabControl>
         
         <!-- SOLVE -->

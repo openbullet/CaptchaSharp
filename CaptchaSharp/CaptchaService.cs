@@ -64,6 +64,18 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
+        public virtual Task<CaptchaResponse> SolveKeyCaptchaAsync
+            (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual Task<CaptchaResponse> SolveGeeTestAsync
+            (string gt, string challenge, string apiServer, string siteUrl, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public virtual Task ReportIncorrectSolution(string taskId)
         {
             throw new NotSupportedException();
