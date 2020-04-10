@@ -10,13 +10,24 @@ using CaptchaSharp.Services.TwoCaptcha;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System;
 
 namespace CaptchaSharp.Services
 {
     public class TwoCaptchaService : CaptchaService
     {
         public string ApiKey { get; set; }
-        public string Domain { get; set; } = "2captcha.com";
+
+        private string domain = "2captcha.com";
+        public string Domain
+        {
+            get => domain;
+            set
+            {
+                domain = value;
+                httpClient.DefaultRequestHeaders.Host = new Uri(domain).Host;
+            }
+        }
 
         private HttpClient httpClient;
 
