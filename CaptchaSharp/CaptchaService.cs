@@ -53,7 +53,7 @@ namespace CaptchaSharp
         }
         
         public virtual Task<CaptchaResponse> SolveFuncaptchaAsync
-            ()
+            (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

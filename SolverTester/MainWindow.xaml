@@ -52,6 +52,7 @@
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </Style>
             </TabControl.ItemContainerStyle>
+            <!-- TEXT CAPTCHA -->
             <TabItem>
                 <StackPanel>
                     <DockPanel>
@@ -68,6 +69,7 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
+            <!-- IMAGE CAPTCHA -->
             <TabItem>
                 <StackPanel>
                     <DockPanel>
@@ -105,6 +107,7 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
+            <!-- RECAPTCHA V2 -->
             <TabItem>
                 <StackPanel>
                     <DockPanel>
@@ -113,11 +116,12 @@
                     </DockPanel>
                     <DockPanel>
                         <TextBlock>Url</TextBlock>
-                        <TextBox Text="{Binding Url}"></TextBox>
+                        <TextBox Text="{Binding SiteUrl}"></TextBox>
                     </DockPanel>
                     <CheckBox Content="Invisible" IsChecked="{Binding Invisible}" />
                 </StackPanel>
             </TabItem>
+            <!-- RECAPTCHA V3 -->
             <TabItem>
                 <StackPanel>
                     <DockPanel>
@@ -126,7 +130,7 @@
                     </DockPanel>
                     <DockPanel>
                         <TextBlock>Url</TextBlock>
-                        <TextBox Text="{Binding Url}"></TextBox>
+                        <TextBox Text="{Binding SiteUrl}"></TextBox>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock>Action</TextBlock>
@@ -135,6 +139,37 @@
                     <DockPanel>
                         <TextBlock>Min Score</TextBlock>
                         <TextBox Text="{Binding MinScore}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <!-- FUNCAPTCHA -->
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Public Key</TextBlock>
+                        <TextBox Text="{Binding PublicKey}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Service Url</TextBlock>
+                        <TextBox Text="{Binding ServiceUrl}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Site Url</TextBlock>
+                        <TextBox Text="{Binding SiteUrl}"></TextBox>
+                    </DockPanel>
+                    <CheckBox Content="No JS" IsChecked="{Binding NoJS}" />
+                </StackPanel>
+            </TabItem>
+            <!-- HCAPTCHA -->
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Site Key</TextBlock>
+                        <TextBox Text="{Binding SiteKey}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Url</TextBlock>
+                        <TextBox Text="{Binding SiteUrl}"></TextBox>
                     </DockPanel>
                 </StackPanel>
             </TabItem>

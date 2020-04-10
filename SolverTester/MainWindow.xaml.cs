@@ -41,14 +41,23 @@ namespace SolverTester
         public string MaxLength { get; set; } = "0";
         public string TextInstructions { get; set; } = "";
 
-        // RecaptchaV2 / RecaptchaV3 / HCaptcha
+        // RecaptchaV2 / RecaptchaV3 / HCaptcha / FunCaptcha
         public string SiteKey { get; set; } = "";
-        public string Url { get; set; } = "";
+
+        // RecaptchaV2 / RecaptchaV3 / HCaptcha
+        public string SiteUrl { get; set; } = "";
+
+        // RecaptchaV2
         public bool Invisible { get; set; } = false;
 
         // RecaptchaV3
         public string Action { get; set; } = "";
         public string MinScore { get; set; } = "0.3";
+
+        // FunCaptcha
+        public string PublicKey { get; set; } = "";
+        public string ServiceUrl { get; set; } = "";
+        public bool NoJS { get; set; } = false;
 
         public MainWindow()
         {
@@ -112,8 +121,9 @@ namespace SolverTester
                 { CaptchaType.TextCaptcha,  0 },
                 { CaptchaType.ImageCaptcha, 1 },
                 { CaptchaType.ReCaptchaV2,  2 },
-                { CaptchaType.HCaptcha,     2 },
-                { CaptchaType.ReCaptchaV3,  3 }
+                { CaptchaType.ReCaptchaV3,  3 },
+                { CaptchaType.FunCaptcha,   4 },
+                { CaptchaType.HCaptcha,     5 }
             };
 
             paramsTabControl.SelectedIndex = dict[CaptchaType];
@@ -186,13 +196,16 @@ namespace SolverTester
                     return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions);
 
                 case CaptchaType.ReCaptchaV2:
-                    return await service.SolveRecaptchaV2Async(SiteKey, Url, Invisible);
+                    return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible);
 
                 case CaptchaType.ReCaptchaV3:
-                    return await service.SolveRecaptchaV3Async(SiteKey, Url, Action, float.Parse(MinScore, CultureInfo.InvariantCulture));
+                    return await service.SolveRecaptchaV3Async(SiteKey, SiteUrl, Action, float.Parse(MinScore, CultureInfo.InvariantCulture));
+
+                case CaptchaType.FunCaptcha:
+                    return await service.SolveFuncaptchaAsync(PublicKey, ServiceUrl, SiteUrl, NoJS);
 
                 case CaptchaType.HCaptcha:
-                    return await service.SolveHCaptchaAsync(SiteKey, Url);
+                    return await service.SolveHCaptchaAsync(SiteKey, SiteUrl);
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");

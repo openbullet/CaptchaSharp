@@ -124,6 +124,26 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
+        public async override Task<CaptchaResponse> SolveFuncaptchaAsync
+            (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
+                ($"http://2captcha.com/in.php",
+                new (string, string)[] {
+                    ("key", ApiKey),
+                    ("method", "funcaptcha"),
+                    ("publickey", publicKey),
+                    ("surl", serviceUrl),
+                    ("pageurl", siteUrl),
+                    ("nojs", noJS.ToInt().ToString()),
+                    ("json", "1") }
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+        }
+
         public async override Task<CaptchaResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
