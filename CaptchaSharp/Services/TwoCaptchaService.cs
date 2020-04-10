@@ -241,7 +241,7 @@ namespace CaptchaSharp.Services
         }
 
         #region Capabilities
-        public new CaptchaServiceCapabilities Capabilities =
+        public new CaptchaServiceCapabilities Capabilities =>
             CaptchaServiceCapabilities.LanguageGroup |
             CaptchaServiceCapabilities.Language |
             CaptchaServiceCapabilities.Phrases |

@@ -14,7 +14,7 @@ namespace CaptchaSharp
     {
         public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(3);
 
-        public CaptchaServiceCapabilities Capabilities { get; } = CaptchaServiceCapabilities.None;
+        public CaptchaServiceCapabilities Capabilities => CaptchaServiceCapabilities.None;
 
         public virtual Task<decimal> GetBalanceAsync
             (CancellationToken cancellationToken = default)

@@ -27,6 +27,10 @@ namespace SolverTester
         public string Username { get; set; } = "";
         public string Password { get; set; } = "";
 
+        // Configuration
+        public string TwoCaptchaDomain { get; set; } = "2captcha.com";
+        public string Timeout { get; set; } = "180";
+
         // TextCaptcha / ImageCaptcha
         public string Text { get; set; }
         public CaptchaLanguageGroup CaptchaLanguageGroup { get; set; } = CaptchaLanguageGroup.NotSpecified;
@@ -119,6 +123,11 @@ namespace SolverTester
             {
                 case CaptchaServiceType.TwoCaptcha:
                     authTabControl.SelectedIndex = 0;
+                    configTabControl.SelectedIndex = 1;
+                    break;
+
+                default:
+                    configTabControl.SelectedIndex = 0;
                     break;
             }
         }
@@ -150,7 +159,7 @@ namespace SolverTester
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Oopsie! An exception of type {ex.GetType()} has been thrown!\r\nHere's the message: {ex.Message}");
+                LogException(ex);
             }
         }
 
@@ -163,16 +172,18 @@ namespace SolverTester
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Oopsie! An exception of type {ex.GetType()} has been thrown!\r\nHere's the message: {ex.Message}");
+                LogException(ex);
             }
         }
 
         private CaptchaService GetService(CaptchaServiceType service)
         {
+            var timeout = TimeSpan.FromSeconds(double.Parse(Timeout));
+
             switch (service)
             {
                 case CaptchaServiceType.TwoCaptcha:
-                    return new TwoCaptchaService(ApiKey);
+                    return new TwoCaptchaService(ApiKey) { Domain = TwoCaptchaDomain, Timeout = timeout };
             }
 
             throw new NotSupportedException($"Service {service} is not supported by the tester yet!");
@@ -232,8 +243,20 @@ namespace SolverTester
 
         private async void downloadImageButton_Click(object sender, RoutedEventArgs e)
         {
-            CaptchaImage = await new HttpClient().DownloadBitmapAsync(captchaImageUrlTextbox.Text);
-            captchaImage.Source = BitmapToImageSource(CaptchaImage);
+            try
+            {
+                CaptchaImage = await new HttpClient().DownloadBitmapAsync(captchaImageUrlTextbox.Text);
+                captchaImage.Source = BitmapToImageSource(CaptchaImage);
+            }
+            catch (Exception ex)
+            {
+                LogException(ex);
+            }
+        }
+
+        private void LogException(Exception ex)
+        {
+            MessageBox.Show($"Oopsie! An exception of type {ex.GetType()} has been thrown!\r\nHere's the message: {ex.Message}");
         }
 
         private BitmapImage BitmapToImageSource(Bitmap bitmap)

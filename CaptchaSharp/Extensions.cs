@@ -23,9 +23,7 @@ namespace CaptchaSharp
         /// <returns>The base64-encoded string</returns>
         public static string ToBase64(this Bitmap image, ImageFormat format)
         {
-            MemoryStream stream = new MemoryStream();
-            image.Save(stream, format);
-            byte[] imageBytes = stream.ToArray();
+            var imageBytes = image.ToStream(format).ToArray();
             return Convert.ToBase64String(imageBytes);
         }
 
@@ -39,6 +37,7 @@ namespace CaptchaSharp
         {
             MemoryStream stream = new MemoryStream();
             image.Save(stream, format);
+            stream.Position = 0;
             return stream;
         }
 
