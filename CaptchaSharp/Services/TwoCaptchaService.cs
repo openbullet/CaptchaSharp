@@ -17,30 +17,20 @@ namespace CaptchaSharp.Services
     public class TwoCaptchaService : CaptchaService
     {
         public string ApiKey { get; set; }
-
-        private string domain = "2captcha.com";
-        public string Domain
-        {
-            get => domain;
-            set
-            {
-                domain = value;
-                httpClient.DefaultRequestHeaders.Host = new Uri(domain).Host;
-            }
-        }
+        public string Domain { get; set; } = "2captcha.com";
 
         private HttpClient httpClient;
 
-        public TwoCaptchaService(string apiKey)
+        public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
         {
             ApiKey = apiKey;
-            httpClient = new HttpClient();
+            this.httpClient = httpClient ?? new HttpClient();
+            SetupHttpClient();
         }
 
-        public TwoCaptchaService(string apiKey, HttpClient httpClient)
+        private void SetupHttpClient()
         {
-            ApiKey = apiKey;
-            this.httpClient = httpClient;
+            httpClient.DefaultRequestHeaders.Host = "2captcha.com";
         }
 
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
