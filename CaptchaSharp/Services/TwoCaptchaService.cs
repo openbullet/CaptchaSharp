@@ -229,6 +229,17 @@ namespace CaptchaSharp.Services
             return new CaptchaResponse(task.Id, response.Request);
         }
 
+        public async override Task ReportSolution(string taskId, bool correct = false, CancellationToken cancellationToken = default)
+        {
+            var action = correct ? "reportgood" : "reportbad";
+
+            var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
+                ($"http://{Domain}/res.php?key={ApiKey}&action={action}&id={taskId}&json=1", cancellationToken).ConfigureAwait(false);
+
+            if (response.IsErrorCode)
+                throw new TaskReportException(response.Request);
+        }
+
         #region Capabilities
         public new CaptchaServiceCapabilities Capabilities =
             CaptchaServiceCapabilities.LanguageGroup |

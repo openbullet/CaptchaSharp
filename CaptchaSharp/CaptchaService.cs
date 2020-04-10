@@ -76,7 +76,7 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
-        public virtual Task ReportIncorrectSolution(string taskId)
+        public virtual Task ReportSolution(string taskId, bool correct = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
