@@ -26,6 +26,7 @@ namespace CaptchaSharp.Services
             httpClient.BaseAddress = new Uri("http://2captcha.com");
         }
 
+        #region Getting the Balance
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetJsonAsync<TwoCaptchaResponse>
@@ -36,7 +37,9 @@ namespace CaptchaSharp.Services
 
             return decimal.Parse(response.Request, CultureInfo.InvariantCulture);
         }
+        #endregion
 
+        #region Solve Methods
         public async override Task<CaptchaResponse> SolveTextCaptchaAsync
             (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
@@ -138,7 +141,8 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task<CaptchaResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
+        public async override Task<CaptchaResponse> SolveHCaptchaAsync
+            (string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartJsonAsync<TwoCaptchaResponse>
                 ("in.php",
@@ -195,7 +199,9 @@ namespace CaptchaSharp.Services
 
             return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
+        #endregion
 
+        #region Getting the result
         private async Task<CaptchaResponse> TryGetResult
             (TwoCaptchaResponse response, CancellationToken cancellationToken = default)
         {
@@ -222,7 +228,9 @@ namespace CaptchaSharp.Services
 
             return new CaptchaResponse(task.Id, response.Request);
         }
+        #endregion
 
+        #region Reporting the solution
         public async override Task ReportSolution(string taskId, bool correct = false, CancellationToken cancellationToken = default)
         {
             var action = correct ? "reportgood" : "reportbad";
@@ -233,6 +241,7 @@ namespace CaptchaSharp.Services
             if (response.IsErrorCode)
                 throw new TaskReportException(response.Request);
         }
+        #endregion
 
         #region Capabilities
         public new CaptchaServiceCapabilities Capabilities =>

@@ -27,6 +27,7 @@ namespace CaptchaSharp.Services
          * 
          */
 
+        #region Getting the Balance
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
@@ -37,7 +38,9 @@ namespace CaptchaSharp.Services
 
             return decimal.Parse(response, CultureInfo.InvariantCulture);
         }
+        #endregion
 
+        #region Solve Methods
         public async override Task<CaptchaResponse> SolveTextCaptchaAsync
             (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
@@ -128,7 +131,8 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task<CaptchaResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, CancellationToken cancellationToken = default)
+        public async override Task<CaptchaResponse> SolveHCaptchaAsync
+            (string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
@@ -182,7 +186,9 @@ namespace CaptchaSharp.Services
 
             return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
         }
+        #endregion
 
+        #region Getting the result
         private async Task<CaptchaResponse> TryGetResult
             (string response, CancellationToken cancellationToken = default)
         {
@@ -209,7 +215,9 @@ namespace CaptchaSharp.Services
 
             return new CaptchaResponse(task.Id, TakeSecondSlice(response));
         }
+        #endregion
 
+        #region Reporting the solution
         public async override Task ReportSolution(string taskId, bool correct = false, CancellationToken cancellationToken = default)
         {
             var action = correct ? "reportgood" : "reportbad";
@@ -220,7 +228,9 @@ namespace CaptchaSharp.Services
             if (IsErrorCode(response))
                 throw new TaskReportException(response);
         }
+        #endregion
 
+        #region Utility methods
         private bool IsErrorCode(string response)
         {
             return !response.StartsWith("OK");
@@ -230,5 +240,6 @@ namespace CaptchaSharp.Services
         {
             return str.Split('|')[1];
         }
+        #endregion
     }
 }
