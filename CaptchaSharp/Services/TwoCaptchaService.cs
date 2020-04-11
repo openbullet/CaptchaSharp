@@ -17,13 +17,13 @@ namespace CaptchaSharp.Services
     public class TwoCaptchaService : CaptchaService
     {
         public string ApiKey { get; set; }
-        protected HttpClient httpClient;
+        private HttpClient httpClient;
 
         public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
         {
             ApiKey = apiKey;
             this.httpClient = httpClient ?? new HttpClient();
-            httpClient.BaseAddress = new Uri("http://2captcha.com");
+            this.httpClient.BaseAddress = new Uri("http://2captcha.com");
         }
 
         #region Getting the Balance
@@ -55,12 +55,6 @@ namespace CaptchaSharp.Services
                 .ConfigureAwait(false);
 
             return await TryGetResult(response, cancellationToken).ConfigureAwait(false);
-        }
-
-        public override Task<CaptchaResponse> SolveImageCaptchaAsync
-            (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
-        {
-            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, cancellationToken);
         }
 
         public async override Task<CaptchaResponse> SolveImageCaptchaAsync

@@ -37,7 +37,7 @@ namespace CaptchaSharp
         public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
             (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
-            throw new NotSupportedException();
+            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, cancellationToken);
         }
 
         public virtual Task<CaptchaResponse> SolveRecaptchaV2Async

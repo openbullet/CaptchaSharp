@@ -14,7 +14,7 @@ namespace CaptchaSharp.Services
     public class CustomTwoCaptchaService : CaptchaService
     {
         public string ApiKey { get; set; }
-        protected HttpClient httpClient;
+        private HttpClient httpClient;
 
         // The baseUri must end with a forward slash
         public CustomTwoCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null)
@@ -23,8 +23,8 @@ namespace CaptchaSharp.Services
             this.httpClient = httpClient ?? new HttpClient();
 
             // Use 2captcha.com as host header to simulate an entry in the hosts file
-            httpClient.DefaultRequestHeaders.Host = "2captcha.com";
-            httpClient.BaseAddress = baseUri;
+            this.httpClient.DefaultRequestHeaders.Host = "2captcha.com";
+            this.httpClient.BaseAddress = baseUri;
         }
 
         /*
