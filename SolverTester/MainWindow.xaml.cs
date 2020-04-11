@@ -11,7 +11,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace SolverTester
@@ -28,7 +27,7 @@ namespace SolverTester
         public string Password { get; set; } = "";
 
         // Configuration
-        public string TwoCaptchaDomain { get; set; } = "2captcha.com";
+        public string CustomTwoCaptchaBaseUri { get; set; } = "http://2captcha.com/";
         public string Timeout { get; set; } = "180";
 
         // TextCaptcha / ImageCaptcha
@@ -118,16 +117,17 @@ namespace SolverTester
         private void serviceCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ServiceType = (CaptchaServiceType)((ComboBox)e.OriginalSource).SelectedIndex;
+            configTabControl.SelectedIndex = 0;
 
             switch (ServiceType)
             {
                 case CaptchaServiceType.TwoCaptcha:
                     authTabControl.SelectedIndex = 0;
-                    configTabControl.SelectedIndex = 1;
                     break;
 
-                default:
-                    configTabControl.SelectedIndex = 0;
+                case CaptchaServiceType.CustomTwoCaptcha:
+                    authTabControl.SelectedIndex = 0;
+                    configTabControl.SelectedIndex = 1;
                     break;
             }
         }
@@ -183,7 +183,10 @@ namespace SolverTester
             switch (service)
             {
                 case CaptchaServiceType.TwoCaptcha:
-                    return new TwoCaptchaService(ApiKey) { Domain = TwoCaptchaDomain, Timeout = timeout };
+                    return new TwoCaptchaService(ApiKey) { Timeout = timeout };
+
+                case CaptchaServiceType.CustomTwoCaptcha:
+                    return new CustomTwoCaptchaService(ApiKey, new Uri(CustomTwoCaptchaBaseUri)) { Timeout = timeout };
             }
 
             throw new NotSupportedException($"Service {service} is not supported by the tester yet!");

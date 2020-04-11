@@ -55,8 +55,8 @@
             <TabItem>
                 <StackPanel>
                     <DockPanel>
-                        <TextBlock>Domain</TextBlock>
-                        <TextBox Text="{Binding TwoCaptchaDomain}"></TextBox>
+                        <TextBlock>Base Uri</TextBlock>
+                        <TextBox Text="{Binding CustomTwoCaptchaBaseUri}"></TextBox>
                     </DockPanel>
                 </StackPanel>
             </TabItem>

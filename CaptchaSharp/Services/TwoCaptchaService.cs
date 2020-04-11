@@ -17,35 +17,13 @@ namespace CaptchaSharp.Services
     public class TwoCaptchaService : CaptchaService
     {
         public string ApiKey { get; set; }
-
-        private string domain = "2captcha.com";
-        public string Domain
-        {
-            get => domain;
-            set
-            {
-                domain = value;
-                httpClient.BaseAddress = new Uri(BaseAddress);
-            }
-        }
-        
-        public bool UseSSL { get; set; } = false;
-
-        private string BaseAddress => (UseSSL ? "https" : "http") + $"://{Domain}/";
-        private HttpClient httpClient;
+        protected HttpClient httpClient;
 
         public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
         {
             ApiKey = apiKey;
             this.httpClient = httpClient ?? new HttpClient();
-            SetupHttpClient();
-        }
-
-        private void SetupHttpClient()
-        {
-            // Use 2captcha.com as host header to simulate an entry in the hosts file
-            httpClient.DefaultRequestHeaders.Host = "2captcha.com";
-            httpClient.BaseAddress = new Uri(BaseAddress);
+            httpClient.BaseAddress = new Uri("http://2captcha.com");
         }
 
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)

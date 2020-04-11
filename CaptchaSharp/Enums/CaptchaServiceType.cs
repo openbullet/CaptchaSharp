@@ -2,6 +2,7 @@
 {
     public enum CaptchaServiceType
     {
-        TwoCaptcha
+        TwoCaptcha,
+        CustomTwoCaptcha
     }
 }
