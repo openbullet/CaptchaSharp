@@ -2,7 +2,7 @@
 
 namespace CaptchaSharp.Services.TwoCaptcha
 {
-    public class TwoCaptchaResponse
+    internal class TwoCaptchaResponse
     {
         public int Status { get; set; }
         public string Request { get; set; }
