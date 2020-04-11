@@ -29,6 +29,8 @@ namespace SolverTester
         // Configuration
         public string CustomTwoCaptchaBaseUri { get; set; } = "http://2captcha.com/";
         public string Timeout { get; set; } = "180";
+        public string Proxy { get; set; } = "";
+        public ProxyType ProxyType { get; set; } = ProxyType.HTTPS;
 
         // TextCaptcha / ImageCaptcha
         public string Text { get; set; }
@@ -111,6 +113,11 @@ namespace SolverTester
                 imageCharacterSetCombobox.Items.Add(s);
 
             imageCharacterSetCombobox.SelectedIndex = (int)CharacterSet;
+
+            foreach (var p in Enum.GetNames(typeof(ProxyType)))
+                proxyTypeCombobox.Items.Add(p);
+
+            proxyTypeCombobox.SelectedIndex = (int)ProxyType;
             #endregion
         }
 
@@ -202,7 +209,7 @@ namespace SolverTester
                         CaptchaLanguageGroup = CaptchaLanguageGroup,
                         CaptchaLanguage = CaptchaLanguage
                     };
-                    return await service.SolveTextCaptchaAsync(Text, textOptions);
+                    return await service.SolveTextCaptchaAsync(Text, textOptions, MakeProxy(Proxy, ProxyType));
 
                 case CaptchaType.ImageCaptcha:
                     if (CaptchaImage == null)
@@ -220,25 +227,27 @@ namespace SolverTester
                         CaptchaLanguage = CaptchaLanguage,
                         TextInstructions = TextInstructions
                     };
-                    return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions);
+                    return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions, MakeProxy(Proxy, ProxyType));
 
                 case CaptchaType.ReCaptchaV2:
-                    return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible);
+                    return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible, MakeProxy(Proxy, ProxyType));
 
                 case CaptchaType.ReCaptchaV3:
-                    return await service.SolveRecaptchaV3Async(SiteKey, SiteUrl, Action, float.Parse(MinScore, CultureInfo.InvariantCulture));
+                    return await service.SolveRecaptchaV3Async(SiteKey, SiteUrl, Action,
+                        float.Parse(MinScore, CultureInfo.InvariantCulture), MakeProxy(Proxy, ProxyType));
 
                 case CaptchaType.FunCaptcha:
-                    return await service.SolveFuncaptchaAsync(PublicKey, ServiceUrl, SiteUrl, NoJS);
+                    return await service.SolveFuncaptchaAsync(PublicKey, ServiceUrl, SiteUrl, NoJS, MakeProxy(Proxy, ProxyType));
 
                 case CaptchaType.HCaptcha:
-                    return await service.SolveHCaptchaAsync(SiteKey, SiteUrl);
+                    return await service.SolveHCaptchaAsync(SiteKey, SiteUrl, MakeProxy(Proxy, ProxyType));
 
                 case CaptchaType.KeyCaptcha:
-                    return await service.SolveKeyCaptchaAsync(UserId, SessionId, WebServerSign1, WebServerSign2, SiteUrl);
+                    return await service.SolveKeyCaptchaAsync(UserId, SessionId, WebServerSign1, WebServerSign2,
+                        SiteUrl, MakeProxy(Proxy, ProxyType));
 
                 case CaptchaType.GeeTest:
-                    return await service.SolveGeeTestAsync(GT, Challenge, ApiServer, SiteUrl);
+                    return await service.SolveGeeTestAsync(GT, Challenge, ApiServer, SiteUrl, MakeProxy(Proxy, ProxyType));
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");
@@ -278,6 +287,27 @@ namespace SolverTester
             }
         }
 
+        private Proxy MakeProxy(string proxy, ProxyType type)
+        {
+            Proxy p = new Proxy() { Type = type };
+
+            if (proxy.Contains("@"))
+            {
+                var split = proxy.Split('@');
+                var creds = split[0];
+                var split2 = creds.Split(':');
+                p.Username = split2[0];
+                p.Password = split2[1];
+                proxy = split[1];
+            }
+
+            var split3 = proxy.Split(':');
+            p.Host = split3[0];
+            p.Port = int.Parse(split3[1]);
+
+            return p;
+        }
+
         #region Combo Boxes SelectionChanged events
         private void languageGroupCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -292,6 +322,11 @@ namespace SolverTester
         private void imageCharacterSetCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CharacterSet = (CharacterSet)((ComboBox)e.OriginalSource).SelectedIndex;
+        }
+
+        private void proxyTypeCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ProxyType = (ProxyType)((ComboBox)e.OriginalSource).SelectedIndex;
         }
         #endregion
     }

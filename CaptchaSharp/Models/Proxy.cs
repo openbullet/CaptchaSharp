@@ -2,31 +2,23 @@
 
 namespace CaptchaSharp.Models
 {
-    public struct Proxy
+    public class Proxy
     {
-        public string Host;
-        public int Port;
-        public ProxyType Type;
-        public bool RequiresAuthentication;
-        public string Username;
-        public string Password;
+        public string Host { get; set; }
+        public int Port { get; set; }
+        public ProxyType Type { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
 
-        public Proxy(string host, int port, ProxyType type = ProxyType.HTTPS)
+        public bool RequiresAuthentication => !string.IsNullOrEmpty(Username);
+
+        public Proxy() { }
+
+        public Proxy(string host, int port, ProxyType type = ProxyType.HTTPS, string username = "", string password = "")
         {
             Host = host;
             Port = port;
             Type = type;
-            RequiresAuthentication = false;
-            Username = "";
-            Password = "";
-        }
-
-        public Proxy(string host, int port, string username, string password, ProxyType type = ProxyType.HTTPS)
-        {
-            Host = host;
-            Port = port;
-            Type = type;
-            RequiresAuthentication = true;
             Username = username;
             Password = password;
         }

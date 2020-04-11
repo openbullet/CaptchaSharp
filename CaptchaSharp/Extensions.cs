@@ -58,12 +58,7 @@ namespace CaptchaSharp
             (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
         {
             var json = await GetStringAsync(httpClient, url, cancellationToken).ConfigureAwait(false);
-            var obj = JsonConvert.DeserializeObject<T>(json);
-
-            if (obj == null)
-                throw new JsonException($"Error while deserializing the response to type {typeof(T)}");
-
-            return obj;
+            return json.Deserialize<T>();
         }
 
         public static async Task<string> GetStringAsync
@@ -77,12 +72,7 @@ namespace CaptchaSharp
             (this HttpClient httpClient, string url, MultipartFormDataContent content, CancellationToken cancellationToken = default)
         {
             var json = await PostMultipartAsync(httpClient, url, content, cancellationToken).ConfigureAwait(false);
-            var obj = JsonConvert.DeserializeObject<T>(json);
-
-            if (obj == null)
-                throw new JsonException($"Error while deserializing the response to type {typeof(T)}");
-
-            return obj;
+            return json.Deserialize<T>();
         }
 
         public static async Task<string> PostMultipartAsync
@@ -102,6 +92,14 @@ namespace CaptchaSharp
         }
     }
 
+    public static class StringExtensions
+    {
+        public static T Deserialize<T>(this string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+    }
+
     public static class BoolExtensions
     {
         public static int ToInt(this bool boolean)
@@ -110,16 +108,41 @@ namespace CaptchaSharp
         }
     }
 
-    public static class IEnumerableExtensions
+    // Fluent interface
+    public static class MultipartExtensions
     {
-        public static MultipartFormDataContent ToMultipartFormDataContent(this IEnumerable<(string, string)> stringContents)
+        public static MultipartFormDataContent Add
+            (this MultipartFormDataContent multipartFormDataContent, string name, string value, bool condition = true)
         {
-            var content = new MultipartFormDataContent();
+            if (!condition)
+                return multipartFormDataContent;
+
+            multipartFormDataContent.Add(new StringContent(value), name);
+            return multipartFormDataContent;
+        }
+
+        public static MultipartFormDataContent Add
+            (this MultipartFormDataContent multipartFormDataContent, IEnumerable<(string, string)> stringContents, bool condition = true)
+        {
+            if (!condition)
+                return multipartFormDataContent;
 
             stringContents.ToList()
-                .ForEach(p => content.Add(new StringContent(p.Item2, Encoding.UTF8), p.Item1));
+                .ForEach(p => multipartFormDataContent.Add(new StringContent(p.Item2, Encoding.UTF8), p.Item1));
 
-            return content;
+            return multipartFormDataContent;
+        }
+
+        public static MultipartFormDataContent Add
+            (this MultipartFormDataContent multipartFormDataContent, IEnumerable<KeyValuePair<string, string>> stringContents, bool condition = true)
+        {
+            if (!condition)
+                return multipartFormDataContent;
+
+            stringContents.ToList()
+                .ForEach(p => multipartFormDataContent.Add(new StringContent(p.Value, Encoding.UTF8), p.Key));
+
+            return multipartFormDataContent;
         }
     }
 }

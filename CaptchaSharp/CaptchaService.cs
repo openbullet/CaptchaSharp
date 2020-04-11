@@ -23,55 +23,59 @@ namespace CaptchaSharp
         }
 
         public virtual Task<CaptchaResponse> SolveTextCaptchaAsync
-            (string text, TextCaptchaOptions options = null, CancellationToken cancellationToken = default)
+            (string text, TextCaptchaOptions options = null, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
-            (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
+            (string base64, ImageCaptchaOptions options = null, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
-            (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
+            (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, cancellationToken);
+            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, proxy, cancellationToken);
         }
 
         public virtual Task<CaptchaResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, bool invisible = false, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action, float minScore, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
         
         public virtual Task<CaptchaResponse> SolveFuncaptchaAsync
-            (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, CancellationToken cancellationToken = default)
+            (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
+            CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveHCaptchaAsync
-            (string siteKey, string siteUrl, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveKeyCaptchaAsync
-            (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl, CancellationToken cancellationToken = default)
+            (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public virtual Task<CaptchaResponse> SolveGeeTestAsync
-            (string gt, string challenge, string apiServer, string siteUrl, CancellationToken cancellationToken = default)
+            (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
+            CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

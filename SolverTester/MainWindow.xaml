@@ -67,6 +67,14 @@
             <TextBlock>Timeout (seconds)</TextBlock>
             <TextBox Text="{Binding Timeout}"></TextBox>
         </DockPanel>
+        <DockPanel>
+            <TextBlock>Proxy (user:pass@host:port)</TextBlock>
+            <TextBox Text="{Binding Proxy}"></TextBox>
+        </DockPanel>
+        <DockPanel>
+            <TextBlock>Proxy Type</TextBlock>
+            <ComboBox x:Name="proxyTypeCombobox" HorizontalAlignment="Stretch" SelectionChanged="proxyTypeCombobox_SelectionChanged" ></ComboBox>
+        </DockPanel>
         
         <!-- CAPTCHA TYPE SELECTION -->
         <ComboBox x:Name="captchaTypeCombobox" Margin="0 10 0 0" HorizontalAlignment="Stretch" SelectionChanged="captchaTypeCombobox_SelectionChanged"></ComboBox>
