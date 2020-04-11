@@ -211,7 +211,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.GetStringAsync
                 ($"res.php?key={ApiKey}&action=get&id={task.Id}", cancellationToken).ConfigureAwait(false);
 
-            if (response == "CAPCHA_NOT_READY")
+            if (response.Contains("CAPCHA_NOT_READY"))
                 return default;
 
             task.Completed = true;
