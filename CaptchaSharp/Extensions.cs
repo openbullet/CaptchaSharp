@@ -54,13 +54,6 @@ namespace CaptchaSharp
 
     public static class HttpClientExtensions
     {
-        public static async Task<T> GetJsonAsync<T>
-            (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
-        {
-            var json = await GetStringAsync(httpClient, url, cancellationToken).ConfigureAwait(false);
-            return json.Deserialize<T>();
-        }
-
         public static async Task<string> GetStringAsync
             (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
         {
@@ -68,17 +61,18 @@ namespace CaptchaSharp
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
-        public static async Task<T> PostMultipartJsonAsync<T>
-            (this HttpClient httpClient, string url, MultipartFormDataContent content, CancellationToken cancellationToken = default)
-        {
-            var json = await PostMultipartAsync(httpClient, url, content, cancellationToken).ConfigureAwait(false);
-            return json.Deserialize<T>();
-        }
-
         public static async Task<string> PostMultipartAsync
             (this HttpClient httpClient, string url, MultipartFormDataContent content, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+
+        public static async Task<string> PostJsonAsync<T>
+            (this HttpClient httpClient, string url, T content, CancellationToken cancellationToken = default)
+        {
+            var json = JsonConvert.SerializeObject(content);
+            var response = await httpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"), cancellationToken);
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 

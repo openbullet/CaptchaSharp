@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Net.Http;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Enums;
@@ -8,8 +7,6 @@ using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Services.TwoCaptcha;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System;
 
 namespace CaptchaSharp.Services
@@ -21,7 +18,7 @@ namespace CaptchaSharp.Services
         
         public bool UseJsonFlag { get; set; } = true;
         public bool AddACAOHeader { get; set; } = false;
-        public string SoftId { get; set; } = "9127154";
+        public string SoftId { get; set; } = "PLACEHOLDER";
 
         public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
         {
@@ -38,7 +35,7 @@ namespace CaptchaSharp.Services
 
             if (UseJsonFlag)
             {
-                var tcResponse = response.Deserialize<TwoCaptchaResponse>();
+                var tcResponse = response.Deserialize<Response>();
 
                 if (tcResponse.IsErrorCode)
                     throw new BadAuthenticationException(tcResponse.Request);
@@ -56,8 +53,8 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Solve Methods
-        public async override Task<CaptchaResponse> SolveTextCaptchaAsync
-            (string text, TextCaptchaOptions options = default, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public async override Task<StringResponse> SolveTextCaptchaAsync
+            (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
@@ -67,18 +64,18 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertCapabilities(options))
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertCapabilities(options)),
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.TextCaptcha, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.TextCaptcha, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
         }
 
-        public async override Task<CaptchaResponse> SolveImageCaptchaAsync
-            (string base64, ImageCaptchaOptions options = null, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public async override Task<StringResponse> SolveImageCaptchaAsync
+            (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
@@ -89,17 +86,17 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertCapabilities(options))
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertCapabilities(options)),
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
         }
 
-        public async override Task<CaptchaResponse> SolveRecaptchaV2Async
+        public async override Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartAsync
@@ -117,12 +114,13 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
         }
 
-        public async override Task<CaptchaResponse> SolveRecaptchaV3Async
+        public async override Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
@@ -143,12 +141,13 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
         }
 
-        public async override Task<CaptchaResponse> SolveFuncaptchaAsync
+        public async override Task<StringResponse> SolveFuncaptchaAsync
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
@@ -168,12 +167,13 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
         }
 
-        public async override Task<CaptchaResponse> SolveHCaptchaAsync
+        public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartAsync
@@ -190,12 +190,13 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
         }
 
-        public async override Task<CaptchaResponse> SolveKeyCaptchaAsync
+        public async override Task<StringResponse> SolveKeyCaptchaAsync
             (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
             Proxy proxy = null, CancellationToken cancellationToken = default)
         {
@@ -216,12 +217,13 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.KeyCaptcha, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.KeyCaptcha, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
         }
 
-        public async override Task<CaptchaResponse> SolveGeeTestAsync
+        public async override Task<GeeTestResponse> SolveGeeTestAsync
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
@@ -241,36 +243,38 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return UseJsonFlag
-                ? await TryGetResult(response.Deserialize<TwoCaptchaResponse>(), cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, cancellationToken).ConfigureAwait(false);
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false)
+                ) as GeeTestResponse;
         }
         #endregion
 
         #region Getting the result
         private async Task<CaptchaResponse> TryGetResult
-            (TwoCaptchaResponse response, CancellationToken cancellationToken = default)
+            (Response response, CaptchaType type, CancellationToken cancellationToken = default)
         {
             if (response.IsErrorCode)
                 throw new TaskCreationException(response.Request);
 
-            var task = new CaptchaTask(response.Request);
+            var task = new CaptchaTask(response.Request, type);
 
             return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<CaptchaResponse> TryGetResult
-            (string response, CancellationToken cancellationToken = default)
+            (string response, CaptchaType type, CancellationToken cancellationToken = default)
         {
             if (IsErrorCode(response))
                 throw new TaskCreationException(response);
 
-            var task = new CaptchaTask(TakeSecondSlice(response));
+            var task = new CaptchaTask(TakeSecondSlice(response), type);
 
             return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
-        protected async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
+        internal async override Task<CaptchaResponse> CheckResult
+            (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
                 ($"res.php?key={ApiKey}&action=get&id={task.Id}&json=" + UseJsonFlag.ToInt().ToString(), cancellationToken).ConfigureAwait(false);
@@ -282,25 +286,40 @@ namespace CaptchaSharp.Services
 
             if (UseJsonFlag)
             {
-                var tcResponse = response.Deserialize<TwoCaptchaResponse>();
+                var tcResponse = response.Deserialize<Response>();
                 
                 if (tcResponse.IsErrorCode)
                     throw new TaskSolutionException(tcResponse.Request);
 
-                return new CaptchaResponse(task.Id, tcResponse.Request);
+                switch (task.Type)
+                {
+                    case CaptchaType.GeeTest:
+                        return tcResponse.Request.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id);
+
+                    default:
+                        return new StringResponse { Id = task.Id, Response = tcResponse.Request };
+                }
             }
             else
             {
                 if (IsErrorCode(response))
                     throw new TaskSolutionException(response);
 
-                return new CaptchaResponse(task.Id, TakeSecondSlice(response));
+                switch (task.Type)
+                {
+                    case CaptchaType.GeeTest:
+                        return response.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id);
+
+                    default:
+                        return new StringResponse { Id = task.Id, Response = response };
+                }
             }
         }
         #endregion
 
         #region Reporting the solution
-        public async override Task ReportSolution(string taskId, bool correct = false, CancellationToken cancellationToken = default)
+        public async override Task ReportSolution
+            (int taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             var action = correct ? "reportgood" : "reportbad";
 
@@ -309,7 +328,7 @@ namespace CaptchaSharp.Services
 
             if (UseJsonFlag)
             {
-                var tcResponse = response.Deserialize<TwoCaptchaResponse>();
+                var tcResponse = response.Deserialize<Response>();
 
                 if (tcResponse.IsErrorCode)
                     throw new TaskReportException(tcResponse.Request);
@@ -323,7 +342,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Proxies
-        public IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
+        private IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
         {
             if (proxy == null)
                 return new (string, string)[] { };
@@ -363,7 +382,7 @@ namespace CaptchaSharp.Services
             CaptchaServiceCapabilities.MaxLength |
             CaptchaServiceCapabilities.Instructions;
 
-        protected override IEnumerable<(string, string)> ConvertCapabilities(TextCaptchaOptions options)
+        private IEnumerable<(string, string)> ConvertCapabilities(TextCaptchaOptions options)
         {
             // If null, don't return any parameters
             if (options == null)
@@ -380,7 +399,7 @@ namespace CaptchaSharp.Services
             return capabilities;
         }
 
-        protected override IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
+        private IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
         {
             // If null, don't return any parameters
             if (options == null)

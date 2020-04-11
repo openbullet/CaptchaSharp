@@ -1,16 +1,21 @@
-﻿using System;
+﻿using CaptchaSharp.Enums;
+using System;
 
 namespace CaptchaSharp.Models
 {
-    public class CaptchaTask
+    internal class CaptchaTask
     {
         public DateTime CreationDate { get; }
-        public string Id { get; }
+        public CaptchaType Type { get; set; }
+        public int Id { get; }
         public bool Completed { get; set; } = false;
 
-        public CaptchaTask(string id)
+        public CaptchaTask(string id, CaptchaType type) : this(int.Parse(id), type) { }
+
+        public CaptchaTask(int id, CaptchaType type)
         {
             Id = id;
+            Type = type;
             CreationDate = DateTime.Now;
         }
     }

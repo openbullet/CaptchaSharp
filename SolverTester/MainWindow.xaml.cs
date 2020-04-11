@@ -174,8 +174,18 @@ namespace SolverTester
         {
             try
             {
-                var solution = await Solve(GetService(ServiceType), CaptchaType);
-                MessageBox.Show($"The captcha was solved successfully! Response: {solution.Response}");
+                var response = await Solve(GetService(ServiceType), CaptchaType);
+
+                switch (response)
+                {
+                    case StringResponse r:
+                        MessageBox.Show($"The captcha was solved successfully!\r\nResponse: {r.Response}");
+                        break;
+
+                    case GeeTestResponse r:
+                        MessageBox.Show($"The captcha was solved successfully!\r\nChallenge: {r.Challenge}\r\nValidate: {r.Validate}\r\nSecCode: {r.SecCode}");
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -209,7 +219,7 @@ namespace SolverTester
                         CaptchaLanguageGroup = CaptchaLanguageGroup,
                         CaptchaLanguage = CaptchaLanguage
                     };
-                    return await service.SolveTextCaptchaAsync(Text, textOptions, MakeProxy(Proxy, ProxyType));
+                    return await service.SolveTextCaptchaAsync(Text, textOptions);
 
                 case CaptchaType.ImageCaptcha:
                     if (CaptchaImage == null)
@@ -227,7 +237,7 @@ namespace SolverTester
                         CaptchaLanguage = CaptchaLanguage,
                         TextInstructions = TextInstructions
                     };
-                    return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions, MakeProxy(Proxy, ProxyType));
+                    return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions);
 
                 case CaptchaType.ReCaptchaV2:
                     return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible, MakeProxy(Proxy, ProxyType));

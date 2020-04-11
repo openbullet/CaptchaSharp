@@ -14,7 +14,7 @@ namespace CaptchaSharp
     {
         public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(3);
 
-        public CaptchaServiceCapabilities Capabilities => CaptchaServiceCapabilities.None;
+        public virtual CaptchaServiceCapabilities Capabilities => CaptchaServiceCapabilities.None;
 
         public virtual Task<decimal> GetBalanceAsync
             (CancellationToken cancellationToken = default)
@@ -22,70 +22,71 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
-        public virtual Task<CaptchaResponse> SolveTextCaptchaAsync
-            (string text, TextCaptchaOptions options = null, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public virtual Task<StringResponse> SolveTextCaptchaAsync
+            (string text, TextCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
-            (string base64, ImageCaptchaOptions options = null, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public virtual Task<StringResponse> SolveImageCaptchaAsync
+            (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public virtual Task<CaptchaResponse> SolveImageCaptchaAsync
+        public virtual Task<StringResponse> SolveImageCaptchaAsync
             (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
-            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, proxy, cancellationToken);
+            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, cancellationToken);
         }
 
-        public virtual Task<CaptchaResponse> SolveRecaptchaV2Async
+        public virtual Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public virtual Task<CaptchaResponse> SolveRecaptchaV3Async
+        public virtual Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
         
-        public virtual Task<CaptchaResponse> SolveFuncaptchaAsync
+        public virtual Task<StringResponse> SolveFuncaptchaAsync
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public virtual Task<CaptchaResponse> SolveHCaptchaAsync
+        public virtual Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public virtual Task<CaptchaResponse> SolveKeyCaptchaAsync
+        public virtual Task<StringResponse> SolveKeyCaptchaAsync
             (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
             Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public virtual Task<CaptchaResponse> SolveGeeTestAsync
+        public virtual Task<GeeTestResponse> SolveGeeTestAsync
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public virtual Task ReportSolution(string taskId, bool correct = false, CancellationToken cancellationToken = default)
+        public virtual Task ReportSolution
+            (int id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        protected async Task<CaptchaResponse> TryGetResult
+        internal async Task<CaptchaResponse> TryGetResult
             (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var start = DateTime.Now;
@@ -109,18 +110,8 @@ namespace CaptchaSharp
             return result;
         }
 
-        protected virtual Task<CaptchaResponse> CheckResult
+        internal virtual Task<CaptchaResponse> CheckResult
             (CaptchaTask task, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual IEnumerable<(string, string)> ConvertCapabilities(TextCaptchaOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
         {
             throw new NotImplementedException();
         }
@@ -128,6 +119,25 @@ namespace CaptchaSharp
         private async Task Delay(int milliseconds)
         {
             await Task.Run(() => Thread.Sleep(milliseconds));
+        }
+
+        public Bitmap ConvertTextToImage
+            (string txt, string fontname, int fontsize, Color bgcolor, Color fcolor, int width, int Height)
+        {
+            Bitmap bmp = new Bitmap(width, Height);
+            using (Graphics graphics = Graphics.FromImage(bmp))
+            {
+
+                Font font = new Font(fontname, fontsize);
+                graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, bmp.Width, bmp.Height);
+                graphics.DrawString(txt, font, new SolidBrush(fcolor), 0, 0);
+                graphics.Flush();
+                font.Dispose();
+                graphics.Dispose();
+
+
+            }
+            return bmp;
         }
     }
 }
