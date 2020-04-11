@@ -1,5 +1,8 @@
-﻿namespace CaptchaSharp.Enums
+﻿using System;
+
+namespace CaptchaSharp.Enums
 {
+    [Flags]
     public enum CaptchaType
     {
         TextCaptcha,

@@ -1,4 +1,5 @@
-﻿using CaptchaSharp.Exceptions;
+﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
 using System.Drawing;
@@ -11,17 +12,11 @@ using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services
 {
-    public class CustomTwoCaptchaService : CaptchaService
+    public class CustomTwoCaptchaService : TwoCaptchaService
     {
-        public string ApiKey { get; set; }
-        private HttpClient httpClient;
-
         // The baseUri must end with a forward slash
-        public CustomTwoCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null)
+        public CustomTwoCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null) : base(apiKey, httpClient)
         {
-            ApiKey = apiKey;
-            this.httpClient = httpClient ?? new HttpClient();
-
             // Use 2captcha.com as host header to simulate an entry in the hosts file
             this.httpClient.DefaultRequestHeaders.Host = "2captcha.com";
             this.httpClient.BaseAddress = baseUri;
@@ -50,6 +45,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveTextCaptchaAsync
             (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.TextCaptcha))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -66,6 +64,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.ImageCaptcha))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -83,6 +84,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.ReCaptchaV2))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -101,6 +105,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.ReCaptchaV3))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -121,6 +128,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveFuncaptchaAsync
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.FunCaptcha))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -140,6 +150,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.HCaptcha))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -157,6 +170,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveKeyCaptchaAsync
             (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.KeyCaptcha))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -177,6 +193,9 @@ namespace CaptchaSharp.Services
         public async override Task<CaptchaResponse> SolveGeeTestAsync
             (string gt, string challenge, string apiServer, string siteUrl, CancellationToken cancellationToken = default)
         {
+            if (!SupportedCaptchaTypes.HasFlag(CaptchaType.GeeTest))
+                throw new NotSupportedException();
+
             var response = await httpClient.PostMultipartAsync
                 ("in.php",
                 new (string, string)[] {
@@ -246,6 +265,18 @@ namespace CaptchaSharp.Services
         {
             return str.Split('|')[1];
         }
+        #endregion
+
+        #region Supported Types
+        public CaptchaType SupportedCaptchaTypes { get; set; } =
+            CaptchaType.TextCaptcha |
+            CaptchaType.ImageCaptcha |
+            CaptchaType.ReCaptchaV2 |
+            CaptchaType.ReCaptchaV3 |
+            CaptchaType.FunCaptcha |
+            CaptchaType.HCaptcha |
+            CaptchaType.KeyCaptcha |
+            CaptchaType.GeeTest;
         #endregion
     }
 }

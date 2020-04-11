@@ -17,7 +17,7 @@ namespace CaptchaSharp.Services
     public class TwoCaptchaService : CaptchaService
     {
         public string ApiKey { get; set; }
-        private HttpClient httpClient;
+        protected HttpClient httpClient;
 
         public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
         {
