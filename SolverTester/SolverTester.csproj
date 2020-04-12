@@ -103,6 +103,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CaptchaSharp.Services.More\CaptchaSharp.Services.More.csproj">
+      <Project>{16e252fc-b2c6-40c9-9330-809bd84a2941}</Project>
+      <Name>CaptchaSharp.Services.More</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CaptchaSharp\CaptchaSharp.csproj">
       <Project>{cab6f51c-5d7f-40f3-af14-bc2fd6fb40d0}</Project>
       <Name>CaptchaSharp</Name>

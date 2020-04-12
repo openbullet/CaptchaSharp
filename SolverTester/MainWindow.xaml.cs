@@ -2,11 +2,13 @@
 using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using CaptchaSharp.Services;
+using CaptchaSharp.Services.More;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace SolverTester
 {
     public partial class MainWindow : Window
     {
-        public CaptchaServiceType ServiceType { get; set; } = CaptchaServiceType.TwoCaptcha;
+        public string ServiceTypeName { get; set; } = "TwoCaptchaService";
         public CaptchaType CaptchaType { get; set; } = CaptchaType.ReCaptchaV2;
         public Bitmap CaptchaImage { get; set; } = null;
 
@@ -83,10 +85,10 @@ namespace SolverTester
             DataContext = this;
 
             #region Setup Combo Boxes
-            foreach (var s in Enum.GetNames(typeof(CaptchaServiceType)))
+            foreach (var s in GetServiceTypes().Select(t => t.Name))
                 serviceCombobox.Items.Add(s);
 
-            serviceCombobox.SelectedIndex = (int)ServiceType;
+            serviceCombobox.SelectedValue = ServiceTypeName;
 
             foreach (var c in Enum.GetNames(typeof(CaptchaType)))
                 captchaTypeCombobox.Items.Add(c);
@@ -125,28 +127,19 @@ namespace SolverTester
 
         private void serviceCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ServiceType = (CaptchaServiceType)((ComboBox)e.OriginalSource).SelectedIndex;
+            ServiceTypeName = ((ComboBox)e.OriginalSource).SelectedValue as string;
             configTabControl.SelectedIndex = 0;
+            var serviceType = GetServiceType(ServiceTypeName);
 
-            switch (ServiceType)
-            {
-                case CaptchaServiceType.TwoCaptcha:
-                case CaptchaServiceType.AntiCaptcha:
-                case CaptchaServiceType.RuCaptcha:
-                case CaptchaServiceType.AzCaptcha:
-                    authTabControl.SelectedIndex = 0;
-                    break;
+            if (serviceType == typeof(CustomTwoCaptchaService))
+                configTabControl.SelectedIndex = 1;
+            else
+                configTabControl.SelectedIndex = 0;
 
-                case CaptchaServiceType.CustomTwoCaptcha:
-                    authTabControl.SelectedIndex = 0;
-                    configTabControl.SelectedIndex = 1;
-                    break;
-
-                case CaptchaServiceType.DeathByCaptcha:
-                    authTabControl.SelectedIndex = 1;
-                    configTabControl.SelectedIndex = 0;
-                    break;
-            }
+            if (IsApiKeyService(serviceType))
+                authTabControl.SelectedIndex = 0;
+            else
+                authTabControl.SelectedIndex = 1;
         }
 
         private void captchaTypeCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -172,7 +165,7 @@ namespace SolverTester
         {
             try
             {
-                MessageBox.Show($"The balance is {await GetService(ServiceType).GetBalanceAsync()}");
+                MessageBox.Show($"The balance is {await GetService(ServiceTypeName).GetBalanceAsync()}");
             }
             catch (Exception ex)
             {
@@ -184,7 +177,7 @@ namespace SolverTester
         {
             try
             {
-                var response = await Solve(GetService(ServiceType), CaptchaType);
+                var response = await Solve(GetService(ServiceTypeName), CaptchaType);
 
                 switch (response)
                 {
@@ -203,32 +196,55 @@ namespace SolverTester
             }
         }
 
-        private CaptchaService GetService(CaptchaServiceType service)
+        private IEnumerable<Type> GetServiceTypes()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
+                .Where(t => t.IsSubclassOf(typeof(CaptchaService)));
+        }
+
+        private Type GetServiceType(string typeName)
+        {
+            return GetServiceTypes().First(t => t.Name == typeName);
+        }
+
+        private bool IsApiKeyService(Type type)
+        {
+            try { return type.GetConstructors().Any(c => c.GetParameters().First().Name == "apiKey"); }
+            catch { return false; }
+        }
+
+        private bool IsUserPassService(Type type)
+        {
+            try { return type.GetConstructors().Any(c => c.GetParameters().First().Name == "username"); }
+            catch { return false; }
+        }
+
+        private CaptchaService GetService(string serviceTypeName)
+        {
+            return GetService(GetServiceType(serviceTypeName));
+        }
+
+        private CaptchaService GetService(Type serviceType)
         {
             var timeout = TimeSpan.FromSeconds(double.Parse(Timeout));
+            CaptchaService service;
 
-            switch (service)
+            if (serviceType == typeof(CustomTwoCaptchaService))
             {
-                case CaptchaServiceType.TwoCaptcha:
-                    return new TwoCaptchaService(ApiKey) { Timeout = timeout };
-
-                case CaptchaServiceType.CustomTwoCaptcha:
-                    return new CustomTwoCaptchaService(ApiKey, new Uri(CustomTwoCaptchaBaseUri)) { Timeout = timeout };
-
-                case CaptchaServiceType.AntiCaptcha:
-                    return new AntiCaptchaService(ApiKey) { Timeout = timeout };
-
-                case CaptchaServiceType.DeathByCaptcha:
-                    return new DeathByCaptchaService(Username, Password) { Timeout = timeout };
-
-                case CaptchaServiceType.RuCaptcha:
-                    return new RuCaptchaService(ApiKey) { Timeout = timeout };
-
-                case CaptchaServiceType.AzCaptcha:
-                    return new AzCaptchaService(ApiKey) { Timeout = timeout };
+                service = Activator.CreateInstance(serviceType, new object[] { ApiKey, new Uri(CustomTwoCaptchaBaseUri), null }) as CaptchaService;
+            }
+            else
+            {
+                if (IsApiKeyService(serviceType))
+                    service = Activator.CreateInstance(serviceType, new object[] { ApiKey, null }) as CaptchaService;
+                else if (IsUserPassService(serviceType))
+                    service = Activator.CreateInstance(serviceType, new object[] { Username, Password, null }) as CaptchaService;
+                else
+                    throw new NotSupportedException($"{serviceType} is not supported by the tester yet!");
             }
 
-            throw new NotSupportedException($"Service {service} is not supported by the tester yet!");
+            service.Timeout = timeout;
+            return service;
         }
 
         private async Task<CaptchaResponse> Solve(CaptchaService service, CaptchaType captchaType)

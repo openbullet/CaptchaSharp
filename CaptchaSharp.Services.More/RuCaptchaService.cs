@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace CaptchaSharp.Services
+namespace CaptchaSharp.Services.More
 {
     public class RuCaptchaService : CustomTwoCaptchaService
     {
