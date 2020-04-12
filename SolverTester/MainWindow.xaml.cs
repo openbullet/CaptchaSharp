@@ -129,6 +129,7 @@ namespace SolverTester
             switch (ServiceType)
             {
                 case CaptchaServiceType.TwoCaptcha:
+                case CaptchaServiceType.AntiCaptcha:
                     authTabControl.SelectedIndex = 0;
                     break;
 

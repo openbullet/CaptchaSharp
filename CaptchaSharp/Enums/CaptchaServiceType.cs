@@ -3,6 +3,7 @@
     public enum CaptchaServiceType
     {
         TwoCaptcha,
-        CustomTwoCaptcha
+        CustomTwoCaptcha,
+        AntiCaptcha
     }
 }
