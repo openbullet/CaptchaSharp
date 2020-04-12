@@ -264,6 +264,15 @@ namespace CaptchaSharp.Services
                 cancellationToken).ConfigureAwait(false);
 
             var result = response.Deserialize<GetTaskResultResponse>();
+
+            if (!result.IsReady)
+                return default;
+
+            task.Completed = true;
+
+            if (result.IsError)
+                throw new TaskSolutionException($"{result.ErrorCode}: {result.ErrorDescription}");
+
             var jObject = JObject.Parse(response);
             var solution = jObject["solution"];
 
@@ -290,14 +299,6 @@ namespace CaptchaSharp.Services
                 default:
                     throw new NotSupportedException();
             }
-
-            if (!result.IsReady)
-                return default;
-
-            task.Completed = true;
-
-            if (result.IsError)
-                throw new TaskSolutionException($"{result.ErrorCode}: {result.ErrorDescription}");
 
             return result.Solution.ToCaptchaResponse(task.Id);
         }
