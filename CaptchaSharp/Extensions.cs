@@ -1,5 +1,6 @@
 ﻿using CaptchaSharp.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -70,9 +71,14 @@ namespace CaptchaSharp
         }
 
         public static async Task<string> PostJsonAsync<T>
-            (this HttpClient httpClient, string url, T content, CancellationToken cancellationToken = default)
+            (this HttpClient httpClient, string url, T content, CancellationToken cancellationToken = default, bool lowercaseKeys = true)
         {
-            var json = JsonConvert.SerializeObject(content);
+            var settings = new JsonSerializerSettings();
+
+            if (lowercaseKeys)
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            
+            var json = JsonConvert.SerializeObject(content, settings);
             var response = await httpClient.PostAsync(url, new StringContentWithoutCharset(json, "application/json"), cancellationToken);
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
