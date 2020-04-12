@@ -12,6 +12,6 @@ namespace CaptchaSharp.Services.AntiCaptcha.Responses
         public int EndTime { get; set; }
         public int SolveCount { get; set; }
 
-        public bool IsReady => Status == "ready";
+        public bool IsReady => Status != "processing";
     }
 }
