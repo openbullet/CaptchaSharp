@@ -71,11 +71,11 @@ namespace CaptchaSharp
         }
 
         public static async Task<string> PostJsonAsync<T>
-            (this HttpClient httpClient, string url, T content, CancellationToken cancellationToken = default, bool lowercaseKeys = true)
+            (this HttpClient httpClient, string url, T content, CancellationToken cancellationToken = default, bool camelizeKeys = true)
         {
             var settings = new JsonSerializerSettings();
 
-            if (lowercaseKeys)
+            if (camelizeKeys)
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             
             var json = JsonConvert.SerializeObject(content, settings);
