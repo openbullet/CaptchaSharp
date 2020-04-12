@@ -44,10 +44,11 @@ namespace CaptchaSharp.Services
             }
             else
             {
-                if (IsErrorCode(response))
-                    throw new BadAuthenticationException(response);
+                if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal balance))
+                    return balance;
 
-                return decimal.Parse(response, CultureInfo.InvariantCulture);
+                else
+                    throw new BadAuthenticationException(response);
             }
         }
         #endregion
