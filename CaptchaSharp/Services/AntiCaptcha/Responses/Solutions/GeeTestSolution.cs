@@ -2,13 +2,13 @@
 
 namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
 {
-    internal class GeeTestSolution : ITaskSolution
+    internal class GeeTestSolution : Solution
     {
         public string Challenge { get; set; }
         public string Validate { get; set; }
         public string SecCode { get; set; }
 
-        public CaptchaResponse ToCaptchaResponse(long id)
+        public override CaptchaResponse ToCaptchaResponse(long id)
         {
             return new GeeTestResponse()
             {

@@ -1,10 +1,12 @@
-﻿namespace CaptchaSharp.Services.AntiCaptcha.Responses
+﻿using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
+
+namespace CaptchaSharp.Services.AntiCaptcha.Responses
 {
-    internal abstract class GetTaskResultResponse<T> : Response
+    internal class GetTaskResultResponse : Response
     {
         public string Status { get; set; }
         public double Cost { get; set; }
-        public T Solution { get; set; }
+        public Solution Solution { get; set; }
         public string Ip { get; set; }
         public int CreateTime { get; set; }
         public int EndTime { get; set; }

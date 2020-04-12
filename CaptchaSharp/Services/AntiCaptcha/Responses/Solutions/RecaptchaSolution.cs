@@ -2,11 +2,11 @@
 
 namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
 {
-    internal class RecaptchaSolution : ITaskSolution
+    internal class RecaptchaSolution : Solution
     {
         public string GRecaptchaResponse { get; set; }
 
-        public CaptchaResponse ToCaptchaResponse(long id)
+        public override CaptchaResponse ToCaptchaResponse(long id)
         {
             return new StringResponse
             {

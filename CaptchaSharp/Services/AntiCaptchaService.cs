@@ -263,40 +263,7 @@ namespace CaptchaSharp.Services
                 new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = (int)task.Id },
                 cancellationToken).ConfigureAwait(false);
 
-            var result = response.Deserialize<GetTaskResultResponse<object>>();
-            ITaskSolution solution;
-
-            switch (task.Type)
-            {
-                case CaptchaType.ReCaptchaV2:
-                case CaptchaType.ReCaptchaV3:
-                case CaptchaType.HCaptcha:
-                    solution = response
-                        .Deserialize<GetTaskResultResponse<RecaptchaSolution>>()
-                        .Solution;
-                    break;
-
-                case CaptchaType.FunCaptcha:
-                    solution = response
-                        .Deserialize<GetTaskResultResponse<FuncaptchaSolution>>()
-                        .Solution;
-                    break;
-
-                case CaptchaType.ImageCaptcha:
-                    solution = response
-                        .Deserialize<GetTaskResultResponse<ImageCaptchaSolution>>()
-                        .Solution;
-                    break;
-
-                case CaptchaType.GeeTest:
-                    solution = response
-                        .Deserialize<GetTaskResultResponse<GeeTestSolution>>()
-                        .Solution;
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
+            var result = response.Deserialize<GetTaskResultResponse>();
 
             if (!result.IsReady)
                 return default;
@@ -306,7 +273,7 @@ namespace CaptchaSharp.Services
             if (result.IsError)
                 throw new TaskSolutionException($"{result.ErrorCode}: {result.ErrorDescription}");
 
-            return solution.ToCaptchaResponse(task.Id);
+            return result.Solution.ToCaptchaResponse(task.Id);
         }
         #endregion
 

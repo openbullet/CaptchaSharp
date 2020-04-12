@@ -2,11 +2,11 @@
 
 namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
 {
-    internal class FuncaptchaSolution : ITaskSolution
+    internal class FuncaptchaSolution : Solution
     {
         public string Token { get; set; }
 
-        public CaptchaResponse ToCaptchaResponse(long id)
+        public override CaptchaResponse ToCaptchaResponse(long id)
         {
             return new StringResponse
             {
