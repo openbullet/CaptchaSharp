@@ -4,7 +4,9 @@ using CaptchaSharp.Models;
 using CaptchaSharp.Services.AntiCaptcha.Requests;
 using CaptchaSharp.Services.AntiCaptcha.Responses;
 using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -18,6 +20,7 @@ namespace CaptchaSharp.Services
         protected HttpClient httpClient;
 
         public int SoftId { get; set; }
+        private JsonSerializer serializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
         public AntiCaptchaService(string apiKey, HttpClient httpClient = null)
         {
@@ -68,7 +71,7 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("NoCaptchaTask", proxy));
+            var content = JObject.FromObject(CreateCaptchaRequest("NoCaptchaTask", proxy), serializer);
             content.Add("websiteURL", siteUrl);
             content.Add("websiteKey", siteKey);
             content.Add("isInvisible", invisible);
@@ -93,7 +96,7 @@ namespace CaptchaSharp.Services
             if (minScore != 0.3F && minScore != 0.7F && minScore != 0.9F)
                 throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
 
-            var content = JObject.FromObject(CreateCaptchaRequest("RecaptchaV3Task", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("RecaptchaV3Task", null), serializer);
             content.Add("websiteURL", siteUrl);
             content.Add("websiteKey", siteKey);
             content.Add("pageAction", action);
@@ -113,7 +116,7 @@ namespace CaptchaSharp.Services
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("FunCaptchaTask", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("FunCaptchaTask", null), serializer);
             content.Add("websiteURL", siteUrl);
             content.Add("websitePublicKey", publicKey);
             content.Add("funcaptchaApiJSSubdomain", serviceUrl);
@@ -131,7 +134,7 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("HCaptchaTask", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("HCaptchaTask", null), serializer);
             content.Add("websiteURL", siteUrl);
             content.Add("websiteKey", siteKey);
 
@@ -149,7 +152,7 @@ namespace CaptchaSharp.Services
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("GeeTestTask", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("GeeTestTask", null), serializer);
             content.Add("websiteURL", siteUrl);
             content.Add("gt", gt);
             content.Add("challenge", challenge);
