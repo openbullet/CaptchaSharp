@@ -132,6 +132,8 @@ namespace SolverTester
             {
                 case CaptchaServiceType.TwoCaptcha:
                 case CaptchaServiceType.AntiCaptcha:
+                case CaptchaServiceType.RuCaptcha:
+                case CaptchaServiceType.AzCaptcha:
                     authTabControl.SelectedIndex = 0;
                     break;
 
@@ -218,6 +220,12 @@ namespace SolverTester
 
                 case CaptchaServiceType.DeathByCaptcha:
                     return new DeathByCaptchaService(Username, Password) { Timeout = timeout };
+
+                case CaptchaServiceType.RuCaptcha:
+                    return new RuCaptchaService(ApiKey) { Timeout = timeout };
+
+                case CaptchaServiceType.AzCaptcha:
+                    return new AzCaptchaService(ApiKey) { Timeout = timeout };
             }
 
             throw new NotSupportedException($"Service {service} is not supported by the tester yet!");

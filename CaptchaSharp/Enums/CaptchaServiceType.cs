@@ -5,6 +5,8 @@
         TwoCaptcha,
         CustomTwoCaptcha,
         AntiCaptcha,
-        DeathByCaptcha
+        DeathByCaptcha,
+        RuCaptcha,
+        AzCaptcha
     }
 }
