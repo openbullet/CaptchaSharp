@@ -31,6 +31,7 @@ namespace SolverTester
         public string Timeout { get; set; } = "180";
         public string Proxy { get; set; } = "";
         public ProxyType ProxyType { get; set; } = ProxyType.HTTPS;
+        public string UserAgent { get; set; } = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
 
         // TextCaptcha / ImageCaptcha
         public string Text { get; set; }
@@ -306,7 +307,7 @@ namespace SolverTester
             if (proxy == string.Empty)
                 return null;
 
-            Proxy p = new Proxy() { Type = type };
+            Proxy p = new Proxy() { Type = type, UserAgent = UserAgent };
 
             if (proxy.Contains("@"))
             {
