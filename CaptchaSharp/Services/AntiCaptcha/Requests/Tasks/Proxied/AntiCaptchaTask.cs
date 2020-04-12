@@ -33,6 +33,9 @@ namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied
 
         private void SetCookies(IEnumerable<(string, string)> cookies)
         {
+            if (cookies == null)
+                return;
+
             Cookies = string.Join("; ", cookies.Select(c => $"{c.Item1}={c.Item2}"));
         }
     }
