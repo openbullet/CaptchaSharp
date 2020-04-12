@@ -4,6 +4,7 @@
     {
         TwoCaptcha,
         CustomTwoCaptcha,
-        AntiCaptcha
+        AntiCaptcha,
+        DeathByCaptcha
     }
 }

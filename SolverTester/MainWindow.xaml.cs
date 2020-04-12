@@ -139,6 +139,11 @@ namespace SolverTester
                     authTabControl.SelectedIndex = 0;
                     configTabControl.SelectedIndex = 1;
                     break;
+
+                case CaptchaServiceType.DeathByCaptcha:
+                    authTabControl.SelectedIndex = 1;
+                    configTabControl.SelectedIndex = 0;
+                    break;
             }
         }
 
@@ -210,6 +215,9 @@ namespace SolverTester
 
                 case CaptchaServiceType.AntiCaptcha:
                     return new AntiCaptchaService(ApiKey) { Timeout = timeout };
+
+                case CaptchaServiceType.DeathByCaptcha:
+                    return new DeathByCaptchaService(Username, Password) { Timeout = timeout };
             }
 
             throw new NotSupportedException($"Service {service} is not supported by the tester yet!");
