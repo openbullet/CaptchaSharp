@@ -53,7 +53,7 @@ namespace CaptchaSharp.Services
                 AddCapabilities(new ImageCaptchaRequest()
                     {
                         ClientKey = ApiKey,
-                        Type = "ImageToTextTask",
+                        Task = "ImageToTextTask",
                         Body = base64,
                         SoftId = SoftId
                     }, options),
@@ -65,9 +65,10 @@ namespace CaptchaSharp.Services
         }
 
         public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
+            CancellationToken cancellationToken = default)
         {
-            var content = new JObject(CreateCaptchaRequest("NoCaptchaTask", proxy));
+            var content = JObject.FromObject(CreateCaptchaRequest("NoCaptchaTask", proxy));
             content.Add("websiteURL", siteUrl);
             content.Add("websiteKey", siteKey);
             content.Add("isInvisible", invisible);
@@ -92,7 +93,7 @@ namespace CaptchaSharp.Services
             if (minScore != 0.3F && minScore != 0.7F && minScore != 0.9F)
                 throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
 
-            var content = new JObject(CreateCaptchaRequest("RecaptchaV3Task", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("RecaptchaV3Task", null));
             content.Add("websiteURL", siteUrl);
             content.Add("websiteKey", siteKey);
             content.Add("pageAction", action);
@@ -112,7 +113,7 @@ namespace CaptchaSharp.Services
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = new JObject(CreateCaptchaRequest("FunCaptchaTask", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("FunCaptchaTask", null));
             content.Add("websiteURL", siteUrl);
             content.Add("websitePublicKey", publicKey);
             content.Add("funcaptchaApiJSSubdomain", serviceUrl);
@@ -130,7 +131,7 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            var content = new JObject(CreateCaptchaRequest("HCaptchaTask", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("HCaptchaTask", null));
             content.Add("websiteURL", siteUrl);
             content.Add("websiteKey", siteKey);
 
@@ -148,7 +149,7 @@ namespace CaptchaSharp.Services
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = new JObject(CreateCaptchaRequest("GeeTestTask", null));
+            var content = JObject.FromObject(CreateCaptchaRequest("GeeTestTask", null));
             content.Add("websiteURL", siteUrl);
             content.Add("gt", gt);
             content.Add("challenge", challenge);
@@ -279,7 +280,7 @@ namespace CaptchaSharp.Services
                 return new CaptchaTaskProxyRequest()
                 {
                     ClientKey = ApiKey,
-                    Type = type
+                    Task = type
                 }
                 .SetProxy(proxy);
             }
@@ -288,7 +289,7 @@ namespace CaptchaSharp.Services
                 return new CaptchaTaskRequest()
                 {
                     ClientKey = ApiKey,
-                    Type = type + "Proxyless"
+                    Task = type + "Proxyless"
                 };
             }
         }
