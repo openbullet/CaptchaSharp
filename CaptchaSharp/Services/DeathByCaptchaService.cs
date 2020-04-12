@@ -10,7 +10,6 @@ namespace CaptchaSharp.Services
             : base($"{username}:{password}", new Uri("http://api.deathbycaptcha.com"), httpClient) 
         {
             SupportedCaptchaTypes =
-                CaptchaType.TextCaptcha |
                 CaptchaType.ImageCaptcha |
                 CaptchaType.ReCaptchaV2 |
                 CaptchaType.ReCaptchaV3 |
