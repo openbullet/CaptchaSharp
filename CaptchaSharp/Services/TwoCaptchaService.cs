@@ -133,7 +133,7 @@ namespace CaptchaSharp.Services
                     .Add("googlekey", siteKey)
                     .Add("pageurl", siteUrl)
                     .Add("action", action)
-                    .Add("min_score", minScore.ToString("0.0"))
+                    .Add("min_score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
