@@ -2,6 +2,7 @@
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Services.AntiCaptcha.Requests;
+using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks;
 using CaptchaSharp.Services.AntiCaptcha.Responses;
 using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
 using Newtonsoft.Json;
@@ -20,7 +21,6 @@ namespace CaptchaSharp.Services
         protected HttpClient httpClient;
 
         public int SoftId { get; set; }
-        private JsonSerializer serializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
         public AntiCaptchaService(string apiKey, HttpClient httpClient = null)
         {
@@ -53,12 +53,15 @@ namespace CaptchaSharp.Services
         {
             var response = await httpClient.PostJsonAsync
                 ("createTask",
-                AddCapabilities(new ImageCaptchaRequest()
+                AddImageCapabilities(
+                    new CaptchaTaskRequest
                     {
                         ClientKey = ApiKey,
-                        Task = "ImageToTextTask",
-                        Body = base64,
-                        SoftId = SoftId
+                        SoftId = SoftId,
+                        Task = new ImageCaptchaTask
+                        {
+                            Body = base64
+                        }
                     }, options),
                 cancellationToken)
                 .ConfigureAwait(false);
@@ -71,10 +74,13 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("NoCaptchaTask", proxy), serializer);
-            content.Add("websiteURL", siteUrl);
-            content.Add("websiteKey", siteKey);
-            content.Add("isInvisible", invisible);
+            var content = CreateCaptchaRequest(proxy);
+            content.Task = new NoCaptchaTask
+            {
+                WebsiteKey = siteKey,
+                WebsiteURL = siteUrl,
+                IsInvisible = invisible
+            };
             
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -96,11 +102,14 @@ namespace CaptchaSharp.Services
             if (minScore != 0.3F && minScore != 0.7F && minScore != 0.9F)
                 throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
 
-            var content = JObject.FromObject(CreateCaptchaRequest("RecaptchaV3Task", null), serializer);
-            content.Add("websiteURL", siteUrl);
-            content.Add("websiteKey", siteKey);
-            content.Add("pageAction", action);
-            content.Add("minScore", minScore);
+            var content = CreateCaptchaRequest(proxy);
+            content.Task = new RecaptchaV3Task
+            {
+                WebsiteKey = siteKey,
+                WebsiteURL = siteUrl,
+                PageAction = action,
+                MinScore = minScore
+            };
 
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -116,10 +125,16 @@ namespace CaptchaSharp.Services
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("FunCaptchaTask", null), serializer);
-            content.Add("websiteURL", siteUrl);
-            content.Add("websitePublicKey", publicKey);
-            content.Add("funcaptchaApiJSSubdomain", serviceUrl);
+            if (noJS)
+                throw new NotSupportedException("This service does not support no js solving");
+
+            var content = CreateCaptchaRequest(proxy);
+            content.Task = new FunCaptchaTask
+            {
+                WebsitePublicKey = publicKey,
+                WebsiteURL = siteUrl,
+                FuncaptchaApiJSSubdomain = serviceUrl
+            };
 
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -134,10 +149,13 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("HCaptchaTask", null), serializer);
-            content.Add("websiteURL", siteUrl);
-            content.Add("websiteKey", siteKey);
-
+            var content = CreateCaptchaRequest(proxy);
+            content.Task = new HCaptchaTask
+            {
+                WebsiteKey = siteKey,
+                WebsiteURL = siteUrl,
+            };
+            
             var response = await httpClient.PostJsonAsync
                 ("createTask",
                 content,
@@ -152,11 +170,14 @@ namespace CaptchaSharp.Services
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = JObject.FromObject(CreateCaptchaRequest("GeeTestTask", null), serializer);
-            content.Add("websiteURL", siteUrl);
-            content.Add("gt", gt);
-            content.Add("challenge", challenge);
-            content.Add("geetestApiServerSubdomain", apiServer);
+            var content = CreateCaptchaRequest(proxy);
+            content.Task = new GeeTestTask
+            {
+                WebsiteURL = siteUrl,
+                Gt = gt,
+                Challenge = challenge,
+                GeetestApiServerSubdomain = apiServer
+            };
 
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -276,25 +297,11 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Private Methods
-        private CaptchaTaskRequest CreateCaptchaRequest(string type, Proxy proxy = null)
+        private CaptchaTaskRequest CreateCaptchaRequest(Proxy proxy = null)
         {
-            if (proxy != null)
-            {
-                return new CaptchaTaskProxyRequest()
-                {
-                    ClientKey = ApiKey,
-                    Task = type
-                }
-                .SetProxy(proxy);
-            }
-            else
-            {
-                return new CaptchaTaskRequest()
-                {
-                    ClientKey = ApiKey,
-                    Task = type + "Proxyless"
-                };
-            }
+            return proxy != null
+                ? new CaptchaTaskProxyRequest() { ClientKey = ApiKey }.SetProxy(proxy)
+                : new CaptchaTaskRequest() { ClientKey = ApiKey };
         }
         #endregion
 
@@ -309,30 +316,32 @@ namespace CaptchaSharp.Services
             CaptchaServiceCapabilities.MaxLength |
             CaptchaServiceCapabilities.Instructions;
 
-        private ImageCaptchaRequest AddCapabilities(ImageCaptchaRequest request, ImageCaptchaOptions options)
+        private CaptchaTaskRequest AddImageCapabilities(CaptchaTaskRequest request, ImageCaptchaOptions options)
         {
-            request.Phrase = options.IsPhrase;
-            request.Case = options.CaseSensitive;
+            var task = request.Task as ImageCaptchaTask;
+
+            task.Phrase = options.IsPhrase;
+            task.Case = options.CaseSensitive;
             
             switch (options.CharacterSet)
             {
                 case CharacterSet.OnlyNumbers:
-                    request.Numeric = 1;
+                    task.Numeric = 1;
                     break;
 
                 case CharacterSet.OnlyLetters:
-                    request.Numeric = 2;
+                    task.Numeric = 2;
                     break;
 
                 default:
-                    request.Numeric = 0;
+                    task.Numeric = 0;
                     break;
             }
 
-            request.Math = options.RequiresCalculation;
-            request.MinLength = options.MinLength;
-            request.MaxLength = options.MaxLength;
-            request.Comment = options.TextInstructions;
+            task.Math = options.RequiresCalculation;
+            task.MinLength = options.MinLength;
+            task.MaxLength = options.MaxLength;
+            task.Comment = options.TextInstructions;
             
             switch (options.CaptchaLanguage)
             {

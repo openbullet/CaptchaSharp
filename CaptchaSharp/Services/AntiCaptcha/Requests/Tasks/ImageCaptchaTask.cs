@@ -1,6 +1,6 @@
-﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests
+﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks
 {
-    internal class ImageCaptchaRequest : CaptchaTaskRequest
+    internal class ImageCaptchaTask : AntiCaptchaTask
     {
         public string Body { get; set; } = "";
         public bool Phrase { get; set; } = false;
@@ -10,6 +10,10 @@
         public int MinLength { get; set; } = 0;
         public int MaxLength { get; set; } = 0;
         public string Comment { get; set; } = "";
-        public string WebsiteURL { get; set; } = "";
+
+        public ImageCaptchaTask()
+        {
+            Type = "ImageToTextTask";
+        }
     }
 }
