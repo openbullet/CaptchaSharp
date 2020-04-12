@@ -395,6 +395,7 @@ namespace CaptchaSharp.Services
             
             switch (options.CaptchaLanguage)
             {
+                case CaptchaLanguage.NotSpecified:
                 case CaptchaLanguage.English:
                     request.LanguagePool = "en";
                     break;
