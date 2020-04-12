@@ -306,6 +306,8 @@ namespace CaptchaSharp.Services
                 if (IsErrorCode(response))
                     throw new TaskSolutionException(response);
 
+                response = TakeSecondSlice(response);
+
                 switch (task.Type)
                 {
                     case CaptchaType.GeeTest:
