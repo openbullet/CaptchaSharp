@@ -264,6 +264,32 @@ namespace CaptchaSharp.Services
                 cancellationToken).ConfigureAwait(false);
 
             var result = response.Deserialize<GetTaskResultResponse>();
+            var jObject = JObject.Parse(response);
+            var solution = jObject["solution"];
+
+            switch (task.Type)
+            {
+                case CaptchaType.ReCaptchaV2:
+                case CaptchaType.ReCaptchaV3:
+                case CaptchaType.HCaptcha:
+                    result.Solution = solution.ToObject<RecaptchaSolution>();
+                    break;
+
+                case CaptchaType.FunCaptcha:
+                    result.Solution = solution.ToObject<FuncaptchaSolution>();
+                    break;
+
+                case CaptchaType.ImageCaptcha:
+                    result.Solution = solution.ToObject<ImageCaptchaSolution>();
+                    break;
+
+                case CaptchaType.GeeTest:
+                    result.Solution = solution.ToObject<GeeTestSolution>();
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
 
             if (!result.IsReady)
                 return default;
