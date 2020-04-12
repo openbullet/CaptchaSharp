@@ -299,6 +299,9 @@ namespace SolverTester
 
         private Proxy MakeProxy(string proxy, ProxyType type)
         {
+            if (proxy == string.Empty)
+                return null;
+
             Proxy p = new Proxy() { Type = type };
 
             if (proxy.Contains("@"))
