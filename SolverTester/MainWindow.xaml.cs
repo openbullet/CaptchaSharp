@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -311,17 +312,19 @@ namespace SolverTester
 
             if (proxy.Contains("@"))
             {
-                var split = proxy.Split('@');
-                var creds = split[0];
-                var split2 = creds.Split(':');
-                p.Username = split2[0];
-                p.Password = split2[1];
-                proxy = split[1];
+                var groups = Regex.Match(proxy, "^([^:]*):([^@]*)@([^:]*):(.*)$").Groups;
+                
+                p.Username = groups[1].Value;
+                p.Password = groups[2].Value;
+                p.Host = groups[3].Value;
+                p.Port = int.Parse(groups[4].Value);
             }
-
-            var split3 = proxy.Split(':');
-            p.Host = split3[0];
-            p.Port = int.Parse(split3[1]);
+            else
+            {
+                var split = proxy.Split(':');
+                p.Host = split[0];
+                p.Port = int.Parse(split[1]);
+            }
 
             return p;
         }
