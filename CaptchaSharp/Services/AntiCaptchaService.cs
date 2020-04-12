@@ -181,7 +181,7 @@ namespace CaptchaSharp.Services
         {
             var response = await httpClient.PostJsonAsync
                 ("getTaskResult",
-                new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = task.Id },
+                new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = (int)task.Id },
                 cancellationToken).ConfigureAwait(false);
 
             var result = response.Deserialize<GetTaskResultResponse<object>>();

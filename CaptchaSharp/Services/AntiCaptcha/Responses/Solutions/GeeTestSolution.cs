@@ -8,7 +8,7 @@ namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
         public string Validate { get; set; }
         public string SecCode { get; set; }
 
-        public CaptchaResponse ToCaptchaResponse(int id)
+        public CaptchaResponse ToCaptchaResponse(long id)
         {
             return new GeeTestResponse()
             {

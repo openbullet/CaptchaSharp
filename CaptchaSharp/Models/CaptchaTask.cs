@@ -7,12 +7,12 @@ namespace CaptchaSharp.Models
     {
         public DateTime CreationDate { get; }
         public CaptchaType Type { get; set; }
-        public int Id { get; }
+        public long Id { get; }
         public bool Completed { get; set; } = false;
 
-        public CaptchaTask(string id, CaptchaType type) : this(int.Parse(id), type) { }
+        public CaptchaTask(string id, CaptchaType type) : this(long.Parse(id), type) { }
 
-        public CaptchaTask(int id, CaptchaType type)
+        public CaptchaTask(long id, CaptchaType type)
         {
             Id = id;
             Type = type;

@@ -6,7 +6,7 @@ namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
     {
         public string Token { get; set; }
 
-        public CaptchaResponse ToCaptchaResponse(int id)
+        public CaptchaResponse ToCaptchaResponse(long id)
         {
             return new StringResponse
             {

@@ -8,7 +8,7 @@ namespace CaptchaSharp.Services.TwoCaptcha
         public string Validate { get; set; }
         public string SecCode { get; set; }
 
-        public GeeTestResponse ToGeeTestResponse(int id)
+        public GeeTestResponse ToGeeTestResponse(long id)
         {
             return new GeeTestResponse()
             {
