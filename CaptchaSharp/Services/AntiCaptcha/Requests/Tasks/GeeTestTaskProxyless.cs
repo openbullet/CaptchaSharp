@@ -1,15 +1,15 @@
 ﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks
 {
-    internal class GeeTestTask : AntiCaptchaTask
+    internal class GeeTestTaskProxyless : AntiCaptchaTaskProxyless
     {
         public string WebsiteURL { get; set; }
         public string Gt { get; set; }
         public string Challenge { get; set; }
         public string GeetestApiServerSubdomain { get; set; }
 
-        public GeeTestTask()
+        public GeeTestTaskProxyless()
         {
-            Type = "GeeTestTask";
+            Type = "GeeTestTaskProxyless";
         }
     }
 }

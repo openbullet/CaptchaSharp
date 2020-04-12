@@ -1,6 +1,6 @@
 ﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks
 {
-    internal class ImageCaptchaTask : AntiCaptchaTask
+    internal class ImageCaptchaTask : AntiCaptchaTaskProxyless
     {
         public string Body { get; set; } = "";
         public bool Phrase { get; set; } = false;

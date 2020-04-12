@@ -1,14 +1,14 @@
 ﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks
 {
-    internal class FunCaptchaTask : AntiCaptchaTask
+    internal class FunCaptchaTaskProxyless : AntiCaptchaTaskProxyless
     {
         public string WebsiteURL { get; set; }
         public string WebsitePublicKey { get; set; }
         public string FuncaptchaApiJSSubdomain { get; set; }
 
-        public FunCaptchaTask()
+        public FunCaptchaTaskProxyless()
         {
-            Type = "FunCaptchaTask";
+            Type = "FunCaptchaTaskProxyless";
         }
     }
 }

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CaptchaSharp.Services.AntiCaptcha.Requests
+namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied
 {
-    internal class CaptchaTaskProxyRequest : CaptchaTaskRequest
+    internal class AntiCaptchaTask : AntiCaptchaTaskProxyless
     {
         public string ProxyType { get; set; }
         public string ProxyAddress { get; set; }
@@ -15,7 +15,7 @@ namespace CaptchaSharp.Services.AntiCaptcha.Requests
         public string UserAgent { get; set; }
         public string Cookies { get; set; } // Format cookiename1=cookievalue1; cookiename2=cookievalue2
 
-        public CaptchaTaskProxyRequest SetProxy(Proxy proxy)
+        public AntiCaptchaTask SetProxy(Proxy proxy)
         {
             if (!System.Net.IPAddress.TryParse(proxy.Host, out _))
                 throw new NotSupportedException($"Only IP addresses are supported for the proxy host");

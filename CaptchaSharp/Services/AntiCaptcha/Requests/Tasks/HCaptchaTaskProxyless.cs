@@ -1,13 +1,13 @@
 ﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks
 {
-    internal class HCaptchaTask : AntiCaptchaTask
+    internal class HCaptchaTaskProxyless : AntiCaptchaTaskProxyless
     {
         public string WebsiteKey { get; set; }
         public string WebsiteURL { get; set; }
 
-        public HCaptchaTask()
+        public HCaptchaTaskProxyless()
         {
-            Type = "HCaptchaTask";
+            Type = "HCaptchaTaskProxyless";
         }
     }
 }

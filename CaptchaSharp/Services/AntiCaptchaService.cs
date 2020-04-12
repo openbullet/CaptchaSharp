@@ -3,6 +3,7 @@ using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Services.AntiCaptcha.Requests;
 using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks;
+using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied;
 using CaptchaSharp.Services.AntiCaptcha.Responses;
 using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
 using Newtonsoft.Json;
@@ -74,13 +75,26 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = CreateCaptchaRequest(proxy);
-            content.Task = new NoCaptchaTask
+            var content = CreateTaskRequest();
+
+            if (proxy != null)
             {
-                WebsiteKey = siteKey,
-                WebsiteURL = siteUrl,
-                IsInvisible = invisible
-            };
+                content.Task = new NoCaptchaTask
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    IsInvisible = invisible
+                }.SetProxy(proxy);
+            }
+            else
+            {
+                content.Task = new NoCaptchaTaskProxyless
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    IsInvisible = invisible
+                };
+            }
             
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -102,8 +116,9 @@ namespace CaptchaSharp.Services
             if (minScore != 0.3F && minScore != 0.7F && minScore != 0.9F)
                 throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
 
-            var content = CreateCaptchaRequest(proxy);
-            content.Task = new RecaptchaV3Task
+            var content = CreateTaskRequest();
+
+            content.Task = new RecaptchaV3TaskProxyless
             {
                 WebsiteKey = siteKey,
                 WebsiteURL = siteUrl,
@@ -128,13 +143,26 @@ namespace CaptchaSharp.Services
             if (noJS)
                 throw new NotSupportedException("This service does not support no js solving");
 
-            var content = CreateCaptchaRequest(proxy);
-            content.Task = new FunCaptchaTask
+            var content = CreateTaskRequest();
+
+            if (proxy != null)
             {
-                WebsitePublicKey = publicKey,
-                WebsiteURL = siteUrl,
-                FuncaptchaApiJSSubdomain = serviceUrl
-            };
+                content.Task = new FunCaptchaTask
+                {
+                    WebsitePublicKey = publicKey,
+                    WebsiteURL = siteUrl,
+                    FuncaptchaApiJSSubdomain = serviceUrl
+                }.SetProxy(proxy);
+            }
+            else
+            {
+                content.Task = new FunCaptchaTaskProxyless
+                {
+                    WebsitePublicKey = publicKey,
+                    WebsiteURL = siteUrl,
+                    FuncaptchaApiJSSubdomain = serviceUrl
+                };
+            }
 
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -149,12 +177,24 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            var content = CreateCaptchaRequest(proxy);
-            content.Task = new HCaptchaTask
+            var content = CreateTaskRequest();
+            
+            if (proxy != null)
             {
-                WebsiteKey = siteKey,
-                WebsiteURL = siteUrl,
-            };
+                content.Task = new HCaptchaTask
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                }.SetProxy(proxy);
+            }
+            else
+            {
+                content.Task = new HCaptchaTaskProxyless
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                };
+            }
             
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -170,14 +210,28 @@ namespace CaptchaSharp.Services
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var content = CreateCaptchaRequest(proxy);
-            content.Task = new GeeTestTask
+            var content = CreateTaskRequest();
+            
+            if (proxy != null)
             {
-                WebsiteURL = siteUrl,
-                Gt = gt,
-                Challenge = challenge,
-                GeetestApiServerSubdomain = apiServer
-            };
+                content.Task = new GeeTestTask
+                {
+                    WebsiteURL = siteUrl,
+                    Gt = gt,
+                    Challenge = challenge,
+                    GeetestApiServerSubdomain = apiServer
+                }.SetProxy(proxy);
+            }
+            else
+            {
+                content.Task = new GeeTestTaskProxyless
+                {
+                    WebsiteURL = siteUrl,
+                    Gt = gt,
+                    Challenge = challenge,
+                    GeetestApiServerSubdomain = apiServer
+                };
+            }
 
             var response = await httpClient.PostJsonAsync
                 ("createTask",
@@ -297,11 +351,13 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Private Methods
-        private CaptchaTaskRequest CreateCaptchaRequest(Proxy proxy = null)
+        private CaptchaTaskRequest CreateTaskRequest()
         {
-            return proxy != null
-                ? new CaptchaTaskProxyRequest() { ClientKey = ApiKey }.SetProxy(proxy)
-                : new CaptchaTaskRequest() { ClientKey = ApiKey };
+            return new CaptchaTaskRequest
+            {
+                ClientKey = ApiKey,
+                SoftId = SoftId
+            };
         }
         #endregion
 
