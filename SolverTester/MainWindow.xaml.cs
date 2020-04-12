@@ -205,6 +205,9 @@ namespace SolverTester
 
                 case CaptchaServiceType.CustomTwoCaptcha:
                     return new CustomTwoCaptchaService(ApiKey, new Uri(CustomTwoCaptchaBaseUri)) { Timeout = timeout };
+
+                case CaptchaServiceType.AntiCaptcha:
+                    return new AntiCaptchaService(ApiKey) { Timeout = timeout };
             }
 
             throw new NotSupportedException($"Service {service} is not supported by the tester yet!");
