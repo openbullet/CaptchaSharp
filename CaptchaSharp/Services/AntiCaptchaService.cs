@@ -304,7 +304,7 @@ namespace CaptchaSharp.Services
 
         #region Reporting the solution
         public async override Task ReportSolution
-            (int taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+            (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             if (correct)
                 throw new NotSupportedException("This service doesn't allow reporting of good solutions");

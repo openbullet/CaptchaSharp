@@ -340,7 +340,7 @@ namespace CaptchaSharp.Services
 
         #region Reporting the solution
         public async override Task ReportSolution
-            (int taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+            (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             var action = correct ? "reportgood" : "reportbad";
 
@@ -421,7 +421,7 @@ namespace CaptchaSharp.Services
                 capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language) && options.CaptchaLanguage != CaptchaLanguage.NotSpecified)
-                capabilities.Add(("lang", GetLanguageCode(options.CaptchaLanguage)));
+                capabilities.Add(("lang", options.CaptchaLanguage.ToISO6391Code()));
 
             return capabilities;
         }
@@ -459,74 +459,9 @@ namespace CaptchaSharp.Services
                 capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language) && options.CaptchaLanguage != CaptchaLanguage.NotSpecified)
-                capabilities.Add(("lang", GetLanguageCode(options.CaptchaLanguage)));
+                capabilities.Add(("lang", options.CaptchaLanguage.ToISO6391Code()));
 
             return capabilities;
-        }
-        
-        private string GetLanguageCode(CaptchaLanguage language)
-        {
-            var dict = new Dictionary<CaptchaLanguage, string>
-            {
-                { CaptchaLanguage.NotSpecified, "en" },
-                { CaptchaLanguage.English,      "en" },
-                { CaptchaLanguage.Russian,      "ru" },
-                { CaptchaLanguage.Spanish,      "es" },
-                { CaptchaLanguage.Portuguese,   "pt" },
-                { CaptchaLanguage.Ukrainian,    "uk" },
-                { CaptchaLanguage.Vietnamese,   "vi" },
-                { CaptchaLanguage.French,       "fr" },
-                { CaptchaLanguage.Indonesian,   "id" },
-                { CaptchaLanguage.Arab,         "ar" },
-                { CaptchaLanguage.Japanese,     "ja" },
-                { CaptchaLanguage.Turkish,      "tr" },
-                { CaptchaLanguage.German,       "de" },
-                { CaptchaLanguage.Chinese,      "zh" },
-                { CaptchaLanguage.Philippine,   "fil" },
-                { CaptchaLanguage.Polish,       "pl" },
-                { CaptchaLanguage.Thai,         "th" },
-                { CaptchaLanguage.Italian,      "it" },
-                { CaptchaLanguage.Dutch,        "nl" },
-                { CaptchaLanguage.Slovak,       "sk" },
-                { CaptchaLanguage.Bulgarian,    "bg" },
-                { CaptchaLanguage.Romanian,     "ro" },
-                { CaptchaLanguage.Hungarian,    "hu" },
-                { CaptchaLanguage.Korean,       "ko" },
-                { CaptchaLanguage.Czech,        "cs" },
-                { CaptchaLanguage.Azerbaijani,  "az" },
-                { CaptchaLanguage.Persian,      "fa" },
-                { CaptchaLanguage.Bengali,      "bn" },
-                { CaptchaLanguage.Greek,        "el" },
-                { CaptchaLanguage.Lithuanian,   "lt" },
-                { CaptchaLanguage.Latvian,      "lv" },
-                { CaptchaLanguage.Swedish,      "sv" },
-                { CaptchaLanguage.Serbian,      "sr" },
-                { CaptchaLanguage.Croatian,     "hr" },
-                { CaptchaLanguage.Hebrew,       "he" },
-                { CaptchaLanguage.Hindi,        "hi" },
-                { CaptchaLanguage.Norwegian,    "nb" },
-                { CaptchaLanguage.Slovenian,    "sl" },
-                { CaptchaLanguage.Danish,       "da" },
-                { CaptchaLanguage.Uzbek,        "uz" },
-                { CaptchaLanguage.Finnish,      "fi" },
-                { CaptchaLanguage.Catalan,      "ca" },
-                { CaptchaLanguage.Georgian,     "ka" },
-                { CaptchaLanguage.Malay,        "ms" },
-                { CaptchaLanguage.Telugu,       "te" },
-                { CaptchaLanguage.Estonian,     "et" },
-                { CaptchaLanguage.Malayalam,    "ml" },
-                { CaptchaLanguage.Belorussian,  "be" },
-                { CaptchaLanguage.Kazakh,       "kk" },
-                { CaptchaLanguage.Marathi,      "mr" },
-                { CaptchaLanguage.Nepali,       "ne" },
-                { CaptchaLanguage.Burmese,      "my" },
-                { CaptchaLanguage.Bosnian,      "bs" },
-                { CaptchaLanguage.Armenian,     "hy" },
-                { CaptchaLanguage.Macedonian,   "mk" },
-                { CaptchaLanguage.Punjabi,      "pa" }
-            };
-
-            return dict[language];
         }
         #endregion
     }

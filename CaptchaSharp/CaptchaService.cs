@@ -81,7 +81,7 @@ namespace CaptchaSharp
         }
 
         public virtual Task ReportSolution
-            (int id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+            (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

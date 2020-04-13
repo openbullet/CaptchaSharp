@@ -2,6 +2,6 @@
 {
     internal class ReportIncorrectCaptchaRequest : Request
     {
-        public int TaskId { get; set; }
+        public long TaskId { get; set; }
     }
 }
