@@ -171,7 +171,7 @@ namespace CaptchaSharp.Services
                 "captcha",
                 GetAuthPair()
                     .Add("type", 6)
-                    .Add("token_params", task.SerializeLowerCase()),
+                    .Add("funcaptcha_params", task.SerializeLowerCase()),
                 cancellationToken)
                 .ConfigureAwait(false);
 
