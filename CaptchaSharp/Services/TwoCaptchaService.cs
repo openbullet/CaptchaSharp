@@ -31,7 +31,12 @@ namespace CaptchaSharp.Services
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
-                ($"res.php?key={ApiKey}&action=getbalance&json=" + UseJsonFlag.ToInt().ToString(), cancellationToken);
+                ("res.php",
+                new StringPairCollection() 
+                    .Add("key", ApiKey)
+                    .Add("action", "getbalance")
+                    .Add("json", UseJsonFlag.ToInt().ToString()),
+                cancellationToken);
 
             if (UseJsonFlag)
             {
@@ -57,15 +62,16 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveTextCaptchaAsync
             (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
+                new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("textcaptcha", text)
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertCapabilities(options)),
+                    .Add(ConvertCapabilities(options))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -78,16 +84,17 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
+                new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("method", "base64")
                     .Add("body", base64)
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertCapabilities(options)),
+                    .Add(ConvertCapabilities(options))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -100,9 +107,9 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
+                new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("method", "userrecaptcha")
                     .Add("googlekey", siteKey)
@@ -111,7 +118,8 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -125,10 +133,9 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
-                    .Add("key", ApiKey)
+                new StringPairCollection()
                     .Add("method", "userrecaptcha")
                     .Add("version", "v3")
                     .Add("googlekey", siteKey)
@@ -138,7 +145,8 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -152,9 +160,9 @@ namespace CaptchaSharp.Services
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
+                new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("method", "funcaptcha")
                     .Add("publickey", publicKey)
@@ -164,7 +172,8 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -177,9 +186,9 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
+                new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("method", "hcaptcha")
                     .Add("sitekey", siteKey)
@@ -187,7 +196,8 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -201,9 +211,9 @@ namespace CaptchaSharp.Services
             (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
             Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
+                new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("method", "keycaptcha")
                     .Add("s_s_c_user_id", userId)
@@ -214,7 +224,8 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -228,9 +239,9 @@ namespace CaptchaSharp.Services
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostMultipartAsync
+            var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
-                new MultipartFormDataContent()
+                new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("method", "geetest")
                     .Add("gt", gt)
@@ -240,7 +251,8 @@ namespace CaptchaSharp.Services
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy)),
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -278,7 +290,13 @@ namespace CaptchaSharp.Services
             (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
-                ($"res.php?key={ApiKey}&action=get&id={task.Id}&json=" + UseJsonFlag.ToInt().ToString(), cancellationToken).ConfigureAwait(false);
+                ("res.php",
+                new StringPairCollection()
+                    .Add("key", ApiKey)
+                    .Add("action", "get")
+                    .Add("id", task.Id.ToString())
+                    .Add("json", UseJsonFlag.ToInt().ToString()),
+                cancellationToken);
 
             if (response.Contains("CAPCHA_NOT_READY"))
                 return default;
@@ -327,7 +345,13 @@ namespace CaptchaSharp.Services
             var action = correct ? "reportgood" : "reportbad";
 
             var response = await httpClient.GetStringAsync
-                ($"res.php?key={ApiKey}&action={action}&id={taskId}&json=" + UseJsonFlag.ToInt().ToString(), cancellationToken).ConfigureAwait(false);
+                ("res.php",
+                new StringPairCollection()
+                    .Add("key", ApiKey)
+                    .Add("action", action)
+                    .Add("id", taskId.ToString())
+                    .Add("json", UseJsonFlag.ToInt().ToString()),
+                cancellationToken);
 
             if (UseJsonFlag)
             {

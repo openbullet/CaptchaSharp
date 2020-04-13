@@ -6,9 +6,7 @@ using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks;
 using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied;
 using CaptchaSharp.Services.AntiCaptcha.Responses;
 using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -33,7 +31,7 @@ namespace CaptchaSharp.Services
         #region Getting the Balance
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("getBalance",
                 new Request() { ClientKey = ApiKey },
                 cancellationToken)
@@ -52,7 +50,7 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 AddImageCapabilities(
                     new CaptchaTaskRequest
@@ -96,7 +94,7 @@ namespace CaptchaSharp.Services
                 };
             }
             
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
                 cancellationToken)
@@ -126,7 +124,7 @@ namespace CaptchaSharp.Services
                 MinScore = minScore
             };
 
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
                 cancellationToken)
@@ -164,7 +162,7 @@ namespace CaptchaSharp.Services
                 };
             }
 
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
                 cancellationToken)
@@ -196,7 +194,7 @@ namespace CaptchaSharp.Services
                 };
             }
             
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
                 cancellationToken)
@@ -233,7 +231,7 @@ namespace CaptchaSharp.Services
                 };
             }
 
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
                 cancellationToken)
@@ -258,7 +256,7 @@ namespace CaptchaSharp.Services
 
         internal async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostJsonAsync
+            var response = await httpClient.PostJsonToStringAsync
                 ("getTaskResult",
                 new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = (int)task.Id },
                 cancellationToken).ConfigureAwait(false);
@@ -317,7 +315,7 @@ namespace CaptchaSharp.Services
             switch (type)
             {
                 case CaptchaType.ImageCaptcha:
-                    response = await httpClient.PostJsonAsync
+                    response = await httpClient.PostJsonToStringAsync
                     ("reportIncorrectImageCaptcha",
                     new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
                     cancellationToken).ConfigureAwait(false);
@@ -327,7 +325,7 @@ namespace CaptchaSharp.Services
 
                 case CaptchaType.ReCaptchaV2:
                 case CaptchaType.ReCaptchaV3:
-                    response = await httpClient.PostJsonAsync
+                    response = await httpClient.PostJsonToStringAsync
                     ("reportIncorrectImageCaptcha",
                     new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
                     cancellationToken).ConfigureAwait(false);

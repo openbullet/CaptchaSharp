@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using CaptchaSharp.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -10,6 +12,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace CaptchaSharp
 {
@@ -54,29 +57,57 @@ namespace CaptchaSharp
 
     public static class HttpClientExtensions
     {
-        public static async Task<string> GetStringAsync
-            (this HttpClient httpClient, string url, CancellationToken cancellationToken = default)
+        // GET METHODS
+        public async static Task<HttpResponseMessage> GetAsync
+            (this HttpClient httpClient, string url, StringPairCollection pairs,
+            CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+            return await httpClient.GetAsync($"{url}?{pairs.ToHttpQueryString()}", cancellationToken);
+        }
+
+        public async static Task<string> GetStringAsync
+            (this HttpClient httpClient, string url, StringPairCollection pairs,
+            CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.GetAsync(url, pairs, cancellationToken);
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
-        public static async Task<string> PostMultipartAsync
+        // POST METHODS
+        public static async Task<HttpResponseMessage> PostAsync
+            (this HttpClient httpClient, string url, StringPairCollection pairs,
+            CancellationToken cancellationToken = default, string mediaType = "application/x-www-form-urlencoded")
+        {
+            return await httpClient.PostAsync(url,
+                new StringContent(pairs.ToHttpQueryString(), Encoding.UTF8, mediaType),
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        public static async Task<string> PostToStringAsync
+            (this HttpClient httpClient, string url, StringPairCollection pairs,
+            CancellationToken cancellationToken = default, string mediaType = "application/x-www-form-urlencoded")
+        {
+            var response = await httpClient.PostAsync(url, pairs, cancellationToken, mediaType);
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+
+        public static async Task<string> PostMultipartToStringAsync
             (this HttpClient httpClient, string url, MultipartFormDataContent content, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
-        public static async Task<string> PostJsonAsync<T>
+        public static async Task<string> PostJsonToStringAsync<T>
             (this HttpClient httpClient, string url, T content, CancellationToken cancellationToken = default, bool camelizeKeys = true)
         {
-            var settings = new JsonSerializerSettings();
+            string json;
 
             if (camelizeKeys)
-                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            
-            var json = JsonConvert.SerializeObject(content, settings);
+                json = content.SerializeCamelCase();
+            else
+                json = JsonConvert.SerializeObject(content);
+
             var response = await httpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"), cancellationToken);
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
@@ -97,6 +128,20 @@ namespace CaptchaSharp
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
+
+        public static string SerializeCamelCase<T>(this T obj)
+        {
+            var settings = new JsonSerializerSettings();
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            return JsonConvert.SerializeObject(obj, settings);
+        }
+
+        public static string SerializeLowerCase<T>(this T obj)
+        {
+            var settings = new JsonSerializerSettings();
+            settings.ContractResolver = new LowercasePropertyNamesContractResolver();
+            return JsonConvert.SerializeObject(obj, settings);
+        }
     }
 
     public static class BoolExtensions
@@ -104,44 +149,6 @@ namespace CaptchaSharp
         public static int ToInt(this bool boolean)
         {
             return boolean ? 1 : 0;
-        }
-    }
-
-    // Fluent interface
-    public static class MultipartExtensions
-    {
-        public static MultipartFormDataContent Add
-            (this MultipartFormDataContent multipartFormDataContent, string name, string value, bool condition = true)
-        {
-            if (!condition)
-                return multipartFormDataContent;
-
-            multipartFormDataContent.Add(new StringContent(value), name);
-            return multipartFormDataContent;
-        }
-
-        public static MultipartFormDataContent Add
-            (this MultipartFormDataContent multipartFormDataContent, IEnumerable<(string, string)> stringContents, bool condition = true)
-        {
-            if (!condition)
-                return multipartFormDataContent;
-
-            stringContents.ToList()
-                .ForEach(p => multipartFormDataContent.Add(new StringContent(p.Item2, Encoding.UTF8), p.Item1));
-
-            return multipartFormDataContent;
-        }
-
-        public static MultipartFormDataContent Add
-            (this MultipartFormDataContent multipartFormDataContent, IEnumerable<KeyValuePair<string, string>> stringContents, bool condition = true)
-        {
-            if (!condition)
-                return multipartFormDataContent;
-
-            stringContents.ToList()
-                .ForEach(p => multipartFormDataContent.Add(new StringContent(p.Value, Encoding.UTF8), p.Key));
-
-            return multipartFormDataContent;
         }
     }
 }
