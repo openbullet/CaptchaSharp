@@ -180,7 +180,7 @@ namespace CaptchaSharp.Services
         }
         #endregion
 
-        #region Getting the Result
+        #region Getting the result
         private async Task<CaptchaResponse> TryGetResult
             (NameValueCollection response, CaptchaType type, CancellationToken cancellationToken = default)
         {
@@ -206,6 +206,26 @@ namespace CaptchaSharp.Services
                 throw new TaskSolutionException(GetErrorMessage(query));
 
             return new StringResponse() { Id = task.Id, Response = query["text"] };
+        }
+        #endregion
+
+        #region Reporting the solution
+        public async override Task ReportSolution
+            (int id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+        {
+            if (correct)
+                throw new NotSupportedException("This service doesn't allow reporting of good solutions");
+
+            var response = await httpClient.PostAsync(
+                $"captcha/{id}/report",
+                GetAuthPair(),
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            var query = HttpUtility.ParseQueryString(await DecodeIsoResponse(response));
+
+            if (IsError(query))
+                throw new TaskReportException(GetErrorMessage(query));
         }
         #endregion
 
