@@ -94,7 +94,7 @@ namespace CaptchaSharp.Services
                 if (proxy.RequiresAuthentication)
                     throw new NotSupportedException("Authenticated proxies are not supported");
 
-                if (proxy.Type != Enums.ProxyType.HTTP)
+                if (proxy.Type != ProxyType.SOCKS4 && proxy.Type != ProxyType.SOCKS5)
                     throw new NotSupportedException("Only SOCKS proxies are supported");
 
                 if (siteUrl.StartsWith("https"))
