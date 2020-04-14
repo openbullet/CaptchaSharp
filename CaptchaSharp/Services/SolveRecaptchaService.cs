@@ -13,7 +13,7 @@ namespace CaptchaSharp.Services
         public SolveRecaptchaService(string apiKey, HttpClient httpClient = null)
             : base(apiKey, new Uri("http://api.solverecaptcha.com"), httpClient)
         {
-            httpClient.DefaultRequestHeaders.Host = "api.solverecaptcha.com";
+            this.httpClient.DefaultRequestHeaders.Host = "api.solverecaptcha.com";
 
             SupportedCaptchaTypes =
                 CaptchaType.ReCaptchaV2 |
