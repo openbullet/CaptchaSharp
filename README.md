@@ -14,7 +14,7 @@ If you need more solvers you can install additional solvers (mostly ones that im
 ## Usage
 First of all, initialize your solver of choice by providing your credentials, for example
 ```csharp
-var service = new TwoCaptchaService("MY_API_KEY");
+CaptchaService service = new TwoCaptchaService("MY_API_KEY");
 ```
 
 You can get your remaining balance like this
