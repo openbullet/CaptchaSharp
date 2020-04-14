@@ -286,8 +286,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Getting the result
-        /// <inheritdoc/>
-        private async Task<CaptchaResponse> TryGetResult
+        internal async Task<CaptchaResponse> TryGetResult
             (Response response, CaptchaType type, CancellationToken cancellationToken = default)
         {
             if (response.IsErrorCode)
@@ -298,7 +297,7 @@ namespace CaptchaSharp.Services
             return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<CaptchaResponse> TryGetResult
+        internal async Task<CaptchaResponse> TryGetResult
             (string response, CaptchaType type, CancellationToken cancellationToken = default)
         {
             if (IsErrorCode(response))
@@ -398,7 +397,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Proxies
-        private IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
+        protected IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
         {
             if (proxy == null)
                 return new (string, string)[] { };
