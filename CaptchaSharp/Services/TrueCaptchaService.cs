@@ -22,51 +22,43 @@ namespace CaptchaSharp.Services
             ApiKey = apiKey;
 
             this.httpClient = httpClient ?? new HttpClient();
-            this.httpClient.BaseAddress = new Uri("https://api.apitruecaptcha.org/one");
+            this.httpClient.BaseAddress = new Uri("https://api.apitruecaptcha.org/");
             this.httpClient.Timeout = Timeout;
         }
 
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
-                ("getbalance",
-                GetAuthPair(),
+                ("one/getbalance",
+                new StringPairCollection()
+                .Add("username", UserId)
+                .Add("apikey", ApiKey),
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            var jObject = JObject.Parse(response);
+            if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal balance))
+                return balance;
 
-            try
-            {
-                return decimal.Parse(jObject["balance"].ToString(), CultureInfo.InvariantCulture);
-            }
-            catch
-            {
+            else
                 throw new BadAuthenticationException(response);
-            }
         }
 
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
-            var response = await httpClient.PostToStringAsync
-                ("gettext",
-                GetAuthPair()
-                .Add("data", base64),
-                cancellationToken)
+            var content = new JObject();
+            content.Add("userid", UserId);
+            content.Add("apikey", ApiKey);
+            content.Add("data", base64);
+
+            var response = await httpClient.PostJsonToStringAsync
+                ("one/gettext",
+                content,
+                cancellationToken, false)
                 .ConfigureAwait(false);
 
             var jObject = JObject.Parse(response);
             return new StringResponse { Id = 0, Response = jObject["result"].ToString() };
         }
-
-        public async override Task ReportSolution
-            (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        private StringPairCollection GetAuthPair()
-            => new StringPairCollection().Add("userid", UserId).Add("apikey", ApiKey);
     }
 }
