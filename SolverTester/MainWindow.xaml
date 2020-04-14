@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SolverTester"
         mc:Ignorable="d"
-        Title="Solver Tester" Height="540" Width="300">
+        Title="Solver Tester" Height="570" Width="300">
     <StackPanel>
         <!-- SERVICE SELECTION -->
         <ComboBox x:Name="serviceCombobox" HorizontalAlignment="Stretch" SelectionChanged="serviceCombobox_SelectionChanged" ></ComboBox>
@@ -250,6 +250,19 @@
                     <DockPanel>
                         <TextBlock>Api Server</TextBlock>
                         <TextBox Text="{Binding ApiServer}"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock>Url</TextBlock>
+                        <TextBox Text="{Binding SiteUrl}"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <!-- CAPY -->
+            <TabItem>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock>Site Key</TextBlock>
+                        <TextBox Text="{Binding SiteKey}"></TextBox>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock>Url</TextBlock>

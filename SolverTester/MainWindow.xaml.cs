@@ -155,7 +155,8 @@ namespace SolverTester
                 { CaptchaType.FunCaptcha,   4 },
                 { CaptchaType.HCaptcha,     5 },
                 { CaptchaType.KeyCaptcha,   6 },
-                { CaptchaType.GeeTest,      7 }
+                { CaptchaType.GeeTest,      7 },
+                { CaptchaType.Capy,         8 }
             };
 
             paramsTabControl.SelectedIndex = dict[CaptchaType];
@@ -249,6 +250,8 @@ namespace SolverTester
 
         private async Task<CaptchaResponse> Solve(CaptchaService service, CaptchaType captchaType)
         {
+            var proxy = MakeProxy(Proxy, ProxyType);
+
             switch (captchaType)
             {
                 case CaptchaType.TextCaptcha:
@@ -278,24 +281,27 @@ namespace SolverTester
                     return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions);
 
                 case CaptchaType.ReCaptchaV2:
-                    return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible, MakeProxy(Proxy, ProxyType));
+                    return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible, proxy);
 
                 case CaptchaType.ReCaptchaV3:
                     return await service.SolveRecaptchaV3Async(SiteKey, SiteUrl, Action,
-                        float.Parse(MinScore, CultureInfo.InvariantCulture), MakeProxy(Proxy, ProxyType));
+                        float.Parse(MinScore, CultureInfo.InvariantCulture), proxy);
 
                 case CaptchaType.FunCaptcha:
-                    return await service.SolveFuncaptchaAsync(PublicKey, ServiceUrl, SiteUrl, NoJS, MakeProxy(Proxy, ProxyType));
+                    return await service.SolveFuncaptchaAsync(PublicKey, ServiceUrl, SiteUrl, NoJS, proxy);
 
                 case CaptchaType.HCaptcha:
-                    return await service.SolveHCaptchaAsync(SiteKey, SiteUrl, MakeProxy(Proxy, ProxyType));
+                    return await service.SolveHCaptchaAsync(SiteKey, SiteUrl, proxy);
 
                 case CaptchaType.KeyCaptcha:
                     return await service.SolveKeyCaptchaAsync(UserId, SessionId, WebServerSign1, WebServerSign2,
-                        SiteUrl, MakeProxy(Proxy, ProxyType));
+                        SiteUrl, proxy);
 
                 case CaptchaType.GeeTest:
-                    return await service.SolveGeeTestAsync(GT, Challenge, ApiServer, SiteUrl, MakeProxy(Proxy, ProxyType));
+                    return await service.SolveGeeTestAsync(GT, Challenge, ApiServer, SiteUrl, proxy);
+
+                case CaptchaType.Capy:
+                    return await service.SolveCapyAsync(SiteKey, SiteUrl, proxy);
             }
 
             throw new NotSupportedException($"Captcha type {captchaType} is not supported by the tester yet!");

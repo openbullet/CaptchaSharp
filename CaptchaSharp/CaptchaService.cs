@@ -80,6 +80,12 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
+        public virtual Task<StringResponse> SolveCapyAsync
+            (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public virtual Task ReportSolution
             (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {

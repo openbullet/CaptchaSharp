@@ -12,6 +12,7 @@ namespace CaptchaSharp.Enums
         ReCaptchaV3,
         HCaptcha,
         KeyCaptcha,
-        GeeTest
+        GeeTest,
+        Capy
     }
 }
