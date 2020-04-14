@@ -138,7 +138,7 @@ namespace CaptchaSharp.Services
             CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
-                ("captchaapi/UploadGeeTestToken.ashx?",
+                ("captchaapi/UploadGeeTestToken.ashx",
                 GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
                 .Add("gt", gt)
