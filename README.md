@@ -2,6 +2,19 @@
 A .NET Standard 2.0 library that implements the APIs of the most used **captcha solving services** out there.
 The library is fully documented, asynchronous and very easy to use. All services derive from the same `CaptchaService` class so you can allow users to use their favourite service without the need of a separate library for each one of them!
 
+## Supported Captchas
+This library supports the following captcha types
+- Text (with language options)
+- Image (with options like phrase, case sensitivity, calculations)
+- FunCaptcha
+- ReCaptcha V2 (invisible too) and V3
+- HCaptcha
+- KeyCaptcha
+- GeeTest
+- Capy
+
+Although this sounds very exciting, sadly not all captcha types are supported by the services. You can find a table of the supported captcha types for each major service at this link (INSERT LINK LATER).
+
 ## Adding CaptchaSharp to your project
 Simply install the nuget package via
 
@@ -54,7 +67,7 @@ And finally your solution as plaintext
 Console.WriteLine($"The solution is {solution.Response}");
 ```
 
-In addition, mind that not every service supports every type of captcha! You can find a table of the supported captcha type for each major service at this link (INSERT LINK LATER). If a method is not supported, a `NotSupportedException` will be thrown.
+In addition, mind that not every service supports every type of captcha! If a method or specific parameters are not supported, a `NotSupportedException` will be thrown.
 
 ## What needs to be improved
 - Use C# anonymous types or `JObject` for the `AntiCaptchaSolver` instead of a million classes!
