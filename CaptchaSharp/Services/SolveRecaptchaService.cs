@@ -13,15 +13,17 @@ namespace CaptchaSharp.Services
         public SolveRecaptchaService(string apiKey, HttpClient httpClient = null)
             : base(apiKey, new Uri("http://api.solverecaptcha.com"), httpClient)
         {
+            httpClient.DefaultRequestHeaders.Host = "api.solverecaptcha.com";
+
             SupportedCaptchaTypes =
                 CaptchaType.ReCaptchaV2 |
                 CaptchaType.ReCaptchaV3;
         }
 
-        // There is no balance since this service has a monthly subscription
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
-            return await Task.Run(() => 999);
+            // There is no balance since this service has a monthly subscription
+            return await Task.Run(() => 999).ConfigureAwait(false);
         }
 
         public async override Task<StringResponse> SolveRecaptchaV2Async
@@ -61,7 +63,7 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, CaptchaType.ReCaptchaV3, cancellationToken) as StringResponse;
         }
 
-        public override Task ReportSolution
+        public async override Task ReportSolution
             (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();

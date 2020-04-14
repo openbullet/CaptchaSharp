@@ -589,9 +589,6 @@
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveGeeTestAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.TryGetResult(CaptchaSharp.Services.TwoCaptcha.Response,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
