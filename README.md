@@ -4,10 +4,12 @@ The library is fully documented, asynchronous and very easy to use. All services
 
 ## Adding CaptchaSharp to your project
 Simply install the nuget package via
-`PM> Install-Package CaptchaSharp`
+
+`Install-Package CaptchaSharp`
 
 If you need more solvers you can install additional solvers (mostly ones that implement the 2captcha API) like this
-`PM> Install-Package CaptchaSharp.Services.More`
+
+`Install-Package CaptchaSharp.Services.More`
 
 ## Usage
 First of all, initialize your solver of choice by providing your credentials, for example
