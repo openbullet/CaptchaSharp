@@ -1,6 +1,6 @@
 ﻿namespace Newtonsoft.Json.Serialization
 {
-    public class LowercasePropertyNamesContractResolver : DefaultContractResolver
+    internal class LowercasePropertyNamesContractResolver : DefaultContractResolver
     {
         protected override string ResolvePropertyName(string propertyName)
         {

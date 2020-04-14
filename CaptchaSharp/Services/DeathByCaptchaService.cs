@@ -15,10 +15,16 @@ using System.Web;
 
 namespace CaptchaSharp.Services
 {
+    /// <summary>The service provided by <c>https://www.deathbycaptcha.com/</c></summary>
     public class DeathByCaptchaService : CaptchaService
-{
+    {
+        /// <summary>Your DeathByCaptcha account name.</summary>
         public string Username { get; set; }
+
+        /// <summary>Your DeathByCaptcha account password.</summary>
         public string Password { get; set; }
+
+        /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
         protected HttpClient httpClient;
 
         /*
@@ -26,6 +32,8 @@ namespace CaptchaSharp.Services
          * we will avoid using the Accept: application/json header.
          */
 
+        /// <summary>Initializes a <see cref="DeathByCaptchaService"/> using the given account credentials and 
+        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public DeathByCaptchaService(string username, string password, HttpClient httpClient = null)
         {
             Username = username;
@@ -35,6 +43,7 @@ namespace CaptchaSharp.Services
         }
 
         #region Getting the Balance
+        /// <inheritdoc/>
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostAsync(
@@ -54,6 +63,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Solve Methods
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
@@ -68,6 +78,7 @@ namespace CaptchaSharp.Services
                 CaptchaType.ImageCaptcha, cancellationToken) as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -103,6 +114,7 @@ namespace CaptchaSharp.Services
                 CaptchaType.ReCaptchaV2, cancellationToken) as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -142,6 +154,7 @@ namespace CaptchaSharp.Services
                 CaptchaType.ReCaptchaV3, cancellationToken) as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveFuncaptchaAsync
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -208,6 +221,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Reporting the solution
+        /// <inheritdoc/>
         public async override Task ReportSolution
             (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {

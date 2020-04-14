@@ -14,13 +14,20 @@ using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services
 {
+    /// <summary>The service provided by <c>https://anti-captcha.com/</c></summary>
     public class AntiCaptchaService : CaptchaService
     {
+        /// <summary>Your secret api key.</summary>
         public string ApiKey { get; set; }
+
+        /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
         protected HttpClient httpClient;
 
+        /// <summary>The ID of the software developer.</summary>
         public int SoftId { get; set; }
 
+        /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/> 
+        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public AntiCaptchaService(string apiKey, HttpClient httpClient = null)
         {
             ApiKey = apiKey;
@@ -29,6 +36,7 @@ namespace CaptchaSharp.Services
         }
 
         #region Getting the Balance
+        /// <inheritdoc/>
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostJsonToStringAsync
@@ -47,6 +55,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Solve Methods
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
@@ -69,6 +78,7 @@ namespace CaptchaSharp.Services
                 as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -104,6 +114,7 @@ namespace CaptchaSharp.Services
                 as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -134,6 +145,7 @@ namespace CaptchaSharp.Services
                 as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveFuncaptchaAsync
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -172,6 +184,7 @@ namespace CaptchaSharp.Services
                 as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
@@ -204,6 +217,7 @@ namespace CaptchaSharp.Services
                 as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<GeeTestResponse> SolveGeeTestAsync
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -254,7 +268,8 @@ namespace CaptchaSharp.Services
             return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
-        internal async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
+        internal async override Task<CaptchaResponse> CheckResult
+            (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostJsonToStringAsync
                 ("getTaskResult",
@@ -303,6 +318,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Reporting the solution
+        /// <inheritdoc/>
         public async override Task ReportSolution
             (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
@@ -354,6 +370,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Capabilities
+        /// <inheritdoc/>
         public override CaptchaServiceCapabilities Capabilities =>
             CaptchaServiceCapabilities.Language |
             CaptchaServiceCapabilities.Phrases |

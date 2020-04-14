@@ -10,12 +10,20 @@ using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services
 {
+    /// <summary>The service provided by <c>https://www.imagetyperz.com/</c></summary>
     public class ImageTyperzService : CaptchaService
     {
+        /// <summary>Your secret api key.</summary>
         public string ApiKey { get; set; }
-        protected HttpClient httpClient;
+
+        /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
+        private HttpClient httpClient;
+
+        /// <summary>The ID of the software developer.</summary>
         public string AffiliateId { get; set; } = "123";
 
+        /// <summary>Initializes a <see cref="ImageTyperzService"/> using the given <paramref name="apiKey"/> 
+        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public ImageTyperzService(string apiKey, HttpClient httpClient = null)
         {
             ApiKey = apiKey;
@@ -28,6 +36,7 @@ namespace CaptchaSharp.Services
         }
 
         #region Getting the Balance
+        /// <inheritdoc/>
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostToStringAsync
@@ -45,6 +54,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Solve Methods
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
@@ -64,6 +74,7 @@ namespace CaptchaSharp.Services
             return new StringResponse { Id = long.Parse(split[0]), Response = split[1] };
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -82,6 +93,7 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, CaptchaType.ReCaptchaV2, cancellationToken) as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -102,6 +114,7 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, CaptchaType.ReCaptchaV2, cancellationToken) as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -119,6 +132,7 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, CaptchaType.HCaptcha, cancellationToken) as StringResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<GeeTestResponse> SolveGeeTestAsync
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -136,6 +150,7 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response, CaptchaType.GeeTest, cancellationToken) as GeeTestResponse;
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveCapyAsync
             (string siteKey, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -218,6 +233,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Reporting the solution
+        /// <inheritdoc/>
         public async override Task ReportSolution
             (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
@@ -271,6 +287,15 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Capabilities
+        /// <inheritdoc/>
+        public override CaptchaServiceCapabilities Capabilities =>
+            CaptchaServiceCapabilities.Phrases |
+            CaptchaServiceCapabilities.CaseSensitivity |
+            CaptchaServiceCapabilities.CharacterSets |
+            CaptchaServiceCapabilities.Calculations |
+            CaptchaServiceCapabilities.MinLength |
+            CaptchaServiceCapabilities.MaxLength;
+
         private IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
         {
             // If null, don't return any parameters

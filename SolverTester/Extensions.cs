@@ -10,9 +10,7 @@ namespace SolverTester
 {
     public static class BitmapExtensions
     {
-        /// <summary>
         /// Gets the base64-encoded string from an image.
-        /// </summary>
         /// <param name="image">The bitmap image</param>
         /// <param name="format">The format of the bitmap image</param>
         /// <returns>The base64-encoded string</returns>

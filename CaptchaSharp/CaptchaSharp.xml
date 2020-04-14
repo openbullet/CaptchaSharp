@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CaptchaSharp</name>
+    </assembly>
+    <members>
+        <member name="T:CaptchaSharp.CaptchaService">
+            <summary>Abstract class for a generic captcha solving service.</summary>
+        </member>
+        <member name="P:CaptchaSharp.CaptchaService.Timeout">
+            <summary>The maximum allowed time for captcha completion.
+            If this <see cref="T:System.TimeSpan"/> is exceeded, a <see cref="T:System.TimeoutException"/> is thrown.</summary>
+        </member>
+        <member name="P:CaptchaSharp.CaptchaService.Capabilities">
+            <summary>Returns a list of flags that denote the capabilities of the service in terms of additional 
+            parameters to provide when solving text or image based captchas.</summary>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <summary>Retrieves the remaining balance in USD as a <see cref="T:System.Double"/>.</summary>
+            <exception cref="T:CaptchaSharp.Exceptions.BadAuthenticationException">Thrown when the provided credentials are invalid.</exception>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.TextCaptchaOptions,System.Threading.CancellationToken)">
+            <summary>Solves a text based captcha.</summary>
+            
+            <param name="text">The captcha question.</param>
+            
+            <param name="options">
+            Any additional options like the language of the question.
+            If null they will be disregarded.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <summary>Solves an image based captcha.</summary>
+            
+            <param name="base64">The captcha image encoded as a base64 string.</param>
+            
+            <param name="options">
+            Any additional options like whether the captcha is case sensitive.
+            If null they will be disregarded.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            /// <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a Google ReCaptcha V2.</summary>
+            
+            <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            <param name="invisible">Whether the captcha is not in a clickable format on the page.</param>
+            
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a Google ReCaptcha V3.</summary>
+            
+            <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            <param name="action">The action to execute. Can be found in the webpage source or in a js file.</param>
+            <param name="minScore">The minimum human-to-robot score necessary to solve the challenge.</param>
+            
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a Google ReCaptcha V3.</summary>
+            
+            <param name="publicKey">
+            Can be found inside data-pkey parameter of funcaptcha's div element or inside an input element 
+            with name <code>fc-token</code>. Just extract the key indicated after pk from the value of this element.
+            </param>
+            
+            <param name="serviceUrl">
+            Can be found in the <code>fc-token</code>, that is a value of the <code>surl</code> parameter.
+            </param>
+            
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            
+            <param name="noJS">
+            Whether to solve the challenge without JavaScript enabled. This is not supported by every service and 
+            it provides a partial token.
+            </param>
+            
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a HCaptcha.</summary>
+            
+            <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+        </member>
+        <member name="T:CaptchaSharp.HttpClientExtensions">
+            <summary>Extensions for an <see cref="T:System.Net.Http.HttpClient"/>.</summary>
+        </member>
+        <member name="M:CaptchaSharp.HttpClientExtensions.GetAsync(System.Net.Http.HttpClient,System.String,CaptchaSharp.Models.StringPairCollection,System.Threading.CancellationToken)">
+            <summary>Automatically builds a GET query string from a <see cref="T:CaptchaSharp.Models.StringPairCollection"/> 
+            and appends it to the provided URL.</summary>
+        </member>
+        <member name="M:CaptchaSharp.HttpClientExtensions.GetStringAsync(System.Net.Http.HttpClient,System.String,CaptchaSharp.Models.StringPairCollection,System.Threading.CancellationToken)">
+            <summary>Automatically builds a GET query string from a <see cref="T:CaptchaSharp.Models.StringPairCollection"/> 
+            and appends it to the provided URL.</summary>
+            <returns>The <see cref="T:System.Net.Http.HttpResponseMessage"/> content converted to a string.</returns>
+        </member>
+        <member name="M:CaptchaSharp.HttpClientExtensions.PostAsync(System.Net.Http.HttpClient,System.String,CaptchaSharp.Models.StringPairCollection,System.Threading.CancellationToken,System.String)">
+            <summary>Automatically builds a POST query string from a <see cref="T:CaptchaSharp.Models.StringPairCollection"/> 
+            using <see cref="P:System.Text.Encoding.UTF8"/> encoding and the provided Content-Type.</summary>
+        </member>
+        <member name="M:CaptchaSharp.HttpClientExtensions.PostToStringAsync(System.Net.Http.HttpClient,System.String,CaptchaSharp.Models.StringPairCollection,System.Threading.CancellationToken,System.String)">
+            <summary>Automatically builds a POST query string from a <see cref="T:CaptchaSharp.Models.StringPairCollection"/> 
+            using <see cref="P:System.Text.Encoding.UTF8"/> encoding and the provided Content-Type.</summary>
+            <returns>The <see cref="T:System.Net.Http.HttpResponseMessage"/> content converted to a <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:CaptchaSharp.HttpClientExtensions.PostMultipartToStringAsync(System.Net.Http.HttpClient,System.String,System.Net.Http.MultipartFormDataContent,System.Threading.CancellationToken)">
+            <summary>Sends a POST request with the desired <see cref="T:System.Net.Http.MultipartFormDataContent"/> and reads the 
+            response as a <see cref="T:System.String"/>.</summary>
+            <returns>The <see cref="T:System.Net.Http.HttpResponseMessage"/> content converted to a <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:CaptchaSharp.HttpClientExtensions.PostJsonToStringAsync``1(System.Net.Http.HttpClient,System.String,``0,System.Threading.CancellationToken,System.Boolean)">
+            <summary>Automatically builds a POST json string from a given object using <see cref="P:System.Text.Encoding.UTF8"/> encoding 
+            and application/json Content-Type.</summary>
+            <returns>The <see cref="T:System.Net.Http.HttpResponseMessage"/> content converted to a <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="T:CaptchaSharp.StringExtensions">
+            <summary>Extensions for a <see cref="T:System.String"/>.</summary>
+        </member>
+        <member name="M:CaptchaSharp.StringExtensions.Deserialize``1(System.String)">
+            <summary>Deserializes a json string to a given type.</summary>
+        </member>
+        <member name="M:CaptchaSharp.StringExtensions.SerializeCamelCase``1(``0)">
+            <summary>Serializes an object to a json string and converts the property names 
+            to a camelCase based convention.</summary>
+        </member>
+        <member name="M:CaptchaSharp.StringExtensions.SerializeLowerCase``1(``0)">
+            <summary>Serializes an object to a json string and converts the property names 
+            to a lowercase based convention.</summary>
+        </member>
+        <member name="T:CaptchaSharp.BoolExtensions">
+            <summary>Extensions for a <see cref="T:System.Boolean"/>.</summary>
+        </member>
+        <member name="M:CaptchaSharp.BoolExtensions.ToInt(System.Boolean)">
+            <summary>Converts a bool to an int.</summary>
+            <returns>0 if false, 1 if true.</returns>
+        </member>
+        <member name="T:CaptchaSharp.CaptchaLanguageExtensions">
+            <summary>Extensions for a <see cref="T:CaptchaSharp.Enums.CaptchaLanguage"/>.</summary>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaLanguageExtensions.ToISO6391Code(CaptchaSharp.Enums.CaptchaLanguage)">
+            <summary>Converts a <see cref="T:CaptchaSharp.Enums.CaptchaLanguage"/> to an ISO-639-1 country code.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.ImageTyperzService.Capabilities">
+            <inheritdoc/>
+        </member>
+        <member name="T:CaptchaSharp.Services.TwoCaptchaService">
+            <summary>The service provided by <code>https://2captcha.com/</code>.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.TwoCaptchaService.ApiKey">
+            <summary>Your secret api key.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.TwoCaptchaService.httpClient">
+            <summary>The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.TextCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveKeyCaptchaAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveGeeTestAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.TryGetResult(CaptchaSharp.Services.TwoCaptcha.Response,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="P:CaptchaSharp.Services.TwoCaptchaService.Capabilities">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>
