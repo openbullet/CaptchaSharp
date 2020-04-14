@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CaptchaSharp.Services
+namespace CaptchaSharp.Services.More
 {
     public class SolveRecaptchaService : CustomTwoCaptchaService
     {

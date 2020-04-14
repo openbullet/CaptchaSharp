@@ -1,5 +1,4 @@
-﻿using CaptchaSharp.Enums;
-using CaptchaSharp.Exceptions;
+﻿using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,7 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CaptchaSharp.Services
+namespace CaptchaSharp.Services.More
 {
     public class TrueCaptchaService : CaptchaService
     {

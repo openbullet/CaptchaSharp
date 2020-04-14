@@ -414,12 +414,12 @@ namespace CaptchaSharp.Services
 
         #region Utility methods
         // For non-json response
-        internal bool IsErrorCode(string response)
+        protected bool IsErrorCode(string response)
         {
             return !response.StartsWith("OK");
         }
 
-        internal string TakeSecondSlice(string str)
+        protected string TakeSecondSlice(string str)
         {
             return str.Split('|')[1];
         }

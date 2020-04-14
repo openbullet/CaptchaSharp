@@ -85,6 +85,9 @@ namespace SolverTester
             InitializeComponent();
             DataContext = this;
 
+            // Dummy line so that the JIT compiler loads the assembly containing the extra solvers
+            new RuCaptchaService("", null);
+
             #region Setup Combo Boxes
             foreach (var s in GetServiceTypes().Select(t => t.Name))
                 serviceCombobox.Items.Add(s);
