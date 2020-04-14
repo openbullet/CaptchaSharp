@@ -251,7 +251,7 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.HCaptcha, cancellationToken)
+            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.GeeTest, cancellationToken)
                 as GeeTestResponse;
         }
         #endregion

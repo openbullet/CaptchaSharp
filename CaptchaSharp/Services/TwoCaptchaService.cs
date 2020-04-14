@@ -327,17 +327,22 @@ namespace CaptchaSharp.Services
 
             if (UseJsonFlag)
             {
-                var tcResponse = response.Deserialize<Response>();
-                
-                if (tcResponse.IsErrorCode)
-                    throw new TaskSolutionException(tcResponse.Request);
-
                 switch (task.Type)
                 {
                     case CaptchaType.GeeTest:
-                        return tcResponse.Request.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id);
+                        var gtResponse = response.Deserialize<TwoCaptchaGeeTestResponse>();
+
+                        if (gtResponse.IsErrorCode)
+                            throw new TaskSolutionException(gtResponse.Error_Text);
+
+                        return gtResponse.Request.ToGeeTestResponse(task.Id);
 
                     default:
+                        var tcResponse = response.Deserialize<Response>();
+
+                        if (tcResponse.IsErrorCode)
+                            throw new TaskSolutionException(tcResponse.Error_Text);
+
                         return new StringResponse { Id = task.Id, Response = tcResponse.Request };
                 }
             }
