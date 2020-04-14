@@ -1,4 +1,5 @@
 ﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
 using System.Globalization;
@@ -41,7 +42,10 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return await TryGetResult(response, CaptchaType.ReCaptchaV2, cancellationToken) as StringResponse;
+            if (IsErrorCode(response))
+                ThrowException(response);
+
+            return new StringResponse { Id = 0, Response = TakeSecondSlice(response) };
         }
 
         public async override Task<StringResponse> SolveRecaptchaV3Async
@@ -60,7 +64,10 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return await TryGetResult(response, CaptchaType.ReCaptchaV3, cancellationToken) as StringResponse;
+            if (IsErrorCode(response))
+                ThrowException(response);
+
+            return new StringResponse { Id = 0, Response = TakeSecondSlice(response) };
         }
 
         public async override Task ReportSolution
@@ -71,5 +78,24 @@ namespace CaptchaSharp.Services
 
         private StringPairCollection GetAuthPair()
             => new StringPairCollection().Add("key", ApiKey);
+
+        private void ThrowException(string response)
+        {
+            switch (response)
+            {
+                case "ERROR_API_KEY_NOT_FOUND":
+                case "ERROR_ACCESS_DENIED":
+                    throw new BadAuthenticationException(response);
+
+                case "ERROR_NO_AVAILABLE_THREADS":
+                    throw new TaskCreationException(response);
+
+                case "ERROR_CAPTCHA_UNSOLVABLE":
+                    throw new TaskSolutionException(response);
+
+                default:
+                    throw new Exception(response);
+            }
+        }
     }
 }
