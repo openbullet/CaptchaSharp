@@ -104,7 +104,7 @@ namespace CaptchaSharp.Services
                 .Add("action", "UPLOADCAPTCHA")
                 .Add("pageurl", siteUrl)
                 .Add("googlekey", siteKey)
-                .Add("action", action)
+                .Add("captchaaction", action)
                 .Add("score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
                 .Add("recaptchatype", 3)
                 .Add(GetProxyParams(proxy)),
@@ -189,7 +189,7 @@ namespace CaptchaSharp.Services
             if (task.Type == CaptchaType.GeeTest)
             {
                 response = await httpClient.GetStringAsync
-                    ("captchaapi/getrecaptchatext.ashx?",
+                    ("captchaapi/getrecaptchatext.ashx",
                     GetAuthPair()
                     .Add("action", "GETTEXT")
                     .Add("captchaID", task.Id),
