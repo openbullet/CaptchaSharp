@@ -42,6 +42,10 @@ namespace CaptchaSharp
         /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
         /// captcha solution as plaintext.
         /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveTextCaptchaAsync
             (string text, TextCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
@@ -64,6 +68,10 @@ namespace CaptchaSharp
         /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
         /// captcha solution as plaintext.
         /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
@@ -89,6 +97,10 @@ namespace CaptchaSharp
         /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
         /// captcha solution as plaintext.
         /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
@@ -115,6 +127,10 @@ namespace CaptchaSharp
         /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
         /// captcha solution as plaintext.
         /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
@@ -152,6 +168,10 @@ namespace CaptchaSharp
         /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
         /// captcha solution as plaintext.
         /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveFuncaptchaAsync
             (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -177,12 +197,41 @@ namespace CaptchaSharp
         /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
         /// captcha solution as plaintext.
         /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveHCaptchaAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>Solves a KeyCaptcha.</summary>
+        /// 
+        /// <param name="userId">s_s_c_user_id parameter in the webpage source code.</param>
+        /// <param name="sessionId">s_s_c_session_id parameter in the webpage source code.</param>
+        /// <param name="webServerSign1">s_s_c_web_server_sign parameter in the webpage source code.</param>
+        /// <param name="webServerSign2">s_s_c_web_server_sign2 parameter in the webpage source code.</param>
+        /// <param name="siteUrl">The URL where the captcha appears.</param>
+        /// 
+        /// <param name="proxy">
+        /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+        /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+        /// fetch the captcha without using a proxy.
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <returns>
+        /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+        /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+        /// captcha solution as plaintext.
+        /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveKeyCaptchaAsync
             (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
             Proxy proxy = null, CancellationToken cancellationToken = default)
@@ -190,6 +239,30 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
+        /// <summary>Solves a GeeTest captcha.</summary>
+        /// 
+        /// <param name="gt">The static public key assigned to the website found in the webpage source code.</param>
+        /// <param name="challenge">The dynamic challenge key found in the webpage source code.</param>
+        /// <param name="apiServer">The api_server parameter found in the webpage source code.</param>
+        /// <param name="siteUrl">The URL where the captcha appears.</param>
+        /// 
+        /// <param name="proxy">
+        /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+        /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+        /// fetch the captcha without using a proxy.
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <returns>
+        /// A <see cref="GeeTestResponse"/> containing the captcha id to be used with 
+        /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and three solution parameters 
+        /// (Challenge, Validate and SecCode) that you will need to provide when you submit the form.
+        /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<GeeTestResponse> SolveGeeTestAsync
             (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
@@ -197,19 +270,58 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
+        /// <summary>Solves a Capy captcha.</summary>
+        /// 
+        /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+        /// <param name="siteUrl">The URL where the captcha appears.</param>
+        /// 
+        /// <param name="proxy">
+        /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+        /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+        /// fetch the captcha without using a proxy.
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <returns>
+        /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+        /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+        /// captcha solution as plaintext.
+        /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
         public virtual Task<StringResponse> SolveCapyAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Reports a captcha solution as good or bad to the service.
+        /// Mostly used for reporting bad solutions for image captchas and get the funds back.
+        /// Make sure to not abuse this system or the service might ban you from accessing it!
+        /// </summary>
+        /// 
+        /// <param name="id">The ID of the captcha that you got inside your <see cref="CaptchaResponse"/>.</param>
+        /// <param name="type">The type of captcha you want to report.</param>
+        /// 
+        /// <param name="correct">
+        /// If true, the captcha will be reported as correctly solved (this is not supported by most services).
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <exception cref="TaskReportException"></exception>
         public virtual Task ReportSolution
             (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        internal async Task<CaptchaResponse> TryGetResult
+        /// <summary></summary>
+        protected async Task<CaptchaResponse> TryGetResult
             (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var start = DateTime.Now;
@@ -233,7 +345,8 @@ namespace CaptchaSharp
             return result;
         }
 
-        internal virtual Task<CaptchaResponse> CheckResult
+        /// <summary></summary>
+        protected virtual Task<CaptchaResponse> CheckResult
             (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();

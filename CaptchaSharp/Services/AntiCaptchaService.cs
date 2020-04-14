@@ -26,7 +26,7 @@ namespace CaptchaSharp.Services
         /// <summary>The ID of the software developer.</summary>
         public int SoftId { get; set; }
 
-        /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/> 
+        /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public AntiCaptchaService(string apiKey, HttpClient httpClient = null)
         {
@@ -268,7 +268,8 @@ namespace CaptchaSharp.Services
             return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
-        internal async override Task<CaptchaResponse> CheckResult
+        /// <inheritdoc/>
+        protected async override Task<CaptchaResponse> CheckResult
             (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostJsonToStringAsync

@@ -4,9 +4,12 @@ using System.Net.Http;
 
 namespace CaptchaSharp.Services
 {
+    /// <summary>The service provided by a service that implements the 2captcha API.</summary>
     public class CustomTwoCaptchaService : TwoCaptchaService
     {
-        // The baseUri must end with a forward slash
+        /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/>, 
+        /// <paramref name="baseUri"/> and <paramref name="httpClient"/>.
+        /// If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public CustomTwoCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null) : base(apiKey, httpClient)
         {
             SetupHttpClient(baseUri);
@@ -16,6 +19,8 @@ namespace CaptchaSharp.Services
             UseJsonFlag = false;
         }
 
+        /// <summary>Sets 2captcha.com as host and <paramref name="baseUri"/> as <see cref="HttpClient.BaseAddress"/> 
+        /// for the <see cref="HttpClient"/> requests.</summary>
         protected void SetupHttpClient(Uri baseUri)
         {
             // Use 2captcha.com as host header to simulate an entry in the hosts file
@@ -24,6 +29,7 @@ namespace CaptchaSharp.Services
         }
 
         #region Supported Types
+        /// <summary>The supported captcha types for this service.</summary>
         public CaptchaType SupportedCaptchaTypes { get; set; } =
             CaptchaType.TextCaptcha |
             CaptchaType.ImageCaptcha |

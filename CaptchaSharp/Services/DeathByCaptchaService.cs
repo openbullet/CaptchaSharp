@@ -203,7 +203,8 @@ namespace CaptchaSharp.Services
             return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
-        internal async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        protected async override Task<CaptchaResponse> CheckResult(CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetAsync($"captcha/{task.Id}", cancellationToken);
             var query = HttpUtility.ParseQueryString(await DecodeIsoResponse(response));

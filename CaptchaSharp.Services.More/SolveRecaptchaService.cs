@@ -71,7 +71,7 @@ namespace CaptchaSharp.Services.More
             return new StringResponse { Id = 0, Response = TakeSecondSlice(response) };
         }
 
-        public async override Task ReportSolution
+        public override Task ReportSolution
             (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();

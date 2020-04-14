@@ -31,7 +31,7 @@ namespace CaptchaSharp.Services
         /// <summary>The ID of the software developer.</summary>
         public string SoftId { get; set; } = "PLACEHOLDER";
 
-        /// <summary>Initializes a <see cref="TwoCaptchaService"/> using the given <paramref name="apiKey"/> 
+        /// <summary>Initializes a <see cref="TwoCaptchaService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
         {
@@ -308,7 +308,8 @@ namespace CaptchaSharp.Services
             return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
         }
 
-        internal async override Task<CaptchaResponse> CheckResult
+        /// <summary></summary>
+        protected async override Task<CaptchaResponse> CheckResult
             (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
@@ -397,6 +398,7 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Proxies
+        /// <summary></summary>
         protected IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
         {
             if (proxy == null)
@@ -413,12 +415,13 @@ namespace CaptchaSharp.Services
         #endregion
 
         #region Utility methods
-        // For non-json response
+        /// <summary>For non-json response.</summary>
         protected bool IsErrorCode(string response)
         {
             return !response.StartsWith("OK");
         }
 
+        /// <summary>For non-json response.</summary>
         protected string TakeSecondSlice(string str)
         {
             return str.Split('|')[1];
