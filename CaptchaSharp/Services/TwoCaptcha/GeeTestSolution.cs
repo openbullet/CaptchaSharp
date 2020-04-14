@@ -4,18 +4,18 @@ namespace CaptchaSharp.Services.TwoCaptcha
 {
     internal class GeeTestSolution
     {
-        public string Challenge { get; set; }
-        public string Validate { get; set; }
-        public string SecCode { get; set; }
+        public string GeeTest_Challenge { get; set; }
+        public string GeeTest_Validate { get; set; }
+        public string GeeTest_SecCode { get; set; }
 
         public GeeTestResponse ToGeeTestResponse(long id)
         {
             return new GeeTestResponse()
             {
                 Id = id,
-                Challenge = Challenge,
-                Validate = Validate,
-                SecCode = SecCode
+                Challenge = GeeTest_Challenge,
+                Validate = GeeTest_Validate,
+                SecCode = GeeTest_SecCode
             };
         }
     }

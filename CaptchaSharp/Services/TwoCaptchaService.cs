@@ -8,6 +8,7 @@ using CaptchaSharp.Models;
 using CaptchaSharp.Services.TwoCaptcha;
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json.Linq;
 
 namespace CaptchaSharp.Services
 {
@@ -327,24 +328,24 @@ namespace CaptchaSharp.Services
 
             if (UseJsonFlag)
             {
-                switch (task.Type)
+                if (task.Type == CaptchaType.GeeTest)
                 {
-                    case CaptchaType.GeeTest:
-                        var gtResponse = response.Deserialize<TwoCaptchaGeeTestResponse>();
+                    var jObject = JObject.Parse(response);
+                    var solution = jObject["request"];
 
-                        if (gtResponse.IsErrorCode)
-                            throw new TaskSolutionException(gtResponse.Error_Text);
-
-                        return gtResponse.Request.ToGeeTestResponse(task.Id);
-
-                    default:
-                        var tcResponse = response.Deserialize<Response>();
-
-                        if (tcResponse.IsErrorCode)
-                            throw new TaskSolutionException(tcResponse.Error_Text);
-
-                        return new StringResponse { Id = task.Id, Response = tcResponse.Request };
+                    if (solution.Type == JTokenType.Object)
+                    {
+                        return response.Deserialize<TwoCaptchaGeeTestResponse>()
+                            .Request.ToGeeTestResponse(task.Id);
+                    }
                 }
+
+                var tcResponse = response.Deserialize<Response>();
+
+                if (tcResponse.IsErrorCode)
+                    throw new TaskSolutionException(tcResponse.Error_Text);
+
+                return new StringResponse { Id = task.Id, Response = tcResponse.Request };
             }
             else
             {
