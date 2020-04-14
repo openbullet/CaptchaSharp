@@ -15,6 +15,7 @@ namespace CaptchaSharp.Services
             : base(apiKey, new Uri("http://api.solverecaptcha.com"), httpClient)
         {
             this.httpClient.DefaultRequestHeaders.Host = "api.solverecaptcha.com";
+            this.httpClient.Timeout = Timeout;
 
             SupportedCaptchaTypes =
                 CaptchaType.ReCaptchaV2 |
