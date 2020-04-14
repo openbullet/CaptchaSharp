@@ -6,6 +6,7 @@ using CaptchaSharp.Services.More;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -278,7 +279,7 @@ namespace SolverTester
                         CaptchaLanguage = CaptchaLanguage,
                         TextInstructions = TextInstructions
                     };
-                    return await service.SolveImageCaptchaAsync(CaptchaImage, null, imageOptions);
+                    return await service.SolveImageCaptchaAsync(CaptchaImage.ToBase64(ImageFormat.Jpeg), imageOptions);
 
                 case CaptchaType.ReCaptchaV2:
                     return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible, proxy);

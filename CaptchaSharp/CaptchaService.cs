@@ -1,10 +1,7 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,13 +29,6 @@ namespace CaptchaSharp
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
-        }
-
-        public virtual Task<StringResponse> SolveImageCaptchaAsync
-            (Bitmap image, ImageFormat format = null, ImageCaptchaOptions options = null,
-            CancellationToken cancellationToken = default)
-        {
-            return SolveImageCaptchaAsync(image.ToBase64(format ?? ImageFormat.Jpeg), options, cancellationToken);
         }
 
         public virtual Task<StringResponse> SolveRecaptchaV2Async
@@ -125,25 +115,6 @@ namespace CaptchaSharp
         private async Task Delay(int milliseconds)
         {
             await Task.Run(() => Thread.Sleep(milliseconds));
-        }
-
-        public Bitmap ConvertTextToImage
-            (string txt, string fontname, int fontsize, Color bgcolor, Color fcolor, int width, int Height)
-        {
-            Bitmap bmp = new Bitmap(width, Height);
-            using (Graphics graphics = Graphics.FromImage(bmp))
-            {
-
-                Font font = new Font(fontname, fontsize);
-                graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, bmp.Width, bmp.Height);
-                graphics.DrawString(txt, font, new SolidBrush(fcolor), 0, 0);
-                graphics.Flush();
-                font.Dispose();
-                graphics.Dispose();
-
-
-            }
-            return bmp;
         }
     }
 }
