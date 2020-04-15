@@ -71,6 +71,12 @@ Console.WriteLine($"The solution is {solution.Response}");
 
 In addition, mind that not every service supports every type of captcha! If a method or specific parameters are not supported, a `NotSupportedException` will be thrown.
 
+## SolverTester
+Along with the library and its extension, the solution also includes a WPF based solver that can be used to quickly test most of the features of the library to see if the methods work properly.
+
+#### Why not a unit test framework?
+Implementing proper unit tests would have made little sense since valid credentials are needed for each service and sometimes they are overloaded and they won't solve captchas, so unit tests would have been unreliable and I decided to go for a manual testing approach.
+
 ## What needs to be improved
 - Use C# anonymous types or `JObject` for the `AntiCaptchaSolver` instead of a million classes!
 - Implement better exception handling, for example when there is zero balance or when a solver method returns a bad authentication, they will currently fall in the generic `TaskCreationException` type.
