@@ -13,7 +13,9 @@ This library supports the following captcha types
 - GeeTest
 - Capy
 
-Although this sounds very exciting, sadly not all captcha types are supported by the services. You can find a table of the supported captcha types for each major service at this link (INSERT LINK LATER).
+Although this sounds very exciting, sadly not all captcha types are supported by the services. You can find a table of the supported captcha types for each major service below.
+
+![Supported Captcha Types](https://i.imgur.com/NMUiGRf.png)
 
 ## Adding CaptchaSharp to your project
 Simply install the nuget package via
