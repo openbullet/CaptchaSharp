@@ -20,7 +20,7 @@ namespace CaptchaSharp.Services
         private HttpClient httpClient;
 
         /// <summary>The ID of the software developer.</summary>
-        public string AffiliateId { get; set; } = "123";
+        public int AffiliateId { get; set; } = 671869;
 
         /// <summary>Initializes a <see cref="ImageTyperzService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>

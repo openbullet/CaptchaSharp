@@ -1,7 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Adds additional services to CaptchaSharp.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Ruri</Authors>
+    <Company>Ruri</Company>
+    <RepositoryUrl>https://github.com/openbullet/CaptchaSharp</RepositoryUrl>
+    <PackageTags>Captcha, Solver, Service, API, 2Captcha, TwoCaptcha, AntiCaptcha, Anti-Captcha, DeathByCaptcha, DBC, DeCaptcher, ImageTyperz</PackageTags>
+    <PackageProjectUrl>https://github.com/openbullet/CaptchaSharp</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

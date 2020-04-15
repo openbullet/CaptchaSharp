@@ -24,7 +24,7 @@ namespace CaptchaSharp.Services
         protected HttpClient httpClient;
 
         /// <summary>The ID of the software developer.</summary>
-        public int SoftId { get; set; }
+        public int SoftId { get; set; } = 934;
 
         /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>

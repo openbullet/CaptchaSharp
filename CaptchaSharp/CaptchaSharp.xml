@@ -276,6 +276,270 @@
         <member name="M:CaptchaSharp.CaptchaService.CheckResult(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <summary></summary>
         </member>
+        <member name="T:CaptchaSharp.Enums.CaptchaLanguage">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.NotSpecified">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.English">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Russian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Spanish">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Portuguese">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Ukrainian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Vietnamese">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.French">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Indonesian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Arab">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Japanese">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Turkish">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.German">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Chinese">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Philippine">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Polish">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Thai">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Italian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Dutch">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Slovak">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Bulgarian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Romanian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Hungarian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Korean">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Czech">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Azerbaijani">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Persian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Bengali">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Greek">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Lithuanian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Latvian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Swedish">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Serbian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Croatian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Hebrew">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Hindi">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Norwegian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Slovenian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Danish">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Uzbek">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Finnish">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Catalan">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Georgian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Malay">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Telugu">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Estonian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Malayalam">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Belorussian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Kazakh">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Marathi">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Nepali">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Burmese">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Bosnian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Armenian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Macedonian">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguage.Punjabi">
+            <summary></summary>
+        </member>
+        <member name="T:CaptchaSharp.Enums.CaptchaLanguageGroup">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguageGroup.NotSpecified">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguageGroup.Cyrillic">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaLanguageGroup.Latin">
+            <summary></summary>
+        </member>
+        <member name="T:CaptchaSharp.Enums.CaptchaServiceCapabilities">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.None">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.LanguageGroup">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.Language">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.Phrases">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.CaseSensitivity">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.CharacterSets">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.Calculations">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.MinLength">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.MaxLength">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaServiceCapabilities.Instructions">
+            <summary></summary>
+        </member>
+        <member name="T:CaptchaSharp.Enums.CaptchaType">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.TextCaptcha">
+            <summary>A captcha that is a plaintext question.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.ImageCaptcha">
+            <summary>A captcha that is made by an image with some text to recognize.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.FunCaptcha">
+            <summary>A type of puzzle captcha.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.ReCaptchaV2">
+            <summary>The Google ReCaptcha v2.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.ReCaptchaV3">
+            <summary>The Google ReCaptcha v3.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.HCaptcha">
+            <summary>A type of token captcha.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.KeyCaptcha">
+            <summary>A type of token captcha.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.GeeTest">
+            <summary>A type of challenge based captcha.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.Capy">
+            <summary>A type of token captcha.</summary>
+        </member>
+        <member name="T:CaptchaSharp.Enums.CharacterSet">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CharacterSet.NotSpecified">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CharacterSet.OnlyNumbers">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CharacterSet.OnlyLetters">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CharacterSet.OnlyNumbersOrOnlyLetters">
+            <summary></summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CharacterSet.BothNumbersAndLetters">
+            <summary></summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.ProxyType">
             <summary></summary>
         </member>
@@ -547,7 +811,7 @@
             <summary>The ID of the software developer.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
-            <summary>Initializes a <see cref="T:CaptchaSharp.Services.AntiCaptchaService"/> using the given <paramref name="apiKey"/> 
+            <summary>Initializes a <see cref="T:CaptchaSharp.Services.AntiCaptchaService"/> using the given <paramref name="apiKey"/> and 
             <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
@@ -579,6 +843,21 @@
         </member>
         <member name="P:CaptchaSharp.Services.AntiCaptchaService.Capabilities">
             <inheritdoc/>
+        </member>
+        <member name="T:CaptchaSharp.Services.CustomTwoCaptchaService">
+            <summary>The service provided by a service that implements the 2captcha API.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CustomTwoCaptchaService.#ctor(System.String,System.Uri,System.Net.Http.HttpClient)">
+            <summary>Initializes a <see cref="T:CaptchaSharp.Services.AntiCaptchaService"/> using the given <paramref name="apiKey"/>, 
+            <paramref name="baseUri"/> and <paramref name="httpClient"/>.
+            If <paramref name="httpClient"/> is null, a default one will be created.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CustomTwoCaptchaService.SetupHttpClient(System.Uri)">
+            <summary>Sets 2captcha.com as host and <paramref name="baseUri"/> as <see cref="P:System.Net.Http.HttpClient.BaseAddress"/> 
+            for the <see cref="T:System.Net.Http.HttpClient"/> requests.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.CustomTwoCaptchaService.SupportedCaptchaTypes">
+            <summary>The supported captcha types for this service.</summary>
         </member>
         <member name="T:CaptchaSharp.Services.DeathByCaptchaService">
             <summary>The service provided by <c>https://www.deathbycaptcha.com/</c></summary>
@@ -661,7 +940,7 @@
             <summary>The ID of the software developer.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.ImageTyperzService.#ctor(System.String,System.Net.Http.HttpClient)">
-            <summary>Initializes a <see cref="T:CaptchaSharp.Services.ImageTyperzService"/> using the given <paramref name="apiKey"/> 
+            <summary>Initializes a <see cref="T:CaptchaSharp.Services.ImageTyperzService"/> using the given <paramref name="apiKey"/> and 
             <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.ImageTyperzService.GetBalanceAsync(System.Threading.CancellationToken)">
@@ -714,7 +993,7 @@
             <summary>The ID of the software developer.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
-            <summary>Initializes a <see cref="T:CaptchaSharp.Services.TwoCaptchaService"/> using the given <paramref name="apiKey"/> 
+            <summary>Initializes a <see cref="T:CaptchaSharp.Services.TwoCaptchaService"/> using the given <paramref name="apiKey"/> and 
             <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">

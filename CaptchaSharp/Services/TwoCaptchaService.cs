@@ -29,7 +29,7 @@ namespace CaptchaSharp.Services
         public bool AddACAOHeader { get; set; } = false;
 
         /// <summary>The ID of the software developer.</summary>
-        public string SoftId { get; set; } = "PLACEHOLDER";
+        public int SoftId { get; set; } = 2658;
 
         /// <summary>Initializes a <see cref="TwoCaptchaService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
