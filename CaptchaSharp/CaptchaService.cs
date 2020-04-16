@@ -328,14 +328,14 @@ namespace CaptchaSharp
             CaptchaResponse result;
 
             // Initial 5s delay
-            await Delay(5000);
+            await Task.Delay(5000);
 
             do
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
                 result = await CheckResult(task, cancellationToken);
-                await Delay(5000);
+                await Task.Delay(5000);
             }
             while (!task.Completed && DateTime.Now - start < Timeout);
 
@@ -350,11 +350,6 @@ namespace CaptchaSharp
             (CaptchaTask task, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
-        }
-
-        private async Task Delay(int milliseconds)
-        {
-            await Task.Run(() => Thread.Sleep(milliseconds));
         }
     }
 }
