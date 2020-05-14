@@ -154,6 +154,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
                 new StringPairCollection()
+                    .Add("key", ApiKey)
                     .Add("method", "userrecaptcha")
                     .Add("version", "v3")
                     .Add("googlekey", siteKey)
