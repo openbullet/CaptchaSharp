@@ -384,6 +384,9 @@ namespace CaptchaSharp.Services
 
         private CaptchaTaskRequest AddImageCapabilities(CaptchaTaskRequest request, ImageCaptchaOptions options)
         {
+            if (options == null)
+                return request;
+
             var task = request.Task as ImageCaptchaTask;
 
             task.Phrase = options.IsPhrase;
