@@ -38,7 +38,7 @@ namespace CaptchaSharp.Services.More
                 .Add("sitekey", siteKey)
                 .Add("pageurl", siteUrl)
                 .Add("version", invisible ? "invisible" : "v2")
-                .Add("invisible", invisible.ToInt().ToString())
+                .Add("invisible", Convert.ToInt32(invisible).ToString())
                 .Add(ConvertProxy(proxy)),
                 cancellationToken)
                 .ConfigureAwait(false);

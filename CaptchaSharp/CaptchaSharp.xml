@@ -648,13 +648,6 @@
             <summary>Serializes an object to a json string and converts the property names 
             to a lowercase based convention.</summary>
         </member>
-        <member name="T:CaptchaSharp.BoolExtensions">
-            <summary>Extensions for a <see cref="T:System.Boolean"/>.</summary>
-        </member>
-        <member name="M:CaptchaSharp.BoolExtensions.ToInt(System.Boolean)">
-            <summary>Converts a bool to an int.</summary>
-            <returns>0 if false, 1 if true.</returns>
-        </member>
         <member name="T:CaptchaSharp.CaptchaLanguageExtensions">
             <summary>Extensions for a <see cref="T:CaptchaSharp.Enums.CaptchaLanguage"/>.</summary>
         </member>

@@ -49,7 +49,7 @@ namespace CaptchaSharp.Services
                 new StringPairCollection() 
                     .Add("key", ApiKey)
                     .Add("action", "getbalance")
-                    .Add("json", UseJsonFlag.ToInt().ToString()),
+                    .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
                 cancellationToken);
 
             if (UseJsonFlag)
@@ -131,7 +131,7 @@ namespace CaptchaSharp.Services
                     .Add("method", "userrecaptcha")
                     .Add("googlekey", siteKey)
                     .Add("pageurl", siteUrl)
-                    .Add("invisible", invisible.ToInt().ToString())
+                    .Add("invisible", Convert.ToInt32(invisible).ToString())
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
@@ -188,7 +188,7 @@ namespace CaptchaSharp.Services
                     .Add("publickey", publicKey)
                     .Add("surl", serviceUrl)
                     .Add("pageurl", siteUrl)
-                    .Add("nojs", noJS.ToInt().ToString())
+                    .Add("nojs", Convert.ToInt32(noJS).ToString())
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
                     .Add("header_acao", "1", AddACAOHeader)
@@ -319,7 +319,7 @@ namespace CaptchaSharp.Services
                     .Add("key", ApiKey)
                     .Add("action", "get")
                     .Add("id", task.Id.ToString())
-                    .Add("json", UseJsonFlag.ToInt().ToString()),
+                    .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
                 cancellationToken);
 
             if (response.Contains("CAPCHA_NOT_READY"))
@@ -380,7 +380,7 @@ namespace CaptchaSharp.Services
                     .Add("key", ApiKey)
                     .Add("action", action)
                     .Add("id", taskId.ToString())
-                    .Add("json", UseJsonFlag.ToInt().ToString()),
+                    .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
                 cancellationToken);
 
             if (UseJsonFlag)
@@ -468,16 +468,16 @@ namespace CaptchaSharp.Services
             var capabilities = new List<(string, string)>();
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.Phrases))
-                capabilities.Add(("phrase", options.IsPhrase.ToInt().ToString()));
+                capabilities.Add(("phrase", Convert.ToInt32(options.IsPhrase).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.CaseSensitivity))
-                capabilities.Add(("regsense", options.CaseSensitive.ToInt().ToString()));
+                capabilities.Add(("regsense", Convert.ToInt32(options.CaseSensitive).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.CharacterSets))
                 capabilities.Add(("numeric", ((int)options.CharacterSet).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.Calculations))
-                capabilities.Add(("calc", options.RequiresCalculation.ToInt().ToString()));
+                capabilities.Add(("calc", Convert.ToInt32(options.RequiresCalculation).ToString()));
 
             if (Capabilities.HasFlag(CaptchaServiceCapabilities.MinLength))
                 capabilities.Add(("min_len", options.MinLength.ToString()));

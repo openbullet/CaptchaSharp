@@ -119,17 +119,6 @@ namespace CaptchaSharp
         }
     }
 
-    /// <summary>Extensions for a <see cref="bool"/>.</summary>
-    public static class BoolExtensions
-    {
-        /// <summary>Converts a bool to an int.</summary>
-        /// <returns>0 if false, 1 if true.</returns>
-        public static int ToInt(this bool boolean)
-        {
-            return boolean ? 1 : 0;
-        }
-    }
-
     /// <summary>Extensions for a <see cref="CaptchaLanguage"/>.</summary>
     public static class CaptchaLanguageExtensions
     {
