@@ -122,10 +122,7 @@ namespace CaptchaSharp
     /// <summary>Extensions for a <see cref="CaptchaLanguage"/>.</summary>
     public static class CaptchaLanguageExtensions
     {
-        /// <summary>Converts a <see cref="CaptchaLanguage"/> to an ISO-639-1 country code.</summary>
-        public static string ToISO6391Code(this CaptchaLanguage language)
-        {
-            var dict = new Dictionary<CaptchaLanguage, string>
+        private static readonly Dictionary<CaptchaLanguage, string> dict = new Dictionary<CaptchaLanguage, string>
             {
                 { CaptchaLanguage.NotSpecified, "en" },
                 { CaptchaLanguage.English,      "en" },
@@ -185,7 +182,7 @@ namespace CaptchaSharp
                 { CaptchaLanguage.Punjabi,      "pa" }
             };
 
-            return dict[language];
-        }
+        /// <summary>Converts a <see cref="CaptchaLanguage"/> to an ISO-639-1 country code.</summary>
+        public static string ToISO6391Code(this CaptchaLanguage language) => dict[language];
     }
 }
