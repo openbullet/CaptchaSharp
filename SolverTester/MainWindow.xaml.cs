@@ -234,7 +234,7 @@ namespace SolverTester
             var timeout = TimeSpan.FromSeconds(double.Parse(Timeout));
             CaptchaService service;
 
-            if (serviceType == typeof(CustomTwoCaptchaService))
+            if (serviceType == typeof(CustomTwoCaptchaService) || serviceType == typeof(CapMonsterService))
             {
                 service = Activator.CreateInstance(serviceType, new object[] { ApiKey, new Uri(CustomTwoCaptchaBaseUri), null }) as CaptchaService;
             }
