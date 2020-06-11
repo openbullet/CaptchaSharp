@@ -135,7 +135,7 @@ namespace SolverTester
             configTabControl.SelectedIndex = 0;
             var serviceType = GetServiceType(ServiceTypeName);
 
-            if (serviceType == typeof(CustomTwoCaptchaService))
+            if (serviceType == typeof(CustomTwoCaptchaService) || serviceType == typeof(CapMonsterService))
                 configTabControl.SelectedIndex = 1;
             else
                 configTabControl.SelectedIndex = 0;

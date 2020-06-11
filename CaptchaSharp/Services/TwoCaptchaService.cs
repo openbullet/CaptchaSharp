@@ -442,7 +442,8 @@ namespace CaptchaSharp.Services
             CaptchaServiceCapabilities.MaxLength |
             CaptchaServiceCapabilities.Instructions;
 
-        private IEnumerable<(string, string)> ConvertCapabilities(TextCaptchaOptions options)
+        /// <summary></summary>
+        protected IEnumerable<(string, string)> ConvertCapabilities(TextCaptchaOptions options)
         {
             // If null, don't return any parameters
             if (options == null)
@@ -459,7 +460,8 @@ namespace CaptchaSharp.Services
             return capabilities;
         }
 
-        private IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
+        /// <summary></summary>
+        protected IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
         {
             // If null, don't return any parameters
             if (options == null)
