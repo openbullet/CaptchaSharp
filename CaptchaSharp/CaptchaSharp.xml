@@ -837,6 +837,17 @@
         <member name="P:CaptchaSharp.Services.AntiCaptchaService.Capabilities">
             <inheritdoc/>
         </member>
+        <member name="T:CaptchaSharp.Services.CapMonsterService">
+            <summary>The service provided by the CapMonster OCR application by ZennoLab.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterService.#ctor(System.String,System.Uri,System.Net.Http.HttpClient)">
+            <summary>Initializes a <see cref="T:CaptchaSharp.Services.CapMonsterService"/> using the given <paramref name="apiKey"/>, 
+            <paramref name="baseUri"/> and <paramref name="httpClient"/>.
+            If <paramref name="httpClient"/> is null, a default one will be created.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:CaptchaSharp.Services.CustomTwoCaptchaService">
             <summary>The service provided by a service that implements the 2captcha API.</summary>
         </member>
@@ -1033,6 +1044,12 @@
         </member>
         <member name="P:CaptchaSharp.Services.TwoCaptchaService.Capabilities">
             <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.TextCaptchaOptions)">
+            <summary></summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.ImageCaptchaOptions)">
+            <summary></summary>
         </member>
     </members>
 </doc>
