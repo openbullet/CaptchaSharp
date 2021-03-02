@@ -23,6 +23,11 @@ namespace CaptchaSharp.Services
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {
+            if (!base64.StartsWith("base64,"))
+            {
+                base64 = "base64," + base64;
+            }   
+
             var response = await httpClient.PostToStringAsync
                 ("in.php",
                 new StringPairCollection()
