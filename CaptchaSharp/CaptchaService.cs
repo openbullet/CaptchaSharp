@@ -14,6 +14,9 @@ namespace CaptchaSharp
         /// If this <see cref="TimeSpan"/> is exceeded, a <see cref="TimeoutException"/> is thrown.</summary>
         public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(3);
 
+        /// <summary>The interval at which the service will be polled for a solution.</summary>
+        public TimeSpan PollingInterval { get; set; } = TimeSpan.FromSeconds(5);
+
         /// <summary>Returns a list of flags that denote the capabilities of the service in terms of additional 
         /// parameters to provide when solving text or image based captchas.</summary>
         public virtual CaptchaServiceCapabilities Capabilities => CaptchaServiceCapabilities.None;
@@ -327,15 +330,15 @@ namespace CaptchaSharp
             var start = DateTime.Now;
             CaptchaResponse result;
 
-            // Initial 5s delay
-            await Task.Delay(5000);
+            // Initial delay
+            await Task.Delay(PollingInterval);
 
             do
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
                 result = await CheckResult(task, cancellationToken);
-                await Task.Delay(5000);
+                await Task.Delay(PollingInterval);
             }
             while (!task.Completed && DateTime.Now - start < Timeout);
 
