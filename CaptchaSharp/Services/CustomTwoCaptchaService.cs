@@ -9,10 +9,12 @@ namespace CaptchaSharp.Services
     {
         /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/>, 
         /// <paramref name="baseUri"/> and <paramref name="httpClient"/>.
-        /// If <paramref name="httpClient"/> is null, a default one will be created.</summary>
-        public CustomTwoCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null) : base(apiKey, httpClient)
+        /// If <paramref name="httpClient"/> is null, a default one will be created.
+        /// If <paramref name="overrideHostHeader"/> is true, the Host header will be changed to 2captcha.com</summary>
+        public CustomTwoCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null, bool overrideHostHeader = true)
+            : base(apiKey, httpClient)
         {
-            SetupHttpClient(baseUri);
+            SetupHttpClient(baseUri, overrideHostHeader);
 
             // Services that implement the 2captcha API don't always support
             // JSON responses so we will not set the json=1 flag
@@ -21,10 +23,14 @@ namespace CaptchaSharp.Services
 
         /// <summary>Sets 2captcha.com as host and <paramref name="baseUri"/> as <see cref="HttpClient.BaseAddress"/> 
         /// for the <see cref="HttpClient"/> requests.</summary>
-        protected void SetupHttpClient(Uri baseUri)
+        protected void SetupHttpClient(Uri baseUri, bool overrideHostHeader = true)
         {
-            // Use 2captcha.com as host header to simulate an entry in the hosts file
-            httpClient.DefaultRequestHeaders.Host = "2captcha.com";
+            if (overrideHostHeader)
+            {
+                // Use 2captcha.com as host header to simulate an entry in the hosts file
+                httpClient.DefaultRequestHeaders.Host = "2captcha.com";
+            }
+            
             httpClient.BaseAddress = baseUri;
         }
 

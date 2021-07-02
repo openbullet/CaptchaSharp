@@ -326,7 +326,7 @@ namespace SolverTester
 
         private void LogException(Exception ex)
         {
-            MessageBox.Show($"Oopsie! An exception of type {ex.GetType()} has been thrown!\r\nHere's the message: {ex.Message}");
+            MessageBox.Show($"Oopsie! An exception of type {ex.GetType()} has been thrown!\r\nHere's the message: {ex}");
         }
 
         private BitmapImage BitmapToImageSource(Bitmap bitmap)

@@ -11,6 +11,9 @@
             <summary>The maximum allowed time for captcha completion.
             If this <see cref="T:System.TimeSpan"/> is exceeded, a <see cref="T:System.TimeoutException"/> is thrown.</summary>
         </member>
+        <member name="P:CaptchaSharp.CaptchaService.PollingInterval">
+            <summary>The interval at which the service will be polled for a solution.</summary>
+        </member>
         <member name="P:CaptchaSharp.CaptchaService.Capabilities">
             <summary>Returns a list of flags that denote the capabilities of the service in terms of additional 
             parameters to provide when solving text or image based captchas.</summary>
@@ -660,6 +663,9 @@
         <member name="P:CaptchaSharp.Models.CaptchaResponse.Id">
             <summary>The captcha id which is needed to report the solution as bad.</summary>
         </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponse.Time">
+            <summary>The time when the solution was received.</summary>
+        </member>
         <member name="T:CaptchaSharp.Models.CaptchaTask">
             <summary></summary>
         </member>
@@ -851,12 +857,12 @@
         <member name="T:CaptchaSharp.Services.CustomTwoCaptchaService">
             <summary>The service provided by a service that implements the 2captcha API.</summary>
         </member>
-        <member name="M:CaptchaSharp.Services.CustomTwoCaptchaService.#ctor(System.String,System.Uri,System.Net.Http.HttpClient)">
+        <member name="M:CaptchaSharp.Services.CustomTwoCaptchaService.#ctor(System.String,System.Uri,System.Net.Http.HttpClient,System.Boolean)">
             <summary>Initializes a <see cref="T:CaptchaSharp.Services.AntiCaptchaService"/> using the given <paramref name="apiKey"/>, 
             <paramref name="baseUri"/> and <paramref name="httpClient"/>.
             If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         </member>
-        <member name="M:CaptchaSharp.Services.CustomTwoCaptchaService.SetupHttpClient(System.Uri)">
+        <member name="M:CaptchaSharp.Services.CustomTwoCaptchaService.SetupHttpClient(System.Uri,System.Boolean)">
             <summary>Sets 2captcha.com as host and <paramref name="baseUri"/> as <see cref="P:System.Net.Http.HttpClient.BaseAddress"/> 
             for the <see cref="T:System.Net.Http.HttpClient"/> requests.</summary>
         </member>
