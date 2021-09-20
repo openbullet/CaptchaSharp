@@ -249,7 +249,9 @@ namespace CaptchaSharp.Services
             return new (string, string)[]
             {
                 ("proxy", $"{proxy.Host}:{proxy.Port}"),
-                ("proxytype", proxy.Type.ToString().ToLower())
+                ("proxytype", proxy.Type.ToString().ToLower()),
+                ("useragent", proxy.UserAgent),
+                ("cookies", proxy.GetCookieString())
             };
         }
         #endregion
