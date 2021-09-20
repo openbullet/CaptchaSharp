@@ -156,7 +156,12 @@
                         <TextBlock>Url</TextBlock>
                         <TextBox Text="{Binding SiteUrl}"></TextBox>
                     </DockPanel>
+                    <DockPanel>
+                        <TextBlock>S Data</TextBlock>
+                        <TextBox Text="{Binding SData}"></TextBox>
+                    </DockPanel>
                     <CheckBox Content="Invisible" IsChecked="{Binding Invisible}" />
+                    <CheckBox Content="Enterprise" IsChecked="{Binding Enterprise}" />
                 </StackPanel>
             </TabItem>
             <!-- RECAPTCHA V3 -->
@@ -178,6 +183,7 @@
                         <TextBlock>Min Score</TextBlock>
                         <TextBox Text="{Binding MinScore}"></TextBox>
                     </DockPanel>
+                    <CheckBox Content="Enterprise" IsChecked="{Binding Enterprise}" />
                 </StackPanel>
             </TabItem>
             <!-- FUNCAPTCHA -->

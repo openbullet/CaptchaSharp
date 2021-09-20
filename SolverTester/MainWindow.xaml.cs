@@ -53,12 +53,14 @@ namespace SolverTester
 
         // RecaptchaV2 / RecaptchaV3 / HCaptcha / FunCaptcha / KeyCaptcha / GeeTest
         public string SiteKey { get; set; } = "";
+        public bool Enterprise { get; set; } = false;
 
         // RecaptchaV2 / RecaptchaV3 / HCaptcha
         public string SiteUrl { get; set; } = "";
 
         // RecaptchaV2
         public bool Invisible { get; set; } = false;
+        public string SData { get; set; } = "";
 
         // RecaptchaV3
         public string Action { get; set; } = "";
@@ -285,11 +287,11 @@ namespace SolverTester
                     return await service.SolveImageCaptchaAsync(CaptchaImage.ToBase64(ImageFormat.Jpeg), imageOptions);
 
                 case CaptchaType.ReCaptchaV2:
-                    return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, Invisible, proxy);
+                    return await service.SolveRecaptchaV2Async(SiteKey, SiteUrl, SData, Enterprise, Invisible, proxy);
 
                 case CaptchaType.ReCaptchaV3:
                     return await service.SolveRecaptchaV3Async(SiteKey, SiteUrl, Action,
-                        float.Parse(MinScore, CultureInfo.InvariantCulture), proxy);
+                        float.Parse(MinScore, CultureInfo.InvariantCulture), Enterprise, proxy);
 
                 case CaptchaType.FunCaptcha:
                     return await service.SolveFuncaptchaAsync(PublicKey, ServiceUrl, SiteUrl, NoJS, proxy);
