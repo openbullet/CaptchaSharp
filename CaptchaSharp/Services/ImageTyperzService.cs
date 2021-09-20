@@ -76,16 +76,18 @@ namespace CaptchaSharp.Services
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostToStringAsync
-                ("captchaapi/UploadRecaptchaToken.ashx",
+                (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
                 GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
                 .Add("pageurl", siteUrl)
                 .Add("googlekey", siteKey)
-                .Add("recaptchatype", invisible ? 2 : 1)
+                .Add("recaptchatype", invisible ? 2 : 1, !enterprise)
+                .Add("enterprise_type", "v2", enterprise)
+                .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
                 .Add(GetProxyParams(proxy)),
                 cancellationToken)
                 .ConfigureAwait(false);
@@ -95,18 +97,19 @@ namespace CaptchaSharp.Services
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostToStringAsync
-                ("captchaapi/UploadRecaptchaToken.ashx",
+                (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
                 GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
                 .Add("pageurl", siteUrl)
                 .Add("googlekey", siteKey)
                 .Add("captchaaction", action)
                 .Add("score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
-                .Add("recaptchatype", 3)
+                .Add("recaptchatype", 3, !enterprise)
+                .Add("enterprise_type", "v3", enterprise)
                 .Add(GetProxyParams(proxy)),
                 cancellationToken)
                 .ConfigureAwait(false);

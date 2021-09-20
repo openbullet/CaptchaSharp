@@ -122,7 +122,8 @@ namespace CaptchaSharp.Services
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
@@ -131,6 +132,8 @@ namespace CaptchaSharp.Services
                     .Add("method", "userrecaptcha")
                     .Add("googlekey", siteKey)
                     .Add("pageurl", siteUrl)
+                    .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
+                    .Add("enterprise", Convert.ToInt32(enterprise).ToString())
                     .Add("invisible", Convert.ToInt32(invisible).ToString())
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)
@@ -148,8 +151,8 @@ namespace CaptchaSharp.Services
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
@@ -160,6 +163,7 @@ namespace CaptchaSharp.Services
                     .Add("googlekey", siteKey)
                     .Add("pageurl", siteUrl)
                     .Add("action", action)
+                    .Add("enterprise", Convert.ToInt32(enterprise).ToString())
                     .Add("min_score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
                     .Add("soft_id", SoftId)
                     .Add("json", "1", UseJsonFlag)

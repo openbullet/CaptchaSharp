@@ -80,28 +80,52 @@ namespace CaptchaSharp.Services
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var content = CreateTaskRequest();
 
-            if (proxy != null)
+            if (enterprise)
             {
-                content.Task = new NoCaptchaTask
+                if (proxy != null)
                 {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    IsInvisible = invisible
-                }.SetProxy(proxy);
+                    content.Task = new RecaptchaV2EnterpriseTask
+                    {
+                        WebsiteKey = siteKey,
+                        WebsiteURL = siteUrl,
+                        EnterprisePayload = dataS
+                    }.SetProxy(proxy);
+                }
+                else
+                {
+                    content.Task = new RecaptchaV2EnterpriseTaskProxyless
+                    {
+                        WebsiteKey = siteKey,
+                        WebsiteURL = siteUrl,
+                        EnterprisePayload = dataS
+                    };
+                }
             }
             else
             {
-                content.Task = new NoCaptchaTaskProxyless
+                if (proxy != null)
                 {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    IsInvisible = invisible
-                };
+                    content.Task = new RecaptchaV2Task
+                    {
+                        WebsiteKey = siteKey,
+                        WebsiteURL = siteUrl,
+                        IsInvisible = invisible
+                    }.SetProxy(proxy);
+                }
+                else
+                {
+                    content.Task = new RecaptchaV2TaskProxyless
+                    {
+                        WebsiteKey = siteKey,
+                        WebsiteURL = siteUrl,
+                        IsInvisible = invisible
+                    };
+                }
             }
             
             var response = await httpClient.PostJsonToStringAsync
@@ -116,8 +140,8 @@ namespace CaptchaSharp.Services
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             if (proxy != null)
                 throw new NotSupportedException("Proxies are not supported");
@@ -132,7 +156,8 @@ namespace CaptchaSharp.Services
                 WebsiteKey = siteKey,
                 WebsiteURL = siteUrl,
                 PageAction = action,
-                MinScore = minScore
+                MinScore = minScore,
+                IsEnterprise = enterprise
             };
 
             var response = await httpClient.PostJsonToStringAsync

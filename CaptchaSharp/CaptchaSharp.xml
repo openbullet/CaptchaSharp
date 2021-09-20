@@ -91,6 +91,33 @@
             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
             <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a Google ReCaptcha V2.</summary>
+            
+            <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            <param name="dataS">The value of the 's' or 'data-s' field (currently only for Google services).</param>
+            <param name="enterprise">Whether this is an Enterprise ReCaptcha V2.</param>
+            <param name="invisible">Whether the captcha is not in a clickable format on the page.</param>
+            
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+            
+            <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+            <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+            <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.CaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <summary>Solves a Google ReCaptcha V3.</summary>
             
@@ -117,8 +144,34 @@
             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
             <exception cref="T:System.TimeoutException"></exception>
         </member>
-        <member name="M:CaptchaSharp.CaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.CaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <summary>Solves a Google ReCaptcha V3.</summary>
+            
+            <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            <param name="action">The action to execute. Can be found in the webpage source or in a js file.</param>
+            <param name="minScore">The minimum human-to-robot score necessary to solve the challenge.</param>
+            <param name="enterprise">Whether this is an Enterprise ReCaptcha V3.</param>
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+            
+            <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+            <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+            <exception cref="T:System.TimeoutException"></exception>
+        </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a FunCaptcha.</summary>
             
             <param name="publicKey">
             Can be found inside data-pkey parameter of funcaptcha's div element or inside an input element 
@@ -819,10 +872,10 @@
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -892,10 +945,10 @@
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -932,7 +985,7 @@
         <member name="M:CaptchaSharp.Services.DeCaptcherService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.DeCaptcherService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeCaptcherService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
@@ -960,10 +1013,10 @@
         <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -1006,7 +1059,16 @@
         <member name="M:CaptchaSharp.Services.NineKWService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.NineKWService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.NineKWService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.NineKWService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.NineKWService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.NineKWService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.NineKWService.CheckResult(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
@@ -1056,10 +1118,10 @@
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">

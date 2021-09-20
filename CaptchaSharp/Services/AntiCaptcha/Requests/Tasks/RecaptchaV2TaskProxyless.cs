@@ -1,14 +1,14 @@
 ﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks
 {
-    internal class NoCaptchaTaskProxyless : AntiCaptchaTaskProxyless
+    internal class RecaptchaV2TaskProxyless : AntiCaptchaTaskProxyless
     {
         public string WebsiteURL { get; set; }
         public string WebsiteKey { get; set; }
         public bool IsInvisible { get; set; }
 
-        public NoCaptchaTaskProxyless()
+        public RecaptchaV2TaskProxyless()
         {
-            Type = "NoCaptchaTaskProxyless";
+            Type = "RecaptchaV2TaskProxyless";
         }
     }
 }

@@ -29,8 +29,8 @@ namespace CaptchaSharp.Services.More
         }
 
         public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
                 ("",
@@ -50,8 +50,8 @@ namespace CaptchaSharp.Services.More
         }
 
         public async override Task<StringResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
                 ("",

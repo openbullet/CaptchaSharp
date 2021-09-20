@@ -98,8 +98,8 @@ namespace CaptchaSharp.Services
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             if (proxy != null)
             {

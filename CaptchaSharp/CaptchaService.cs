@@ -104,8 +104,38 @@ namespace CaptchaSharp
         /// <exception cref="TaskCreationException"></exception>
         /// <exception cref="TaskSolutionException"></exception>
         /// <exception cref="TimeoutException"></exception>
-        public virtual Task<StringResponse> SolveRecaptchaV2Async
+        public Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
+            => SolveRecaptchaV2Async(siteKey, siteUrl, "", false, invisible, proxy, cancellationToken);
+
+        /// <summary>Solves a Google ReCaptcha V2.</summary>
+        /// 
+        /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+        /// <param name="siteUrl">The URL where the captcha appears.</param>
+        /// <param name="dataS">The value of the 's' or 'data-s' field (currently only for Google services).</param>
+        /// <param name="enterprise">Whether this is an Enterprise ReCaptcha V2.</param>
+        /// <param name="invisible">Whether the captcha is not in a clickable format on the page.</param>
+        /// 
+        /// <param name="proxy">
+        /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+        /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+        /// fetch the captcha without using a proxy.
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <returns>
+        /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+        /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+        /// captcha solution as plaintext.
+        /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        public virtual Task<StringResponse> SolveRecaptchaV2Async
+            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
@@ -134,13 +164,42 @@ namespace CaptchaSharp
         /// <exception cref="TaskCreationException"></exception>
         /// <exception cref="TaskSolutionException"></exception>
         /// <exception cref="TimeoutException"></exception>
-        public virtual Task<StringResponse> SolveRecaptchaV3Async
+        public Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null, CancellationToken cancellationToken = default)
+            => SolveRecaptchaV3Async(siteKey, siteUrl, action, minScore, false, proxy, cancellationToken);
+
+        /// <summary>Solves a Google ReCaptcha V3.</summary>
+        /// 
+        /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+        /// <param name="siteUrl">The URL where the captcha appears.</param>
+        /// <param name="action">The action to execute. Can be found in the webpage source or in a js file.</param>
+        /// <param name="minScore">The minimum human-to-robot score necessary to solve the challenge.</param>
+        /// <param name="enterprise">Whether this is an Enterprise ReCaptcha V3.</param>
+        /// <param name="proxy">
+        /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+        /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+        /// fetch the captcha without using a proxy.
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <returns>
+        /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+        /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+        /// captcha solution as plaintext.
+        /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        public virtual Task<StringResponse> SolveRecaptchaV3Async
+            (string siteKey, string siteUrl, string action, float minScore, bool enterprise = false,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        /// <summary>Solves a Google ReCaptcha V3.</summary>
+        /// <summary>Solves a FunCaptcha.</summary>
         /// 
         /// <param name="publicKey">
         /// Can be found inside data-pkey parameter of funcaptcha's div element or inside an input element 
