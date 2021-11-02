@@ -7,7 +7,7 @@ namespace CaptchaSharp.Services.More
     public class AzCaptchaService : CustomTwoCaptchaService
     {
         public AzCaptchaService(string apiKey, HttpClient httpClient = null)
-            : base(apiKey, new Uri("http://azcaptcha.com"), httpClient) 
+            : base(apiKey, new Uri("http://azcaptcha.com"), httpClient, false)
         {
             SupportedCaptchaTypes =
                 CaptchaType.ImageCaptcha |
