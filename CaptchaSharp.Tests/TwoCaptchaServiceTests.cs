@@ -1,5 +1,4 @@
 using CaptchaSharp.Exceptions;
-using CaptchaSharp.Models;
 using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,48 +13,20 @@ namespace CaptchaSharp.Tests
         }
     }
 
-    public class TwoCaptchaServiceTests : IClassFixture<TwoCaptchaFixture>
+    public class TwoCaptchaServiceTests : ServiceTests, IClassFixture<TwoCaptchaFixture>
     {
-        private readonly TwoCaptchaFixture fixture;
+        public TwoCaptchaServiceTests(TwoCaptchaFixture fixture) : base(fixture) { }
 
-        public TwoCaptchaServiceTests(TwoCaptchaFixture fixture)
-        {
-            this.fixture = fixture;
-        }
-
-        [Fact]
-        public async Task GetBalanceAsync_ValidKey_GetsBalance()
-        {
-            var balance = await fixture.Service.GetBalanceAsync();
-            Assert.True(balance > 0);
-        }
-
-        [Fact]
-        public async Task GetBalanceAsync_InvalidKey_Throws()
-        {
-            var service = new TwoCaptchaService("invalid_key");
-            await Assert.ThrowsAsync<BadAuthenticationException>(async () =>
-                await service.GetBalanceAsync());
-        }
-
-        [Fact]
-        public async Task SolveTextCaptchaAsync_ValidCaptcha_ValidSolution()
-        {
-            var solution = await fixture.Service.SolveTextCaptchaAsync(
-                fixture.Config.Captchas.TextCaptcha.Question,
-                fixture.Config.Captchas.TextCaptcha.Options);
-
-            Assert.Equal(fixture.Config.Captchas.TextCaptcha.Solution, solution.Response);
-        }
-
-        [Fact]
-        public async Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution()
-        {
-            var solution = await fixture.Service.SolveImageCaptchaAsync(
-                fixture.Config.Captchas.ImageCaptcha.Base64,
-                fixture.Config.Captchas.ImageCaptcha.Options);
-
-            Assert.Equal(fixture.Config.Captchas.ImageCaptcha.Solution.ToLower(), solution.Response.ToLower());
-        }
+        [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
+        [Fact] public Task SolveTextCaptchaAsync_ValidCaptcha_ValidSolution() => TextCaptchaTest();
+        [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
+        [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
+        [Fact] public Task SolveRecaptchaV2Async_WithProxy_ValidSolution() => RecaptchaV2Test_WithProxy();
+        [Fact] public Task SolveRecaptchaV3Async_NoProxy_ValidSolution() => RecaptchaV3Test_NoProxy();
+        [Fact] public Task SolveRecaptchaV3Async_WithProxy_ValidSolution() => RecaptchaV3Test_WithProxy();
+        [Fact] public Task SolveFuncaptchaAsync_NoProxy_ValidSolution() => FunCaptchaTest_NoProxy();
+        [Fact] public Task SolveFuncaptchaAsync_WithProxy_ValidSolution() => FunCaptchaTest_WithProxy();
+        [Fact] public Task SolveHCaptchaAsync_NoProxy_ValidSolution() => HCaptchaTest_NoProxy();
+        [Fact] public Task SolveHCaptchaAsync_WithProxy_ValidSolution() => HCaptchaTest_WithProxy();
     }
 }
