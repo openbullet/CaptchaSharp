@@ -47,5 +47,15 @@ namespace CaptchaSharp.Tests
 
             Assert.Equal(fixture.Config.Captchas.TextCaptcha.Solution, solution.Response);
         }
+
+        [Fact]
+        public async Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution()
+        {
+            var solution = await fixture.Service.SolveImageCaptchaAsync(
+                fixture.Config.Captchas.ImageCaptcha.Base64,
+                fixture.Config.Captchas.ImageCaptcha.Options);
+
+            Assert.Equal(fixture.Config.Captchas.ImageCaptcha.Solution.ToLower(), solution.Response.ToLower());
+        }
     }
 }
