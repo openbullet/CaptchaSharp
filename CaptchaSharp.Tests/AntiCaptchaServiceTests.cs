@@ -1,23 +1,24 @@
-using CaptchaSharp.Services;
+﻿using CaptchaSharp.Services;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace CaptchaSharp.Tests
 {
-    public class TwoCaptchaFixture : ServiceFixture
+    public class AntiCaptchaFixture : ServiceFixture
     {
-        public TwoCaptchaFixture()
+        public AntiCaptchaFixture()
         {
-            Service = new TwoCaptchaService(Config.Credentials.TwoCaptchaApiKey);
+            Service = new AntiCaptchaService(Config.Credentials.AntiCaptchaApiKey);
         }
     }
 
-    public class TwoCaptchaServiceTests : ServiceTests, IClassFixture<TwoCaptchaFixture>
+    public class AntiCaptchaServiceTests : ServiceTests, IClassFixture<AntiCaptchaFixture>
     {
-        public TwoCaptchaServiceTests(TwoCaptchaFixture fixture) : base(fixture) { }
+        public AntiCaptchaServiceTests(AntiCaptchaFixture fixture) : base(fixture) { }
 
         [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
-        [Fact] public Task SolveTextCaptchaAsync_ValidCaptcha_ValidSolution() => TextCaptchaTest();
+        [Fact] public Task SolveTextCaptchaAsync_ValidCaptcha_ValidSolution() => Assert.ThrowsAsync<NotSupportedException>(TextCaptchaTest);
         [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
         [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
         [Fact] public Task SolveRecaptchaV2Async_WithProxy_ValidSolution() => RecaptchaV2Test_WithProxy();
