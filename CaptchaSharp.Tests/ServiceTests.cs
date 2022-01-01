@@ -1,5 +1,6 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,6 +15,8 @@ namespace CaptchaSharp.Tests
         {
             this.fixture = fixture;
         }
+
+        protected static Task ShouldNotBeSupported(Func<Task> method) => Assert.ThrowsAsync<NotSupportedException>(method);
 
         protected async Task BalanceTest()
         {
