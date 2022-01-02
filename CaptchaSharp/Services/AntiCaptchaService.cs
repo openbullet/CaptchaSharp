@@ -368,7 +368,7 @@ namespace CaptchaSharp.Services
                 case CaptchaType.ReCaptchaV2:
                 case CaptchaType.ReCaptchaV3:
                     response = await httpClient.PostJsonToStringAsync
-                    ("reportIncorrectImageCaptcha",
+                    ("reportIncorrectRecaptcha",
                     new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
                     cancellationToken).ConfigureAwait(false);
 
