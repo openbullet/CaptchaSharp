@@ -16,7 +16,7 @@ This library supports the following captcha types
 
 Although this sounds very exciting, sadly not all captcha types are supported by the services. You can find a table of the supported captcha types for each major service below.
 
-![Supported Captcha Types](https://i.imgur.com/HfFfNDX.png)
+![Supported Captcha Types](https://i.imgur.com/7m8Qo3K.png)
 
 ## Adding CaptchaSharp to your project
 Simply install the nuget package via
