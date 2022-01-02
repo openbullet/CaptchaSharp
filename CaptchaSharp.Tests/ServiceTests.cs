@@ -1,5 +1,6 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -128,7 +129,7 @@ namespace CaptchaSharp.Tests
         private async Task KeyCaptchaTest(Proxy proxy)
         {
             // Get the required parameters from the page since they are not static
-            var siteUrl = "https://www.keycaptcha.com/contact-us/";
+            var siteUrl = $"{"https"}://www.keycaptcha.com/contact-us/";
             using var httpClient = new HttpClient();
             using var response = await httpClient.GetAsync(siteUrl);
             var pageSource = await response.Content.ReadAsStringAsync();
@@ -154,11 +155,22 @@ namespace CaptchaSharp.Tests
 
         private async Task GeeTestTest(Proxy proxy)
         {
+            // Get the required parameters from the page since they are not static
+            var unixTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var siteUrl = $"{"https"}://www.geetest.com/demo/gt/register-enFullpage-official?t={unixTime}";
+            using var httpClient = new HttpClient();
+            using var response = await httpClient.GetAsync(siteUrl);
+            var pageSource = await response.Content.ReadAsStringAsync();
+            var obj = JObject.Parse(pageSource);
+
+            var gt = obj.Value<string>("gt");
+            var challenge = obj.Value<string>("challenge");
+
             var solution = await Service.SolveGeeTestAsync(
-                gt: "",
-                challenge: "",
-                apiServer: "",
-                siteUrl: "",
+                gt,
+                challenge,
+                apiServer: "api.geetest.com",
+                siteUrl,
                 proxy);
 
             Assert.NotEqual("", solution.Challenge);
@@ -173,7 +185,7 @@ namespace CaptchaSharp.Tests
         {
             var solution = await Service.SolveCapyAsync(
                 siteKey: "PUZZLE_Cme4hZLjuZRMYC3uh14C52D3uNms5w",
-                siteUrl: "https://www.capy.me/account/signin",
+                siteUrl: $"{"https"}://www.capy.me/account/signin",
                 proxy);
 
             Assert.NotEqual(string.Empty, solution.ChallengeKey);
