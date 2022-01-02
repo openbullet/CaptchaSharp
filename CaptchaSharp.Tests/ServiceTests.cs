@@ -1,6 +1,8 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using System;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -125,12 +127,23 @@ namespace CaptchaSharp.Tests
 
         private async Task KeyCaptchaTest(Proxy proxy)
         {
+            // Get the required parameters from the page since they are not static
+            var siteUrl = "https://www.keycaptcha.com/contact-us/";
+            using var httpClient = new HttpClient();
+            using var response = await httpClient.GetAsync(siteUrl);
+            var pageSource = await response.Content.ReadAsStringAsync();
+
+            var userId = Regex.Match(pageSource, "var s_s_c_user_id = '([^']*)'").Groups[1].Value;
+            var sessionId = Regex.Match(pageSource, "var s_s_c_session_id = '([^']*)'").Groups[1].Value;
+            var webServerSign1 = Regex.Match(pageSource, "var s_s_c_web_server_sign = '([^']*)'").Groups[1].Value;
+            var webServerSign2 = Regex.Match(pageSource, "var s_s_c_web_server_sign2 = '([^']*)'").Groups[1].Value;
+
             var solution = await Service.SolveKeyCaptchaAsync(
-                userId: "",
-                sessionId: "",
-                webServerSign1: "",
-                webServerSign2: "",
-                siteUrl: "",
+                userId,
+                sessionId,
+                webServerSign1,
+                webServerSign2,
+                siteUrl,
                 proxy);
 
             Assert.NotEqual(string.Empty, solution.Response);
