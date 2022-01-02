@@ -354,7 +354,7 @@ namespace CaptchaSharp
         /// <exception cref="TaskCreationException"></exception>
         /// <exception cref="TaskSolutionException"></exception>
         /// <exception cref="TimeoutException"></exception>
-        public virtual Task<StringResponse> SolveCapyAsync
+        public virtual Task<CapyResponse> SolveCapyAsync
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();

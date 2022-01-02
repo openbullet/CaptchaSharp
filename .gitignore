@@ -6,6 +6,7 @@
 # RuriLib API Documentation
 RuriLib/_site/
 RuriLib/log.txt
+config.json
 
 # Exclude the compiled Extreme.Net dll
 !Extreme.Net.dll
