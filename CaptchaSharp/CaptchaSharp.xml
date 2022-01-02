@@ -919,11 +919,22 @@
         <member name="M:CaptchaSharp.Services.CapMonsterService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="T:CaptchaSharp.Services.CustomAntiCaptchaService">
+            <summary>The service provided by a service that implements the anti-captcha API.</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:CaptchaSharp.Services.CustomAntiCaptchaService.#ctor(System.String,System.Uri,System.Net.Http.HttpClient)" -->
+        <member name="M:CaptchaSharp.Services.CustomAntiCaptchaService.SetupHttpClient(System.Uri)">
+            <summary>Sets anti-captcha.com as host and <paramref name="baseUri"/> as <see cref="P:System.Net.Http.HttpClient.BaseAddress"/> 
+            for the <see cref="T:System.Net.Http.HttpClient"/> requests.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.CustomAntiCaptchaService.SupportedCaptchaTypes">
+            <summary>The supported captcha types for this service.</summary>
+        </member>
         <member name="T:CaptchaSharp.Services.CustomTwoCaptchaService">
             <summary>The service provided by a service that implements the 2captcha API.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.CustomTwoCaptchaService.#ctor(System.String,System.Uri,System.Net.Http.HttpClient,System.Boolean)">
-            <summary>Initializes a <see cref="T:CaptchaSharp.Services.AntiCaptchaService"/> using the given <paramref name="apiKey"/>, 
+            <summary>Initializes a <see cref="T:CaptchaSharp.Services.CustomTwoCaptchaService"/> using the given <paramref name="apiKey"/>, 
             <paramref name="baseUri"/> and <paramref name="httpClient"/>.
             If <paramref name="httpClient"/> is null, a default one will be created.
             If <paramref name="overrideHostHeader"/> is true, the Host header will be changed to 2captcha.com</summary>

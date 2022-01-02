@@ -7,7 +7,7 @@ namespace CaptchaSharp.Services
     /// <summary>The service provided by a service that implements the 2captcha API.</summary>
     public class CustomTwoCaptchaService : TwoCaptchaService
     {
-        /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/>, 
+        /// <summary>Initializes a <see cref="CustomTwoCaptchaService"/> using the given <paramref name="apiKey"/>, 
         /// <paramref name="baseUri"/> and <paramref name="httpClient"/>.
         /// If <paramref name="httpClient"/> is null, a default one will be created.
         /// If <paramref name="overrideHostHeader"/> is true, the Host header will be changed to 2captcha.com</summary>

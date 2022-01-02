@@ -8,9 +8,9 @@ namespace CaptchaSharp.Services.AntiCaptcha.Responses
         public double Cost { get; set; }
         public Solution Solution { get; set; }
         public string Ip { get; set; }
-        public int CreateTime { get; set; }
-        public int EndTime { get; set; }
-        public int SolveCount { get; set; }
+        public double CreateTime { get; set; }
+        public double EndTime { get; set; }
+        public double? SolveCount { get; set; }
 
         public bool IsReady => Status != "processing";
     }
