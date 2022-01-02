@@ -1,21 +1,20 @@
 ﻿using CaptchaSharp.Services;
-using System;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace CaptchaSharp.Tests
 {
-    public class AntiCaptchaFixture : ServiceFixture
+    public class ImageTyperzFixture : ServiceFixture
     {
-        public AntiCaptchaFixture()
+        public ImageTyperzFixture()
         {
-            Service = new AntiCaptchaService(Config.Credentials.AntiCaptchaApiKey);
+            Service = new ImageTyperzService(Config.Credentials.ImageTyperzApiKey);
         }
     }
 
-    public class AntiCaptchaServiceTests : ServiceTests, IClassFixture<AntiCaptchaFixture>
+    public class ImageTyperzServiceTests : ServiceTests, IClassFixture<ImageTyperzFixture>
     {
-        public AntiCaptchaServiceTests(AntiCaptchaFixture fixture) : base(fixture) { }
+        public ImageTyperzServiceTests(ImageTyperzFixture fixture) : base(fixture) { }
 
         [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
         [Fact] public Task SolveTextCaptchaAsync_ValidCaptcha_ValidSolution() => ShouldNotBeSupported(TextCaptchaTest);
@@ -28,7 +27,7 @@ namespace CaptchaSharp.Tests
         [Fact] public Task SolveFuncaptchaAsync_WithProxy_ValidSolution() => FunCaptchaTest_WithProxy();
         [Fact] public Task SolveHCaptchaAsync_NoProxy_ValidSolution() => HCaptchaTest_NoProxy();
         [Fact] public Task SolveHCaptchaAsync_WithProxy_ValidSolution() => HCaptchaTest_WithProxy();
-        [Fact] public Task SolveCapyAsync_NoProxy_ValidSolution() => ShouldNotBeSupported(CapyTest_NoProxy);
-        [Fact] public Task SolveCapyAsync_WithProxy_ValidSolution() => ShouldNotBeSupported(CapyTest_WithProxy);
+        [Fact] public Task SolveCapyAsync_NoProxy_ValidSolution() => CapyTest_NoProxy();
+        [Fact] public Task SolveCapyAsync_WithProxy_ValidSolution() => CapyTest_WithProxy();
     }
 }

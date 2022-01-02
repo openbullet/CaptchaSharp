@@ -122,5 +122,18 @@ namespace CaptchaSharp.Tests
 
         protected Task HCaptchaTest_NoProxy() => HCaptchaTest(null);
         protected Task HCaptchaTest_WithProxy() => HCaptchaTest(fixture.Config.Proxy);
+
+        private async Task CapyTest(Proxy proxy)
+        {
+            var solution = await Service.SolveCapyAsync(
+                siteKey: "PUZZLE_Cme4hZLjuZRMYC3uh14C52D3uNms5w",
+                siteUrl: "https://www.capy.me/account/signin",
+                proxy);
+
+            Assert.NotEqual(string.Empty, solution.Response);
+        }
+
+        protected Task CapyTest_NoProxy() => CapyTest(null);
+        protected Task CapyTest_WithProxy() => CapyTest(fixture.Config.Proxy);
     }
 }
