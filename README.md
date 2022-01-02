@@ -7,7 +7,8 @@ This library supports the following captcha types
 - Text (with language options)
 - Image (with options like phrase, case sensitivity, calculations)
 - FunCaptcha
-- ReCaptcha V2 (invisible too) and V3
+- ReCaptcha V2 (incl. invisible, enterprise)
+- ReCaptcha V3 (incl. enterprise)
 - HCaptcha
 - KeyCaptcha
 - GeeTest
@@ -15,7 +16,7 @@ This library supports the following captcha types
 
 Although this sounds very exciting, sadly not all captcha types are supported by the services. You can find a table of the supported captcha types for each major service below.
 
-![Supported Captcha Types](https://i.imgur.com/NMUiGRf.png)
+![Supported Captcha Types](https://i.imgur.com/HfFfNDX.png)
 
 ## Adding CaptchaSharp to your project
 Simply install the nuget package via
