@@ -27,7 +27,11 @@ namespace CaptchaSharp.Tests
         [Fact] public Task SolveFuncaptchaAsync_WithProxy_ValidSolution() => FunCaptchaTest_WithProxy();
         [Fact] public Task SolveHCaptchaAsync_NoProxy_ValidSolution() => HCaptchaTest_NoProxy();
         [Fact] public Task SolveHCaptchaAsync_WithProxy_ValidSolution() => HCaptchaTest_WithProxy();
-        [Fact] public Task SolveCapyAsync_NoProxy_ValidSolution() => ShouldNotBeSupported(CapyTest_NoProxy);
-        [Fact] public Task SolveCapyAsync_WithProxy_ValidSolution() => ShouldNotBeSupported(CapyTest_WithProxy);
+        [Fact] public Task SolveKeyCaptchaAsync_NoProxy_ValidSolution() => KeyCaptchaTest_NoProxy();
+        [Fact] public Task SolveKeyCaptchaAsync_WithProxy_ValidSolution() => KeyCaptchaTest_WithProxy();
+        [Fact] public Task SolveGeeTestAsync_NoProxy_ValidSolution() => GeeTestTest_NoProxy();
+        [Fact] public Task SolveGeeTestAsync_WithProxy_ValidSolution() => GeeTestTest_WithProxy();
+        [Fact] public Task SolveCapyAsync_NoProxy_ValidSolution() => CapyTest_NoProxy();
+        [Fact] public Task SolveCapyAsync_WithProxy_ValidSolution() => CapyTest_WithProxy();
     }
 }

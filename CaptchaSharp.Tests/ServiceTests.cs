@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using System;
 using System.Threading.Tasks;
@@ -122,6 +122,39 @@ namespace CaptchaSharp.Tests
 
         protected Task HCaptchaTest_NoProxy() => HCaptchaTest(null);
         protected Task HCaptchaTest_WithProxy() => HCaptchaTest(fixture.Config.Proxy);
+
+        private async Task KeyCaptchaTest(Proxy proxy)
+        {
+            var solution = await Service.SolveKeyCaptchaAsync(
+                userId: "",
+                sessionId: "",
+                webServerSign1: "",
+                webServerSign2: "",
+                siteUrl: "",
+                proxy);
+
+            Assert.NotEqual(string.Empty, solution.Response);
+        }
+
+        protected Task KeyCaptchaTest_NoProxy() => KeyCaptchaTest(null);
+        protected Task KeyCaptchaTest_WithProxy() => KeyCaptchaTest(fixture.Config.Proxy);
+
+        private async Task GeeTestTest(Proxy proxy)
+        {
+            var solution = await Service.SolveGeeTestAsync(
+                gt: "",
+                challenge: "",
+                apiServer: "",
+                siteUrl: "",
+                proxy);
+
+            Assert.NotEqual("", solution.Challenge);
+            Assert.NotEqual("", solution.SecCode);
+            Assert.NotEqual("", solution.Validate);
+        }
+
+        protected Task GeeTestTest_NoProxy() => GeeTestTest(null);
+        protected Task GeeTestTest_WithProxy() => GeeTestTest(fixture.Config.Proxy);
 
         private async Task CapyTest(Proxy proxy)
         {
