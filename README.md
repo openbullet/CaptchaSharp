@@ -72,11 +72,15 @@ Console.WriteLine($"The solution is {solution.Response}");
 
 In addition, mind that not every service supports every type of captcha! If a method or specific parameters are not supported, a `NotSupportedException` will be thrown.
 
-## SolverTester
-Along with the library and its extension, the solution also includes a WPF based solver that can be used to quickly test most of the features of the library to see if the methods work properly.
+## Unit Tests
+Unit tests for the major services are included in the `CaptchaSharp.Tests` project. In order to test, you need to:
+1. Run any test once and let it fail. It will create a file called `config.json` in your `bin/Debug` folder.
+2. Add your credentials to the `config.json` file. You can also add a proxy to test proxied endpoints.
+3. Run the tests (one at a time, to avoid overloading the service and overspending).
+4. If you need to test a captcha on a specific website, you can edit the `ServiceTests` class and change the parameters as you need.
 
-#### Why not a unit test framework?
-Implementing proper unit tests would have made little sense since valid credentials are needed for each service and sometimes they are overloaded and they won't solve captchas, so unit tests would have been unreliable and I decided to go for a manual testing approach.
+## SolverTester
+In addition, the solution also includes a WPF based solver that can be used to quickly test most of the features of the library to see if the methods work properly.
 
 ## What needs to be improved
 - Use C# anonymous types or `JObject` for the `AntiCaptchaSolver` instead of a million classes!
