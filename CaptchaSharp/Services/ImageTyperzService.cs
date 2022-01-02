@@ -154,7 +154,7 @@ namespace CaptchaSharp.Services
         }
 
         /// <inheritdoc/>
-        public async override Task<StringResponse> SolveCapyAsync
+        public async override Task<CapyResponse> SolveCapyAsync
             (string siteKey, string siteUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
@@ -168,7 +168,7 @@ namespace CaptchaSharp.Services
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return await TryGetResult(response, CaptchaType.Capy, cancellationToken) as StringResponse;
+            return await TryGetResult(response, CaptchaType.Capy, cancellationToken) as CapyResponse;
         }
         #endregion
 

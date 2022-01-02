@@ -288,6 +288,31 @@ namespace CaptchaSharp.Services
                 : await TryGetResult(response, CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false)
                 ) as GeeTestResponse;
         }
+
+        /// <inheritdoc/>
+        public async override Task<CapyResponse> SolveCapyAsync
+            (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartToStringAsync
+                ("in.php",
+                new StringPairCollection()
+                    .Add("key", ApiKey)
+                    .Add("method", "capy")
+                    .Add("captchakey", siteKey)
+                    .Add("pageurl", siteUrl)
+                    .Add("soft_id", SoftId)
+                    .Add("json", "1", UseJsonFlag)
+                    .Add("header_acao", "1", AddACAOHeader)
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.Capy, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.Capy, cancellationToken).ConfigureAwait(false)
+                ) as CapyResponse;
+        }
         #endregion
 
         #region Getting the result
@@ -344,6 +369,17 @@ namespace CaptchaSharp.Services
                             .Request.ToGeeTestResponse(task.Id);
                     }
                 }
+                else if (task.Type == CaptchaType.Capy)
+                {
+                    var jObject = JObject.Parse(response);
+                    var solution = jObject["request"];
+
+                    if (solution.Type == JTokenType.Object)
+                    {
+                        return response.Deserialize<TwoCaptchaCapyResponse>()
+                            .Request.ToCapyResponse(task.Id);
+                    }
+                }
 
                 var tcResponse = response.Deserialize<Response>();
 
@@ -363,6 +399,9 @@ namespace CaptchaSharp.Services
                 {
                     case CaptchaType.GeeTest:
                         return response.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id);
+
+                    case CaptchaType.Capy:
+                        return response.Deserialize<CapySolution>().ToCapyResponse(task.Id);
 
                     default:
                         return new StringResponse { Id = task.Id, Response = response };

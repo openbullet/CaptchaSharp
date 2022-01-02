@@ -1,4 +1,4 @@
-using CaptchaSharp.Enums;
+﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using System;
 using System.Threading.Tasks;
@@ -163,7 +163,9 @@ namespace CaptchaSharp.Tests
                 siteUrl: "https://www.capy.me/account/signin",
                 proxy);
 
-            Assert.NotEqual(string.Empty, solution.Response);
+            Assert.NotEqual(string.Empty, solution.ChallengeKey);
+            Assert.NotEqual(string.Empty, solution.CaptchaKey);
+            Assert.NotEqual(string.Empty, solution.Answer);
         }
 
         protected Task CapyTest_NoProxy() => CapyTest(null);

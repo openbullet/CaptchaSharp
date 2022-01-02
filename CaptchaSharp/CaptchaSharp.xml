@@ -740,6 +740,18 @@
         <member name="M:CaptchaSharp.Models.CaptchaTask.#ctor(System.Int64,CaptchaSharp.Enums.CaptchaType)">
             <summary></summary>
         </member>
+        <member name="T:CaptchaSharp.Models.CapyResponse">
+            <summary>The solution of a Capy captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CapyResponse.CaptchaKey">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CapyResponse.ChallengeKey">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CapyResponse.Answer">
+            <summary></summary>
+        </member>
         <member name="T:CaptchaSharp.Models.GeeTestResponse">
             <summary>The solution of a GeeTest captcha.</summary>
         </member>
@@ -1134,6 +1146,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveGeeTestAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveCapyAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
