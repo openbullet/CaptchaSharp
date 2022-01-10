@@ -9,15 +9,23 @@ using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services.More
 {
+    /// <summary>The service provided by <c>https://apitruecaptcha.org/</c></summary>
     public class TrueCaptchaService : CaptchaService
     {
+        /// <summary>Your user id.</summary>
         public string UserId { get; set; }
+
+        /// <summary>Your secret api key.</summary>
         public string ApiKey { get; set; }
+
+        /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
         protected HttpClient httpClient;
 
-        public TrueCaptchaService(string username, string apiKey, HttpClient httpClient = null)
+        /// <summary>Initializes a <see cref="TrueCaptchaService"/> using the given <paramref name="userId"/>, <paramref name="apiKey"/> and 
+        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
+        public TrueCaptchaService(string userId, string apiKey, HttpClient httpClient = null)
         {
-            UserId = username;
+            UserId = userId;
             ApiKey = apiKey;
 
             this.httpClient = httpClient ?? new HttpClient();
@@ -25,6 +33,7 @@ namespace CaptchaSharp.Services.More
             this.httpClient.Timeout = Timeout;
         }
 
+        /// <inheritdoc/>
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             var response = await httpClient.GetStringAsync
@@ -42,6 +51,7 @@ namespace CaptchaSharp.Services.More
                 throw new BadAuthenticationException(response);
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveImageCaptchaAsync
             (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
         {

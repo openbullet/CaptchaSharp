@@ -10,8 +10,9 @@
     <PackageProjectUrl>https://github.com/openbullet/CaptchaSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/openbullet/CaptchaSharp</RepositoryUrl>
     <PackageTags>Captcha, Solver, Service, API, 2Captcha, TwoCaptcha, AntiCaptcha, Anti-Captcha, DeathByCaptcha, DBC, DeCaptcher, ImageTyperz</PackageTags>
-    <Version>1.0.9</Version>
+    <Version>1.0.10</Version>
     <PackageReleaseNotes>Added 9kw.eu provider and support for enterprise recaptcha v2/v3 (supported by 2captcha.com, anti-captcha.com and imagetyperz.com)</PackageReleaseNotes>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

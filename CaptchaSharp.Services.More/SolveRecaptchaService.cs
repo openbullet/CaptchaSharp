@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services.More
 {
+    /// <summary>The service provided by <c>https://solverecaptcha.com/</c></summary>
     public class SolveRecaptchaService : CustomTwoCaptchaService
     {
+        /// <summary>Initializes a <see cref="SolveRecaptchaService"/> using the given <paramref name="apiKey"/> and 
+        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public SolveRecaptchaService(string apiKey, HttpClient httpClient = null)
             : base(apiKey, new Uri("http://api.solverecaptcha.com"), httpClient)
         {
@@ -22,12 +25,14 @@ namespace CaptchaSharp.Services.More
                 CaptchaType.ReCaptchaV3;
         }
 
+        /// <inheritdoc/>
         public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
         {
             // There is no balance since this service has a monthly subscription
             return await Task.Run(() => 999).ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV2Async
             (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
             Proxy proxy = null, CancellationToken cancellationToken = default)
@@ -49,6 +54,7 @@ namespace CaptchaSharp.Services.More
             return new StringResponse { Id = 0, Response = TakeSecondSlice(response) };
         }
 
+        /// <inheritdoc/>
         public async override Task<StringResponse> SolveRecaptchaV3Async
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
             Proxy proxy = null, CancellationToken cancellationToken = default)
@@ -71,6 +77,7 @@ namespace CaptchaSharp.Services.More
             return new StringResponse { Id = 0, Response = TakeSecondSlice(response) };
         }
 
+        /// <inheritdoc/>
         public override Task ReportSolution
             (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
         {
