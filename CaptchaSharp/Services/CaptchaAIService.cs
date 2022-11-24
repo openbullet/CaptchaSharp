@@ -1,11 +1,11 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.AntiCaptcha.Requests;
-using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks;
-using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied;
-using CaptchaSharp.Services.AntiCaptcha.Responses;
-using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
+using CaptchaSharp.Services.CaptchaAI.Requests;
+using CaptchaSharp.Services.CaptchaAI.Requests.Tasks;
+using CaptchaSharp.Services.CaptchaAI.Requests.Tasks.Proxied;
+using CaptchaSharp.Services.CaptchaAI.Responses;
+using CaptchaSharp.Services.CaptchaAI.Responses.Solutions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services
 {
-    /// <summary>The service provided by <c>https://anti-captcha.com/</c></summary>
-    public class AntiCaptchaService : CaptchaService
+    /// <summary>The service provided by <c>https://www.captchaai.io/</c></summary>
+    public class CaptchaAIService : CaptchaService
     {
         /// <summary>Your secret api key.</summary>
         public string ApiKey { get; set; }
@@ -23,16 +23,16 @@ namespace CaptchaSharp.Services
         /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
         protected HttpClient httpClient;
 
-        /// <summary>The ID of the software developer.</summary>
-        private readonly int softId = 934;
+        /// <summary>The ID of the app.</summary>
+        private readonly string appId = "FE552FC0-8A06-4B44-BD30-5B9DDA2A4194";
 
-        /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/> and 
+        /// <summary>Initializes a <see cref="CaptchaAIService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
-        public AntiCaptchaService(string apiKey, HttpClient httpClient = null)
+        public CaptchaAIService(string apiKey, HttpClient httpClient = null)
         {
             ApiKey = apiKey;
             this.httpClient = httpClient ?? new HttpClient();
-            this.httpClient.BaseAddress = new Uri("https://api.anti-captcha.com");
+            this.httpClient.BaseAddress = new Uri("https://api.capsolver.com");
         }
 
         #region Getting the Balance
@@ -61,21 +61,31 @@ namespace CaptchaSharp.Services
         {
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
-                AddImageCapabilities(
-                    new CaptchaTaskRequest
+                new CaptchaTaskRequest
+                {
+                    ClientKey = ApiKey,
+                    AppId = appId,
+                    Task = new ImageCaptchaTask
                     {
-                        ClientKey = ApiKey,
-                        SoftId = softId,
-                        Task = new ImageCaptchaTask
-                        {
-                            Body = base64
-                        }
-                    }, options),
+                        Body = base64
+                    }
+                },
                 cancellationToken)
                 .ConfigureAwait(false);
 
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.ImageCaptcha, cancellationToken)
-                as StringResponse;
+            // The image captcha task immediately returns the solution
+            var result = response.Deserialize<GetTaskResultResponse>();
+            
+            if (result.IsError)
+                throw new TaskSolutionException($"{result.ErrorCode}: {result.ErrorDescription}");
+
+            var jObject = JObject.Parse(response);
+            var solution = jObject["solution"];
+            var taskId = jObject["taskId"].Value<string>();
+
+            result.Solution = solution.ToObject<ImageCaptchaSolution>();
+
+            return result.Solution.ToCaptchaResponse(taskId) as StringResponse;
         }
 
         /// <inheritdoc/>
@@ -114,7 +124,8 @@ namespace CaptchaSharp.Services
                     {
                         WebsiteKey = siteKey,
                         WebsiteURL = siteUrl,
-                        IsInvisible = invisible
+                        IsInvisible = invisible,
+                        RecaptchaDataSValue = dataS
                     }.SetProxy(proxy);
                 }
                 else
@@ -123,11 +134,12 @@ namespace CaptchaSharp.Services
                     {
                         WebsiteKey = siteKey,
                         WebsiteURL = siteUrl,
-                        IsInvisible = invisible
+                        IsInvisible = invisible,
+                        RecaptchaDataSValue = dataS
                     };
                 }
             }
-            
+
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
@@ -143,22 +155,30 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
             Proxy proxy = null, CancellationToken cancellationToken = default)
         {
-            if (proxy != null)
-                throw new NotSupportedException("Proxies are not supported");
-
-            if (minScore != 0.3F && minScore != 0.7F && minScore != 0.9F)
-                throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
-
             var content = CreateTaskRequest();
 
-            content.Task = new RecaptchaV3TaskProxyless
+            if (proxy is null)
             {
-                WebsiteKey = siteKey,
-                WebsiteURL = siteUrl,
-                PageAction = action,
-                MinScore = minScore,
-                IsEnterprise = enterprise
-            };
+                content.Task = new RecaptchaV3TaskProxyless
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    PageAction = action,
+                    MinScore = minScore,
+                    IsEnterprise = enterprise
+                };
+            }
+            else
+            {
+                content.Task = new RecaptchaV3Task
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    PageAction = action,
+                    MinScore = minScore,
+                    IsEnterprise = enterprise
+                }.SetProxy(proxy);
+            }
 
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
@@ -214,7 +234,7 @@ namespace CaptchaSharp.Services
             (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
         {
             var content = CreateTaskRequest();
-            
+
             if (proxy != null)
             {
                 content.Task = new HCaptchaTask
@@ -231,7 +251,7 @@ namespace CaptchaSharp.Services
                     WebsiteURL = siteUrl,
                 };
             }
-            
+
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
@@ -248,7 +268,7 @@ namespace CaptchaSharp.Services
             CancellationToken cancellationToken = default)
         {
             var content = CreateTaskRequest();
-            
+
             if (proxy != null)
             {
                 content.Task = new GeeTestTask
@@ -266,7 +286,8 @@ namespace CaptchaSharp.Services
                     WebsiteURL = siteUrl,
                     Gt = gt,
                     Challenge = challenge,
-                    GeetestApiServerSubdomain = apiServer
+                    GeetestApiServerSubdomain = apiServer,
+                    Version = 3
                 };
             }
 
@@ -299,7 +320,7 @@ namespace CaptchaSharp.Services
         {
             var response = await httpClient.PostJsonToStringAsync
                 ("getTaskResult",
-                new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = (int)task.Id },
+                new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = task.IdString },
                 cancellationToken).ConfigureAwait(false);
 
             var result = response.Deserialize<GetTaskResultResponse>();
@@ -339,48 +360,7 @@ namespace CaptchaSharp.Services
                     throw new NotSupportedException();
             }
 
-            return result.Solution.ToCaptchaResponse(task.Id);
-        }
-        #endregion
-
-        #region Reporting the solution
-        /// <inheritdoc/>
-        public async override Task ReportSolution
-            (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-        {
-            if (correct)
-                throw new NotSupportedException("This service doesn't allow reporting of good solutions");
-
-            string response;
-            ReportIncorrectCaptchaResponse incResponse;
-
-            switch (type)
-            {
-                case CaptchaType.ImageCaptcha:
-                    response = await httpClient.PostJsonToStringAsync
-                    ("reportIncorrectImageCaptcha",
-                    new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
-                    cancellationToken).ConfigureAwait(false);
-
-                    incResponse = response.Deserialize<ReportIncorrectCaptchaResponse>();
-                    break;
-
-                case CaptchaType.ReCaptchaV2:
-                case CaptchaType.ReCaptchaV3:
-                    response = await httpClient.PostJsonToStringAsync
-                    ("reportIncorrectRecaptcha",
-                    new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
-                    cancellationToken).ConfigureAwait(false);
-
-                    incResponse = response.Deserialize<ReportIncorrectCaptchaResponse>();
-                    break;
-
-                default:
-                    throw new NotSupportedException("Reporting is not supported for this captcha type");
-            }
-
-            if (incResponse.NotFoundOrExpired)
-                throw new TaskReportException("Captcha not found or expired");
+            return result.Solution.ToCaptchaResponse(task.IdString);
         }
         #endregion
 
@@ -390,7 +370,7 @@ namespace CaptchaSharp.Services
             return new CaptchaTaskRequest
             {
                 ClientKey = ApiKey,
-                SoftId = softId
+                AppId = appId
             };
         }
         #endregion
@@ -398,65 +378,7 @@ namespace CaptchaSharp.Services
         #region Capabilities
         /// <inheritdoc/>
         public override CaptchaServiceCapabilities Capabilities =>
-            CaptchaServiceCapabilities.Language |
-            CaptchaServiceCapabilities.Phrases |
-            CaptchaServiceCapabilities.CaseSensitivity |
-            CaptchaServiceCapabilities.CharacterSets |
-            CaptchaServiceCapabilities.Calculations |
-            CaptchaServiceCapabilities.MinLength |
-            CaptchaServiceCapabilities.MaxLength |
-            CaptchaServiceCapabilities.Instructions;
-
-        private CaptchaTaskRequest AddImageCapabilities(CaptchaTaskRequest request, ImageCaptchaOptions options)
-        {
-            if (options == null)
-                return request;
-
-            var task = request.Task as ImageCaptchaTask;
-
-            task.Phrase = options.IsPhrase;
-            task.Case = options.CaseSensitive;
-            
-            switch (options.CharacterSet)
-            {
-                case CharacterSet.OnlyNumbers:
-                    task.Numeric = 1;
-                    break;
-
-                case CharacterSet.OnlyLetters:
-                    task.Numeric = 2;
-                    break;
-
-                default:
-                    task.Numeric = 0;
-                    break;
-            }
-
-            task.Math = options.RequiresCalculation;
-            task.MinLength = options.MinLength;
-            task.MaxLength = options.MaxLength;
-            task.Comment = options.TextInstructions;
-            
-            switch (options.CaptchaLanguage)
-            {
-                case CaptchaLanguage.NotSpecified:
-                case CaptchaLanguage.English:
-                    request.LanguagePool = "en";
-                    break;
-
-                case CaptchaLanguage.Russian:
-                case CaptchaLanguage.Ukrainian:
-                case CaptchaLanguage.Kazakh:
-                case CaptchaLanguage.Belorussian:
-                    request.LanguagePool = "rn";
-                    break;
-
-                default:
-                    throw new NotSupportedException($"The {options.CaptchaLanguage} language is not supported");
-            }
-
-            return request;
-        }
+            CaptchaServiceCapabilities.None;
         #endregion
     }
 }

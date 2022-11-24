@@ -20,7 +20,7 @@ namespace CaptchaSharp.Services
         private HttpClient httpClient;
 
         /// <summary>The ID of the software developer.</summary>
-        public int AffiliateId { get; set; } = 671869;
+        private readonly int affiliateId = 671869;
 
         /// <summary>Initializes a <see cref="ImageTyperzService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
@@ -259,7 +259,7 @@ namespace CaptchaSharp.Services
             => new StringPairCollection().Add("token", ApiKey);
 
         private StringPairCollection GetAuthAffiliatePair()
-            => GetAuthPair().Add("affiliateid", AffiliateId);
+            => GetAuthPair().Add("affiliateid", affiliateId);
 
         private bool IsError(string response) 
             => response.StartsWith("ERROR:");

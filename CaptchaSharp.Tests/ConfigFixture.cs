@@ -54,5 +54,6 @@ namespace CaptchaSharp.Tests
         public string TrueCaptchaUsername { get; set; } = string.Empty;
         public string NineKWApiKey { get; set; } = string.Empty;
         public string AnyCaptchaApiKey { get; set; } = string.Empty;
+        public string CaptchaAIApiKey { get; set; } = string.Empty;
     }
 }

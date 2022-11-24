@@ -3,28 +3,43 @@ using System;
 
 namespace CaptchaSharp.Models
 {
-    /// <summary></summary>
+    /// <summary>Information about a captcha task</summary>
     public class CaptchaTask
     {
-        /// <summary></summary>
+        /// <summary>When the task was created</summary>
         public DateTime CreationDate { get; }
 
-        /// <summary></summary>
+        /// <summary>The type of captcha that is being solved</summary>
         public CaptchaType Type { get; set; }
 
-        /// <summary></summary>
+        /// <summary>The id of the task</summary>
         public long Id { get; }
 
-        /// <summary></summary>
+        /// <summary>The id of the task as a string</summary>
+        public string IdString { get; }
+
+        /// <summary>Whether the task is completed</summary>
         public bool Completed { get; set; } = false;
 
-        /// <summary></summary>
-        public CaptchaTask(string id, CaptchaType type) : this(long.Parse(id), type) { }
+        /// <summary>Creates a <see cref="CaptchaTask"/> from a string id</summary>
+        public CaptchaTask(string id, CaptchaType type)
+        {
+            IdString = id;
 
-        /// <summary></summary>
+            if (long.TryParse(id, out long parsed))
+            {
+                Id = parsed;
+            }
+
+            Type = type;
+            CreationDate = DateTime.Now;
+        }
+
+        /// <summary>Creates a <see cref="CaptchaTask"/> from a long id</summary>
         public CaptchaTask(long id, CaptchaType type)
         {
             Id = id;
+            IdString = id.ToString();
             Type = type;
             CreationDate = DateTime.Now;
         }
