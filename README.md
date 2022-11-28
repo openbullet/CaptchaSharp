@@ -79,9 +79,6 @@ Unit tests for the major services are included in the `CaptchaSharp.Tests` proje
 3. Run the tests (one at a time, to avoid overloading the service and overspending).
 4. If you need to test a captcha on a specific website, you can edit the `ServiceTests` class and change the parameters as you need.
 
-## SolverTester
-In addition, the solution also includes a WPF based solver that can be used to quickly test most of the features of the library to see if the methods work properly.
-
 ## What needs to be improved
 - Use C# anonymous types or `JObject` for the `AntiCaptchaSolver` instead of a million classes!
 - Implement better exception handling, for example when there is zero balance or when a solver method returns a bad authentication, they will currently fall in the generic `TaskCreationException` type.
