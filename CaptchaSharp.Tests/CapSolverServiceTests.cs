@@ -23,5 +23,6 @@ namespace CaptchaSharp.Tests
         [Fact] public Task SolveFuncaptchaAsync_NoProxy_ValidSolution() => FunCaptchaTest_NoProxy();
         [Fact] public Task SolveHCaptchaAsync_NoProxy_ValidSolution() => HCaptchaTest_NoProxy();
         [Fact] public Task SolveGeeTestAsync_NoProxy_ValidSolution() => GeeTestTest_NoProxy();
+        [Fact] public Task SolveDataDomeTestAsync_WithProxy_ValidSolution() => DataDomeTest_WithProxy();
     }
 }

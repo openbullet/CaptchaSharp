@@ -360,6 +360,35 @@ namespace CaptchaSharp
             throw new NotSupportedException();
         }
 
+        /// <summary>Solves a DataDome captcha.</summary>
+        /// 
+        /// <param name="siteUrl">The URL where the captcha appears.</param>
+        /// <param name="captchaUrl">The URL of the captcha. It is obtained from the 'dd' object in a script
+        /// inside the HTML and the 'datadome' cookie</param>
+        /// 
+        /// <param name="proxy">
+        /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+        /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+        /// fetch the captcha without using a proxy.
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <returns>
+        /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+        /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+        /// captcha solution as plaintext (a.k.a. a valid datadome session cookie).
+        /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        public virtual Task<StringResponse> SolveDataDomeAsync
+            (string siteUrl, string captchaUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         /// <summary>
         /// Reports a captcha solution as good or bad to the service.
         /// Mostly used for reporting bad solutions for image captchas and get the funds back.

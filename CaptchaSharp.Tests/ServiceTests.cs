@@ -195,5 +195,18 @@ namespace CaptchaSharp.Tests
 
         protected Task CapyTest_NoProxy() => CapyTest(null);
         protected Task CapyTest_WithProxy() => CapyTest(fixture.Config.Proxy);
+
+        private async Task DataDomeTest(Proxy proxy)
+        {
+            var solution = await Service.SolveDataDomeAsync(
+                siteUrl: "", // Fill this when testing
+                captchaUrl: "", // Fill this when testing
+                proxy);
+
+            Assert.NotEqual(string.Empty, solution.Response);
+        }
+
+        protected Task DataDomeTest_NoProxy() => DataDomeTest(null);
+        protected Task DataDomeTest_WithProxy() => DataDomeTest(fixture.Config.Proxy);
     }
 }

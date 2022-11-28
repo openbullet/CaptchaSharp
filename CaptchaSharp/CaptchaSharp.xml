@@ -308,6 +308,31 @@
             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
             <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a DataDome captcha.</summary>
+            
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            <param name="captchaUrl">The URL of the captcha. It is obtained from the 'dd' object in a script
+            inside the HTML and the 'datadome' cookie</param>
+            
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext (a.k.a. a valid datadome session cookie).
+            </returns>
+            
+            <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+            <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+            <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
@@ -577,6 +602,9 @@
         </member>
         <member name="F:CaptchaSharp.Enums.CaptchaType.Capy">
             <summary>A type of token captcha.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.DataDome">
+            <summary>A type of challenge based captcha.</summary>
         </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
@@ -963,6 +991,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.CapSolverService.SolveGeeTestAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapSolverService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.CapSolverService.CheckResult(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">

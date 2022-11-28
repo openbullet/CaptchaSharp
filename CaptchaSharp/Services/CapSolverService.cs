@@ -300,6 +300,33 @@ namespace CaptchaSharp.Services
             return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.GeeTest, cancellationToken)
                 as GeeTestResponse;
         }
+
+        /// <inheritdoc/>
+        public async override Task<StringResponse> SolveDataDomeAsync
+            (string siteUrl, string captchaUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        {
+            var content = CreateTaskRequest();
+
+            if (proxy is null)
+            {
+                throw new NotSupportedException("A proxy is required to solve a DataDome captcha");
+            }
+
+            content.Task = new DataDomeTask
+            {
+                WebsiteURL = siteUrl,
+                CaptchaURL = captchaUrl
+            }.SetProxy(proxy);
+
+            var response = await httpClient.PostJsonToStringAsync
+                ("createTask",
+                content,
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.DataDome, cancellationToken)
+                as StringResponse;
+        }
         #endregion
 
         #region Getting the result
@@ -354,6 +381,10 @@ namespace CaptchaSharp.Services
 
                 case CaptchaType.GeeTest:
                     result.Solution = solution.ToObject<GeeTestSolution>();
+                    break;
+
+                case CaptchaType.DataDome:
+                    result.Solution = solution.ToObject<DataDomeSolution>();
                     break;
 
                 default:

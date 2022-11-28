@@ -31,6 +31,9 @@ namespace CaptchaSharp.Enums
         GeeTest,
 
         /// <summary>A type of token captcha.</summary>
-        Capy
+        Capy,
+
+        /// <summary>A type of challenge based captcha.</summary>
+        DataDome
     }
 }
