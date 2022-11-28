@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services
 {
-    /// <summary>The service provided by <c>https://www.CapSolver.io/</c></summary>
+    /// <summary>The service provided by <c>https://capsolver.com/</c></summary>
     public class CapSolverService : CaptchaService
     {
         /// <summary>Your secret api key.</summary>
