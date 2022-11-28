@@ -929,7 +929,7 @@
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.CapSolverService">
-            <summary>The service provided by <c>https://www.CapSolver.io/</c></summary>
+            <summary>The service provided by <c>https://capsolver.com/</c></summary>
         </member>
         <member name="P:CaptchaSharp.Services.CapSolverService.ApiKey">
             <summary>Your secret api key.</summary>
