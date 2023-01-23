@@ -8,6 +8,7 @@ using CaptchaSharp.Services.AntiCaptcha.Responses;
 using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,8 +94,11 @@ namespace CaptchaSharp.Services
                     {
                         WebsiteKey = siteKey,
                         WebsiteURL = siteUrl,
-                        EnterprisePayload = dataS
+                        EnterprisePayload = new Dictionary<string, string>()
                     }.SetProxy(proxy);
+                    
+                    if (!string.IsNullOrEmpty(dataS))
+                        ((RecaptchaV2EnterpriseTask)content.Task).EnterprisePayload.Add("s", dataS);
                 }
                 else
                 {
@@ -102,8 +106,11 @@ namespace CaptchaSharp.Services
                     {
                         WebsiteKey = siteKey,
                         WebsiteURL = siteUrl,
-                        EnterprisePayload = dataS
+                        EnterprisePayload = new Dictionary<string, string>()
                     };
+                    
+                    if (!string.IsNullOrEmpty(dataS))
+                        ((RecaptchaV2EnterpriseTaskProxyless)content.Task).EnterprisePayload.Add("s", dataS);
                 }
             }
             else
