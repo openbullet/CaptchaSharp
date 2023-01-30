@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/openbullet/CaptchaSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/openbullet/CaptchaSharp</RepositoryUrl>
     <PackageTags>Captcha, Solver, Service, API, 2Captcha, TwoCaptcha, AntiCaptcha, Anti-Captcha, DeathByCaptcha, DBC, DeCaptcher, ImageTyperz</PackageTags>
-    <Version>1.0.11</Version>
+    <Version>1.0.13</Version>
     <PackageReleaseNotes>Added capsolver.com and datadome captcha</PackageReleaseNotes>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
