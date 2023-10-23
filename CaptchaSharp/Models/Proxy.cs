@@ -45,5 +45,7 @@ namespace CaptchaSharp.Models
 
         internal string GetCookieString()
             => Cookies != null ? string.Join("; ", Cookies.Select(c => $"{c.Item1}={c.Item2}")) : string.Empty;
+
+      
     }
 }
