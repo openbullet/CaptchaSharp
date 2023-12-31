@@ -1014,6 +1014,43 @@
         <member name="P:CaptchaSharp.Services.CapSolverService.Capabilities">
             <inheritdoc/>
         </member>
+        <member name="T:CaptchaSharp.Services.CheapCaptchaService">
+            <summary>The service provided by <c>https://www.deathbycaptcha.com/</c></summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.CheapCaptchaService.Username">
+            <summary>Your DeathByCaptcha account name.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.CheapCaptchaService.Password">
+            <summary>Your DeathByCaptcha account password.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.CheapCaptchaService.httpClient">
+            <summary>The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.#ctor(System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>Initializes a <see cref="T:CaptchaSharp.Services.DeathByCaptchaService"/> using the given account credentials and 
+            <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.CheckResult(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CheapCaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:CaptchaSharp.Services.CustomAntiCaptchaService">
             <summary>The service provided by a service that implements the anti-captcha API.</summary>
         </member>
