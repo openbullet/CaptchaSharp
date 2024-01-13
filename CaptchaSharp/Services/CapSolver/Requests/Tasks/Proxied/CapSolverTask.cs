@@ -14,7 +14,8 @@ namespace CaptchaSharp.Services.CapSolver.Requests.Tasks.Proxied
         public string ProxyPassword { get; set; }
         public string UserAgent { get; set; }
         public string Cookies { get; set; } // Format cookiename1=cookievalue1; cookiename2=cookievalue2
-
+        public string Anchor { get; set; }
+        public string Reload { get; set; }
         public CapSolverTask SetProxy(Proxy proxy)
         {
             if (!System.Net.IPAddress.TryParse(proxy.Host, out _))
@@ -27,7 +28,6 @@ namespace CaptchaSharp.Services.CapSolver.Requests.Tasks.Proxied
             ProxyPassword = proxy.Password;
             UserAgent = proxy.UserAgent;
             SetCookies(proxy.Cookies);
-
             return this;
         }
 

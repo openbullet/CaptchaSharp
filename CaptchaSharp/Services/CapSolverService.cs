@@ -26,6 +26,18 @@ namespace CaptchaSharp.Services
         /// <summary>The ID of the app.</summary>
         private readonly string appId = "FE552FC0-8A06-4B44-BD30-5B9DDA2A4194";
 
+        /// <summary>
+        /// Used by CapSolver to increase quality of Google ReCaptcha
+        /// https://www.capsolver.com/blog/reCAPTCHA/How-to-bypass-all-the-versions-reCAPTCHA-v2-v3
+        /// </summary>
+        public string Anchor { get; set; }
+
+        /// <summary>
+        /// Used by CapSolver to increase quality of Google ReCaptcha
+        /// https://www.capsolver.com/blog/reCAPTCHA/How-to-bypass-all-the-versions-reCAPTCHA-v2-v3
+        /// </summary>
+        public string Reload { get; set; }
+
         /// <summary>Initializes a <see cref="CapSolverService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
         public CapSolverService(string apiKey, HttpClient httpClient = null)
@@ -165,7 +177,9 @@ namespace CaptchaSharp.Services
                     WebsiteURL = siteUrl,
                     PageAction = action,
                     MinScore = minScore,
-                    IsEnterprise = enterprise
+                    IsEnterprise = enterprise,
+                    Anchor = Anchor,
+                    Reload = Reload
                 };
             }
             else
@@ -176,7 +190,9 @@ namespace CaptchaSharp.Services
                     WebsiteURL = siteUrl,
                     PageAction = action,
                     MinScore = minScore,
-                    IsEnterprise = enterprise
+                    IsEnterprise = enterprise,
+                    Anchor = Anchor,
+                    Reload = Reload
                 }.SetProxy(proxy);
             }
 
