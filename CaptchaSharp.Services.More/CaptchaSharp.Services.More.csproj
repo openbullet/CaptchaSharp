@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Description>Adds additional services to CaptchaSharp.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Ruri</Authors>
@@ -15,6 +15,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CaptchaSharp\CaptchaSharp.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.27.0.93347">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
