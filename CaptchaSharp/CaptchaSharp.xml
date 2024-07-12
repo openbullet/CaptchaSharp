@@ -333,6 +333,33 @@
             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
             <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.CaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <summary>Solves a Cloudflare Turnstile captcha.</summary>
+            
+            <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+            <param name="siteUrl">The URL where the captcha appears.</param>
+            <param name="action">Value of optional action parameter you found on page, can be defined in data-action attribute or passed to turnstile.render call.</param>
+            <param name="data">The value of cData passed to turnstile.render call. Also can be defined in data-cdata attribute.</param>
+            <param name="pageData">The value of chlPageData passed to turnstile.render call.</param>
+            
+            <param name="proxy">
+            A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+            going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+            fetch the captcha without using a proxy.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution as plaintext.
+            </returns>
+            
+            <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+            <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+            <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.CaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
@@ -605,6 +632,9 @@
         </member>
         <member name="F:CaptchaSharp.Enums.CaptchaType.DataDome">
             <summary>A type of challenge based captcha.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.CloudflareTurnstile">
+            <summary>Cloudflare's Turnstile captcha.</summary>
         </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
@@ -1251,6 +1281,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">

@@ -35,4 +35,7 @@ public enum CaptchaType
 
     /// <summary>A type of challenge based captcha.</summary>
     DataDome = 1 << 9,
+    
+    /// <summary>Cloudflare's Turnstile captcha.</summary>
+    CloudflareTurnstile = 1 << 10,
 }

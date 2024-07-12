@@ -318,6 +318,12 @@ namespace CaptchaSharp.Services
         public override async Task<StringResponse> SolveDataDomeAsync(string siteUrl, string captchaUrl, Proxy proxy = null,
             CancellationToken cancellationToken = default)
         {
+            // Make sure there is a proxy with a User-Agent
+            if (proxy == null || string.IsNullOrEmpty(proxy.Host) || string.IsNullOrEmpty(proxy.UserAgent))
+            {
+                throw new ArgumentException("A proxy with a User-Agent is required for DataDome captchas.");
+            }
+            
             var response = await httpClient.PostMultipartToStringAsync
                 ("in.php",
                     new StringPairCollection()
@@ -336,6 +342,41 @@ namespace CaptchaSharp.Services
             return (UseJsonFlag
                 ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.DataDome, cancellationToken).ConfigureAwait(false)
                 : await TryGetResult(response, CaptchaType.DataDome, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
+        }
+
+        /// <inheritdoc/>
+        public override async Task<StringResponse> SolveCloudflareTurnstileAsync(string siteKey, string siteUrl,
+            string action, string data, string pageData, Proxy proxy = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Make sure there is a proxy with a User-Agent
+            if (proxy == null || string.IsNullOrEmpty(proxy.UserAgent))
+            {
+                throw new ArgumentException("A User-Agent is required for Cloudflare Turnstile captchas.");
+            }
+            
+            var response = await httpClient.PostMultipartToStringAsync
+                ("in.php",
+                    new StringPairCollection()
+                        .Add("key", ApiKey)
+                        .Add("method", "turnstile")
+                        .Add("sitekey", siteKey)
+                        .Add("pageurl", siteUrl)
+                        .Add("action", action, !string.IsNullOrEmpty(action))
+                        .Add("data", data, !string.IsNullOrEmpty(data))
+                        .Add("pagedata", pageData, !string.IsNullOrEmpty(pageData))
+                        .Add("soft_id", softId)
+                        .Add("json", "1", UseJsonFlag)
+                        .Add("header_acao", "1", AddACAOHeader)
+                        .Add(ConvertProxy(proxy))
+                        .ToMultipartFormDataContent(),
+                    cancellationToken)
+                .ConfigureAwait(false);
+            
+            return (UseJsonFlag
+                    ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false)
+                    : await TryGetResult(response, CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false)
                 ) as StringResponse;
         }
 
@@ -471,21 +512,31 @@ namespace CaptchaSharp.Services
         /// <summary></summary>
         protected IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
         {
-            if (proxy == null)
-                return [];
-
-            var proxyParams = new List<(string, string)>
+            // TODO: Remove UserAgent and Cookies from Proxy class
+            if (proxy is null)
             {
-                ("proxy", proxy.RequiresAuthentication 
-                    ? $"{proxy.Username}:{proxy.Password}@{proxy.Host}:{proxy.Port}"
-                    : $"{proxy.Host}:{proxy.Port}"),
-                ("proxytype", proxy.Type.ToString())
-            };
-
+                return [];
+            }
+            
+            var proxyParams = new List<(string, string)>();
+            
             if (proxy.UserAgent is not null)
             {
                 proxyParams.Add(("userAgent", proxy.UserAgent));
             }
+
+            if (string.IsNullOrEmpty(proxy.Host))
+            {
+                return proxyParams;
+            }
+
+            proxyParams.AddRange(
+                [
+                    ("proxy", proxy.RequiresAuthentication
+                        ? $"{proxy.Username}:{proxy.Password}@{proxy.Host}:{proxy.Port}"
+                        : $"{proxy.Host}:{proxy.Port}"),
+                    ("proxytype", proxy.Type.ToString())
+                ]);
 
             return proxyParams;
         }

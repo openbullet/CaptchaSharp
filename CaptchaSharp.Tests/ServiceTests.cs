@@ -316,4 +316,22 @@ public class ServiceTests
     }
 
     protected Task DataDomeTest_WithProxy() => DataDomeTest(fixture.Config.Proxy);
+
+    private async Task CloudflareTurnstileTest(Proxy proxy)
+    {
+        var solution = await Service.SolveCloudflareTurnstileAsync(
+            siteKey: "0x4AAAAAAAVrOwQWPlm3Bnr5",
+            siteUrl: "https://2captcha.com/demo/cloudflare-turnstile",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+    }
+    
+    protected Task CloudflareTurnstileTest_NoProxy() => CloudflareTurnstileTest(new Proxy
+    {
+        // User-Agent required
+        UserAgent = fixture.Config.Proxy.UserAgent
+    });
+    
+    protected Task CloudflareTurnstileTest_WithProxy() => CloudflareTurnstileTest(fixture.Config.Proxy);
 }

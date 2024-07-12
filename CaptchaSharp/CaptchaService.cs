@@ -388,6 +388,37 @@ namespace CaptchaSharp
         {
             throw new NotSupportedException();
         }
+        
+        /// <summary>Solves a Cloudflare Turnstile captcha.</summary>
+        /// 
+        /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
+        /// <param name="siteUrl">The URL where the captcha appears.</param>
+        /// <param name="action">Value of optional action parameter you found on page, can be defined in data-action attribute or passed to turnstile.render call.</param>
+        /// <param name="data">The value of cData passed to turnstile.render call. Also can be defined in data-cdata attribute.</param>
+        /// <param name="pageData">The value of chlPageData passed to turnstile.render call.</param>
+        /// 
+        /// <param name="proxy">
+        /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+        /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+        /// fetch the captcha without using a proxy.
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+        /// 
+        /// <returns>
+        /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+        /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+        /// captcha solution as plaintext.
+        /// </returns>
+        /// 
+        /// <exception cref="TaskCreationException"></exception>
+        /// <exception cref="TaskSolutionException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        public virtual Task<StringResponse> SolveCloudflareTurnstileAsync
+            (string siteKey, string siteUrl, string action = null, string data = null, string pageData = null, Proxy proxy = null, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <summary>
         /// Reports a captcha solution as good or bad to the service.
