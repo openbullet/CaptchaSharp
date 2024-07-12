@@ -34,7 +34,7 @@ namespace CaptchaSharp.Enums
         Capy,
 
         /// <summary>A type of challenge based captcha.</summary>
-        DataDome
+        DataDome,
 
         /// <summary>The Cloudflare Turnstile captcha.</summary>
         Turnstile
