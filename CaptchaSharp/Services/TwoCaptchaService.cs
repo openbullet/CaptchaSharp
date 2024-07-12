@@ -315,6 +315,32 @@ namespace CaptchaSharp.Services
         }
         #endregion
 
+        /// <inheritdoc/>
+        public async override Task<StringResponse> SolveTurnstileCaptchaAsync
+            (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartToStringAsync
+                ("in.php",
+                new StringPairCollection()
+                    .Add("key", ApiKey)
+                    .Add("method", "turnstile")
+                    .Add("sitekey", siteKey)
+                    .Add("pageurl", siteUrl)
+                    .Add("soft_id", softId)
+                    .Add("json", "1", UseJsonFlag)
+                    .Add("header_acao", "1", AddACAOHeader)
+                    .Add(ConvertProxy(proxy))
+                    .ToMultipartFormDataContent(),
+                cancellationToken)
+                .ConfigureAwait(false);
+
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.Turnstile, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.Turnstile, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
+        }
+        #endregion
+        
         #region Getting the result
         internal async Task<CaptchaResponse> TryGetResult
             (Response response, CaptchaType type, CancellationToken cancellationToken = default)
