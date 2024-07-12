@@ -1,18 +1,17 @@
-﻿namespace CaptchaSharp.Enums
+﻿namespace CaptchaSharp.Enums;
+
+/// <summary></summary>
+public enum ProxyType
 {
     /// <summary></summary>
-    public enum ProxyType
-    {
-        /// <summary></summary>
-        HTTP,
+    HTTP = 0,
 
-        /// <summary></summary>
-        HTTPS,
+    /// <summary></summary>
+    HTTPS = 1,
 
-        /// <summary></summary>
-        SOCKS4,
+    /// <summary></summary>
+    SOCKS4 = 2,
 
-        /// <summary></summary>
-        SOCKS5
-    }
+    /// <summary></summary>
+    SOCKS5 = 3
 }
