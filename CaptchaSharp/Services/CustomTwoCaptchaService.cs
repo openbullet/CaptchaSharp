@@ -40,7 +40,7 @@ public class CustomTwoCaptchaService : TwoCaptchaService
 
     #region Supported Types
     /// <summary>The supported captcha types for this service.</summary>
-    public CaptchaType SupportedCaptchaTypes { get; protected set; } =
+    public CaptchaType SupportedCaptchaTypes { get; set; } =
         CaptchaType.TextCaptcha |
         CaptchaType.ImageCaptcha |
         CaptchaType.ReCaptchaV2 |

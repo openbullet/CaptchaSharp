@@ -10,11 +10,16 @@ using CaptchaSharp.Extensions;
 
 namespace CaptchaSharp.Services.More;
 
-/// <summary>The service provided by <c>https://solverecaptcha.com/</c></summary>
+/// <summary>
+/// The service provided by <c>https://solverecaptcha.com/</c>
+/// </summary>
 public class SolveRecaptchaService : CustomTwoCaptchaService
 {
-    /// <summary>Initializes a <see cref="SolveRecaptchaService"/> using the given <paramref name="apiKey"/> and 
-    /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
+    /// <summary>
+    /// Initializes a <see cref="SolveRecaptchaService"/>.
+    /// </summary>
+    /// <param name="apiKey">The API key to use.</param>
+    /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
     public SolveRecaptchaService(string apiKey, HttpClient? httpClient = null)
         : base(apiKey, new Uri("http://api.solverecaptcha.com"), httpClient)
     {
@@ -80,7 +85,7 @@ public class SolveRecaptchaService : CustomTwoCaptchaService
 
     /// <inheritdoc/>
     public override Task ReportSolution
-        (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+        (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -90,20 +95,12 @@ public class SolveRecaptchaService : CustomTwoCaptchaService
 
     private void ThrowException(string response)
     {
-        switch (response)
+        throw response switch
         {
-            case "ERROR_API_KEY_NOT_FOUND":
-            case "ERROR_ACCESS_DENIED":
-                throw new BadAuthenticationException(response);
-
-            case "ERROR_NO_AVAILABLE_THREADS":
-                throw new TaskCreationException(response);
-
-            case "ERROR_CAPTCHA_UNSOLVABLE":
-                throw new TaskSolutionException(response);
-
-            default:
-                throw new Exception(response);
-        }
+            "ERROR_API_KEY_NOT_FOUND" or "ERROR_ACCESS_DENIED" => new BadAuthenticationException(response),
+            "ERROR_NO_AVAILABLE_THREADS" => new TaskCreationException(response),
+            "ERROR_CAPTCHA_UNSOLVABLE" => new TaskSolutionException(response),
+            _ => new Exception(response)
+        };
     }
 }

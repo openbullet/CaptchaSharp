@@ -6,7 +6,7 @@ namespace CaptchaSharp.Services.CapSolver.Responses
     {
         public string Status { get; set; }
         public double Cost { get; set; }
-        public Solution Solution { get; set; }
+        public required Solution Solution { get; set; }
         public string Ip { get; set; }
         public double CreateTime { get; set; }
         public double EndTime { get; set; }
