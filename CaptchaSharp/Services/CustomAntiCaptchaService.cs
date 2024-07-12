@@ -11,7 +11,7 @@ namespace CaptchaSharp.Services
         /// <paramref name="baseUri"/> and <paramref name="httpClient"/>.
         /// If <paramref name="httpClient"/> is null, a default one will be created.
         /// </summary>
-        public CustomAntiCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null)
+        public CustomAntiCaptchaService(string apiKey, Uri baseUri, HttpClient? httpClient = null)
             : base(apiKey, httpClient)
         {
             SetupHttpClient(baseUri);

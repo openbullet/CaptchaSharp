@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://github.com/openbullet/CaptchaSharp</PackageProjectUrl>
     <Version>1.0.6</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

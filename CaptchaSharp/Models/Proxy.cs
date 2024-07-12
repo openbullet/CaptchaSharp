@@ -7,8 +7,10 @@ namespace CaptchaSharp.Models;
 /// <summary>A generic proxy class.</summary>
 public class Proxy
 {
+    // TODO: Remove UserAgent and Cookies properties from this class
+    
     /// <summary></summary>
-    public string Host { get; set; }
+    public string? Host { get; set; }
 
     /// <summary></summary>
     public int Port { get; set; }
@@ -17,16 +19,16 @@ public class Proxy
     public ProxyType Type { get; set; }
 
     /// <summary></summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     /// <summary></summary>
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     /// <summary>The User-Agent header to be used in requests.</summary>
-    public string UserAgent { get; set; }
+    public string? UserAgent { get; set; }
 
     /// <summary>The cookies needed to get to the page where the captcha is shown.</summary>
-    public (string, string)[] Cookies { get; set; }
+    public (string, string)[]? Cookies { get; set; }
 
     /// <summary>Whether the proxy requires authentication.</summary>
     [JsonIgnore]

@@ -1,15 +1,14 @@
-﻿namespace CaptchaSharp.Models
+﻿namespace CaptchaSharp.Models;
+
+/// <summary>The solution of a GeeTest captcha.</summary>
+public class GeeTestResponse : CaptchaResponse
 {
-    /// <summary>The solution of a GeeTest captcha.</summary>
-    public class GeeTestResponse : CaptchaResponse
-    {
-        /// <summary></summary>
-        public string Challenge { get; set; }
+    /// <summary></summary>
+    public required string Challenge { get; init; }
 
-        /// <summary></summary>
-        public string Validate { get; set; }
+    /// <summary></summary>
+    public required string Validate { get; init; }
 
-        /// <summary></summary>
-        public string SecCode { get; set; }
-    }
+    /// <summary></summary>
+    public required string SecCode { get; init; }
 }

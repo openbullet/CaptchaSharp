@@ -1,15 +1,14 @@
-﻿namespace CaptchaSharp.Models
+﻿namespace CaptchaSharp.Models;
+
+/// <summary>The solution of a Capy captcha.</summary>
+public class CapyResponse : CaptchaResponse
 {
-    /// <summary>The solution of a Capy captcha.</summary>
-    public class CapyResponse : CaptchaResponse
-    {
-        /// <summary></summary>
-        public string CaptchaKey { get; set; }
+    /// <summary></summary>
+    public required string CaptchaKey { get; init; }
 
-        /// <summary></summary>
-        public string ChallengeKey { get; set; }
+    /// <summary></summary>
+    public required string ChallengeKey { get; init; }
 
-        /// <summary></summary>
-        public string Answer { get; set; }
-    }
+    /// <summary></summary>
+    public required string Answer { get; init; }
 }

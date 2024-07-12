@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CaptchaSharp.Extensions;
 
 namespace CaptchaSharp.Services.More
 {
@@ -63,7 +64,8 @@ namespace CaptchaSharp.Services.More
             var response = await httpClient.PostJsonToStringAsync
                 ("one/gettext",
                 content,
-                cancellationToken, false)
+                camelizeKeys: false,
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             var jObject = JObject.Parse(response);

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CaptchaSharp.Extensions;
 
 namespace CaptchaSharp.Services
 {
@@ -29,7 +30,7 @@ namespace CaptchaSharp.Services
 
         /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/> and 
         /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
-        public AntiCaptchaService(string apiKey, HttpClient httpClient = null)
+        public AntiCaptchaService(string apiKey, HttpClient? httpClient = null)
         {
             ApiKey = apiKey;
             this.httpClient = httpClient ?? new HttpClient();
@@ -43,7 +44,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.PostJsonToStringAsync
                 ("getBalance",
                 new Request() { ClientKey = ApiKey },
-                cancellationToken)
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             var balanceResponse = response.Deserialize<GetBalanceResponse>();
@@ -72,7 +73,7 @@ namespace CaptchaSharp.Services
                             Body = base64
                         }
                     }, options),
-                cancellationToken)
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.ImageCaptcha, cancellationToken)
@@ -138,7 +139,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
-                cancellationToken)
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.ReCaptchaV2, cancellationToken)
@@ -170,7 +171,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
-                cancellationToken)
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.ReCaptchaV3, cancellationToken)
@@ -209,7 +210,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
-                cancellationToken)
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.FunCaptcha, cancellationToken)
@@ -242,7 +243,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
-                cancellationToken)
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.HCaptcha, cancellationToken)
@@ -280,7 +281,7 @@ namespace CaptchaSharp.Services
             var response = await httpClient.PostJsonToStringAsync
                 ("createTask",
                 content,
-                cancellationToken)
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.GeeTest, cancellationToken)
@@ -306,8 +307,8 @@ namespace CaptchaSharp.Services
         {
             var response = await httpClient.PostJsonToStringAsync
                 ("getTaskResult",
-                new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = (int)task.Id },
-                cancellationToken).ConfigureAwait(false);
+                new GetTaskResultRequest { ClientKey = ApiKey, TaskId = (int)task.Id },
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var result = response.Deserialize<GetTaskResultResponse>();
 
@@ -367,7 +368,7 @@ namespace CaptchaSharp.Services
                     response = await httpClient.PostJsonToStringAsync
                     ("reportIncorrectImageCaptcha",
                     new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
                     incResponse = response.Deserialize<ReportIncorrectCaptchaResponse>();
                     break;
@@ -377,7 +378,7 @@ namespace CaptchaSharp.Services
                     response = await httpClient.PostJsonToStringAsync
                     ("reportIncorrectRecaptcha",
                     new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
 
                     incResponse = response.Deserialize<ReportIncorrectCaptchaResponse>();
                     break;

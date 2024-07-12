@@ -183,7 +183,7 @@ public class ServiceTests
             publicKey: "3EE79F8D-13A6-474B-9278-448EA19F79B3",
             serviceUrl: "https://client-api.arkoselabs.com",
             siteUrl: "https://www.arkoselabs.com/arkose-matchkey/",
-            noJS: false,
+            noJs: false,
             proxy);
 
         Assert.NotEqual(string.Empty, solution.Response);

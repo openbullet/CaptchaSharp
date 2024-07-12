@@ -7,334 +7,368 @@ using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CaptchaSharp.Extensions;
 
-namespace CaptchaSharp.Services
+namespace CaptchaSharp.Services;
+
+/// <summary>
+/// The service provided by <c>https://www.imagetyperz.com/</c>
+/// </summary>
+public class ImageTyperzService : CaptchaService
 {
-    /// <summary>The service provided by <c>https://www.imagetyperz.com/</c></summary>
-    public class ImageTyperzService : CaptchaService
+    /// <summary>
+    /// Your secret api key.
+    /// </summary>
+    public string ApiKey { get; set; }
+
+    /// <summary>
+    /// The default <see cref="HttpClient"/> used for requests.
+    /// </summary>
+    private readonly HttpClient _httpClient;
+
+    /// <summary>
+    /// The ID of the software developer.
+    /// </summary>
+    private const int _affiliateId = 671869;
+
+    /// <summary>
+    /// Initializes a <see cref="ImageTyperzService"/>.
+    /// </summary>
+    /// <param name="apiKey">Your secret api key.</param>
+    /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
+    public ImageTyperzService(string apiKey, HttpClient? httpClient = null)
     {
-        /// <summary>Your secret api key.</summary>
-        public string ApiKey { get; set; }
+        ApiKey = apiKey;
+        this._httpClient = httpClient ?? new HttpClient();
+        
+        // TODO: Use https instead of http if possible
+        this._httpClient.BaseAddress = new Uri("http://captchatypers.com");
 
-        /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
-        private HttpClient httpClient;
-
-        /// <summary>The ID of the software developer.</summary>
-        private readonly int affiliateId = 671869;
-
-        /// <summary>Initializes a <see cref="ImageTyperzService"/> using the given <paramref name="apiKey"/> and 
-        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
-        public ImageTyperzService(string apiKey, HttpClient httpClient = null)
-        {
-            ApiKey = apiKey;
-            this.httpClient = httpClient ?? new HttpClient();
-            this.httpClient.BaseAddress = new Uri("http://captchatypers.com");
-
-            // Since this service replies directly with the solution to the task creation request (for image captchas)
-            // we need to set a high timeout here or it will not finish in time
-            this.httpClient.Timeout = Timeout;
-        }
-
-        #region Getting the Balance
-        /// <inheritdoc/>
-        public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostToStringAsync
-                ("Forms/RequestBalanceToken.ashx",
-                GetAuthPair()
-                .Add("action", "REQUESTBALANCE"),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            if (IsError(response))
-                throw new BadAuthenticationException(GetErrorMessage(response));
-
-            return decimal.Parse(response, CultureInfo.InvariantCulture);
-        }
-        #endregion
-
-        #region Solve Methods
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveImageCaptchaAsync
-            (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostToStringAsync
-                ("Forms/UploadFileAndGetTextNEWToken.ashx",
-                GetAuthAffiliatePair()
-                .Add("action", "UPLOADCAPTCHA")
-                .Add("file", base64)
-                .Add(ConvertCapabilities(options)),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            if (IsError(response))
-                throw new TaskSolutionException(GetErrorMessage(response));
-
-            var split = response.Split(new char[] { '|' }, 2);
-            return new StringResponse { Id = long.Parse(split[0]), Response = split[1] };
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostToStringAsync
-                (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                .Add("action", "UPLOADCAPTCHA")
-                .Add("pageurl", siteUrl)
-                .Add("googlekey", siteKey)
-                .Add("recaptchatype", invisible ? 2 : 1, !enterprise)
-                .Add("enterprise_type", "v2", enterprise)
-                .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
-                .Add(GetProxyParams(proxy)),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response, CaptchaType.ReCaptchaV2, cancellationToken) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostToStringAsync
-                (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                .Add("action", "UPLOADCAPTCHA")
-                .Add("pageurl", siteUrl)
-                .Add("googlekey", siteKey)
-                .Add("captchaaction", action)
-                .Add("score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
-                .Add("recaptchatype", 3, !enterprise)
-                .Add("enterprise_type", "v3", enterprise)
-                .Add(GetProxyParams(proxy)),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response, CaptchaType.ReCaptchaV2, cancellationToken) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveHCaptchaAsync
-            (string siteKey, string siteUrl, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostToStringAsync
-                ("captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                .Add("action", "UPLOADCAPTCHA")
-                .Add("pageurl", $"{siteUrl}--hcaptcha")
-                .Add("googlekey", $"{siteKey}--hcaptcha")
-                .Add(GetProxyParams(proxy)),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response, CaptchaType.HCaptcha, cancellationToken) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<GeeTestResponse> SolveGeeTestAsync
-            (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.GetStringAsync
-                ("captchaapi/UploadGeeTestToken.ashx",
-                GetAuthAffiliatePair()
-                .Add("action", "UPLOADCAPTCHA")
-                .Add("gt", gt)
-                .Add("challenge", challenge)
-                .Add("domain", siteUrl),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response, CaptchaType.GeeTest, cancellationToken) as GeeTestResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<CapyResponse> SolveCapyAsync
-            (string siteKey, string siteUrl, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostToStringAsync
-                ("captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                .Add("action", "UPLOADCAPTCHA")
-                .Add("pageurl", $"{siteUrl}--capy")
-                .Add("googlekey", $"{siteKey}--capy")
-                .Add(GetProxyParams(proxy)),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response, CaptchaType.Capy, cancellationToken) as CapyResponse;
-        }
-        #endregion
-
-        #region Getting the result
-        private async Task<CaptchaResponse> TryGetResult
-            (string response, CaptchaType type, CancellationToken cancellationToken = default)
-        {
-            if (IsError(response))
-                throw new TaskCreationException(response);
-
-            var task = new CaptchaTask(response, type);
-
-            return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        protected async override Task<CaptchaResponse> CheckResult
-            (CaptchaTask task, CancellationToken cancellationToken = default)
-        {
-            string response;
-
-            if (task.Type == CaptchaType.GeeTest)
-            {
-                response = await httpClient.GetStringAsync
-                    ("captchaapi/getrecaptchatext.ashx",
-                    GetAuthPair()
-                    .Add("action", "GETTEXT")
-                    .Add("captchaID", task.Id),
-                    cancellationToken)
-                    .ConfigureAwait(false);
-            }
-            else
-            {
-                response = await httpClient.PostToStringAsync
-                    ("captchaapi/GetRecaptchaTextToken.ashx",
-                    GetAuthPair()
-                    .Add("action", "GETTEXT")
-                    .Add("captchaID", task.Id),
-                    cancellationToken)
-                    .ConfigureAwait(false);
-            }
-
-            if (response.Contains("NOT_DECODED"))
-                return default;
-
-            task.Completed = true;
-
-            if (IsError(response))
-                throw new TaskSolutionException(response);
-
-            if (task.Type == CaptchaType.GeeTest) 
-            {
-                var split = response.Split(new string[] { ";;;" }, 3, StringSplitOptions.None);
-                return new GeeTestResponse
-                {
-                    Challenge = split[0],
-                    Validate = split[1],
-                    SecCode = split[2]
-                };
-            }
-            else
-            {
-                return new StringResponse { Id = task.Id, Response = response };
-            }
-        }
-        #endregion
-
-        #region Reporting the solution
-        /// <inheritdoc/>
-        public async override Task ReportSolution
-            (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostToStringAsync
-                ("Forms/SetBadImageToken.ashx",
-                GetAuthPair()
-                .Add("imageid", id)
-                .Add("action", "SETBADIMAGE"),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            if (response != "SUCCESS")
-                throw new TaskReportException(response);
-        }
-        #endregion
-
-        #region Private Methods
-        private StringPairCollection GetAuthPair() 
-            => new StringPairCollection().Add("token", ApiKey);
-
-        private StringPairCollection GetAuthAffiliatePair()
-            => GetAuthPair().Add("affiliateid", affiliateId);
-
-        private bool IsError(string response) 
-            => response.StartsWith("ERROR:");
-
-        private string GetErrorMessage(string response)
-            => response.Replace("ERROR: ", "");
-
-        private IEnumerable<(string, string)> GetProxyParams(Proxy proxy)
-        {
-            if (proxy == null)
-                return new (string, string)[] { };
-
-            if (proxy.Type != ProxyType.HTTP && proxy.Type != ProxyType.HTTPS)
-                throw new NotSupportedException("The api only supports HTTP proxies");
-
-            var proxyPairs = new List<(string, string)>
-            {
-                ("useragent", proxy.UserAgent),
-                ("proxytype", "HTTP")
-            };
-
-            if (proxy.RequiresAuthentication)
-                proxyPairs.Add(("proxy", $"{proxy.Host}:{proxy.Port}:{proxy.Username}:{proxy.Password}"));
-            else
-                proxyPairs.Add(("proxy", $"{proxy.Host}:{proxy.Port}"));
-
-            return proxyPairs;
-        }
-        #endregion
-
-        #region Capabilities
-        /// <inheritdoc/>
-        public override CaptchaServiceCapabilities Capabilities =>
-            CaptchaServiceCapabilities.Phrases |
-            CaptchaServiceCapabilities.CaseSensitivity |
-            CaptchaServiceCapabilities.CharacterSets |
-            CaptchaServiceCapabilities.Calculations |
-            CaptchaServiceCapabilities.MinLength |
-            CaptchaServiceCapabilities.MaxLength;
-
-        private IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
-        {
-            // If null, don't return any parameters
-            if (options == null)
-                return new (string, string)[] { };
-
-            var capabilities = new List<(string, string)> 
-            { 
-                ("iscase", options.CaseSensitive.ToString().ToLower()),
-                ("isphrase", options.IsPhrase.ToString().ToLower()),
-                ("ismath", options.RequiresCalculation.ToString().ToLower()),
-                ("minlength", options.MinLength.ToString()),
-                ("maxlength", options.MaxLength.ToString())
-            };
-
-            int alphanumeric;
-            switch (options.CharacterSet)
-            {
-                default:
-                    alphanumeric = 0;
-                    break;
-
-                case CharacterSet.OnlyNumbers:
-                    alphanumeric = 1;
-                    break;
-
-                case CharacterSet.OnlyLetters:
-                    alphanumeric = 2;
-                    break;
-            }
-
-            capabilities.Add(("alphanumeric", alphanumeric.ToString()));
-
-            return capabilities;
-        }
-        #endregion
+        // Since this service replies directly with the solution to the task creation request (for image captchas)
+        // we need to set a high timeout here, or it will not finish in time
+        this._httpClient.Timeout = Timeout;
     }
+
+    #region Getting the Balance
+    /// <inheritdoc/>
+    public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync
+            ("Forms/RequestBalanceToken.ashx",
+                GetAuthPair()
+                    .Add("action", "REQUESTBALANCE"),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        if (IsError(response))
+            throw new BadAuthenticationException(GetErrorMessage(response));
+
+        return decimal.Parse(response, CultureInfo.InvariantCulture);
+    }
+    #endregion
+
+    #region Solve Methods
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveImageCaptchaAsync(
+        string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync
+            ("Forms/UploadFileAndGetTextNEWToken.ashx",
+                GetAuthAffiliatePair()
+                    .Add("action", "UPLOADCAPTCHA")
+                    .Add("file", base64)
+                    .Add(ConvertCapabilities(options)),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        if (IsError(response))
+            throw new TaskSolutionException(GetErrorMessage(response));
+
+        var split = response.Split(['|'], 2);
+        return new StringResponse { Id = long.Parse(split[0]), Response = split[1] };
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaV2Async(
+        string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync
+            (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
+                GetAuthAffiliatePair()
+                    .Add("action", "UPLOADCAPTCHA")
+                    .Add("pageurl", siteUrl)
+                    .Add("googlekey", siteKey)
+                    .Add("recaptchatype", invisible ? 2 : 1, !enterprise)
+                    .Add("enterprise_type", "v2", enterprise)
+                    .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
+                    .Add(GetProxyParams(proxy)),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaV3Async
+    (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
+        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync
+            (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
+                GetAuthAffiliatePair()
+                    .Add("action", "UPLOADCAPTCHA")
+                    .Add("pageurl", siteUrl)
+                    .Add("googlekey", siteKey)
+                    .Add("captchaaction", action)
+                    .Add("score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Add("recaptchatype", 3, !enterprise)
+                    .Add("enterprise_type", "v3", enterprise)
+                    .Add(GetProxyParams(proxy)),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(
+            response, CaptchaType.ReCaptchaV2, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveHCaptchaAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync
+            ("captchaapi/UploadRecaptchaToken.ashx",
+                GetAuthAffiliatePair()
+                    .Add("action", "UPLOADCAPTCHA")
+                    .Add("pageurl", $"{siteUrl}--hcaptcha")
+                    .Add("googlekey", $"{siteKey}--hcaptcha")
+                    .Add(GetProxyParams(proxy)),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(
+            response, CaptchaType.HCaptcha, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestResponse> SolveGeeTestAsync(
+        string gt, string challenge, string apiServer, string siteUrl,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.GetStringAsync
+            ("captchaapi/UploadGeeTestToken.ashx",
+                GetAuthAffiliatePair()
+                    .Add("action", "UPLOADCAPTCHA")
+                    .Add("gt", gt)
+                    .Add("challenge", challenge)
+                    .Add("domain", siteUrl),
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<GeeTestResponse>(
+            response, CaptchaType.GeeTest, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<CapyResponse> SolveCapyAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync
+            ("captchaapi/UploadRecaptchaToken.ashx",
+                GetAuthAffiliatePair()
+                    .Add("action", "UPLOADCAPTCHA")
+                    .Add("pageurl", $"{siteUrl}--capy")
+                    .Add("googlekey", $"{siteKey}--capy")
+                    .Add(GetProxyParams(proxy)),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        // TODO: Check this, the get result method is not implemented for Capy
+        return await GetResult<CapyResponse>(
+            response, CaptchaType.Capy, cancellationToken);
+    }
+    #endregion
+
+    #region Getting the result
+    private async Task<T> GetResult<T>(
+        string response, CaptchaType type, CancellationToken cancellationToken = default)
+        where T : CaptchaResponse
+    {
+        if (IsError(response))
+            throw new TaskCreationException(response);
+
+        var task = new CaptchaTask(response, type);
+
+        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task<T?> CheckResult<T>(
+        CaptchaTask task, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        string response;
+
+        if (task.Type == CaptchaType.GeeTest)
+        {
+            response = await _httpClient.GetStringAsync
+                ("captchaapi/getrecaptchatext.ashx",
+                    GetAuthPair()
+                        .Add("action", "GETTEXT")
+                        .Add("captchaID", task.Id),
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        else
+        {
+            response = await _httpClient.PostToStringAsync
+                ("captchaapi/GetRecaptchaTextToken.ashx",
+                    GetAuthPair()
+                        .Add("action", "GETTEXT")
+                        .Add("captchaID", task.Id),
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        if (response.Contains("NOT_DECODED"))
+        {
+            return default;
+        }
+
+        task.Completed = true;
+
+        if (IsError(response))
+        {
+            throw new TaskSolutionException(response);
+        }
+        
+        // GeeTestResponse needs GeeTest captcha type
+        if (typeof(T) == typeof(GeeTestResponse))
+        {
+            if (task.Type is not CaptchaType.GeeTest)
+            {
+                throw new TaskSolutionException("The task is not a GeeTest captcha");   
+            }
+            
+            var split = response.Split([";;;"], 3, StringSplitOptions.None);
+            
+            return new GeeTestResponse
+            {
+                Challenge = split[0],
+                Validate = split[1],
+                SecCode = split[2]
+            } as T;
+        }
+
+        // If it's not a StringResponse, throw
+        if (typeof(T) != typeof(StringResponse))
+        {
+            throw new NotSupportedException("Only StringResponse and GeeTestResponse are supported");
+        }
+        
+        return new StringResponse { Id = task.Id, Response = response } as T;
+    }
+    #endregion
+
+    #region Reporting the solution
+    /// <inheritdoc/>
+    public override async Task ReportSolution
+        (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync
+            ("Forms/SetBadImageToken.ashx",
+                GetAuthPair()
+                    .Add("imageid", id)
+                    .Add("action", "SETBADIMAGE"),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        if (response != "SUCCESS")
+            throw new TaskReportException(response);
+    }
+    #endregion
+
+    #region Private Methods
+    private StringPairCollection GetAuthPair() 
+        => new StringPairCollection().Add("token", ApiKey);
+
+    private StringPairCollection GetAuthAffiliatePair()
+        => GetAuthPair().Add("affiliateid", _affiliateId);
+
+    private static bool IsError(string response) 
+        => response.StartsWith("ERROR:");
+
+    private static string GetErrorMessage(string response)
+        => response.Replace("ERROR: ", "");
+
+    private static List<(string, string)> GetProxyParams(Proxy? proxy)
+    {
+        if (proxy == null)
+        {
+            return [];
+        }
+
+        if (proxy.Type != ProxyType.HTTP && proxy.Type != ProxyType.HTTPS)
+        {
+            throw new NotSupportedException("The api only supports HTTP proxies");
+        }
+
+        var proxyPairs = new List<(string, string)>
+        {
+            ("proxytype", "HTTP"),
+            proxy.RequiresAuthentication
+                ? ("proxy", $"{proxy.Host}:{proxy.Port}:{proxy.Username}:{proxy.Password}")
+                : ("proxy", $"{proxy.Host}:{proxy.Port}")
+        };
+
+        if (proxy.UserAgent is not null)
+        {
+            proxyPairs.Add(("useragent", proxy.UserAgent));
+        }
+
+        return proxyPairs;
+    }
+    #endregion
+
+    #region Capabilities
+    /// <inheritdoc/>
+    public override CaptchaServiceCapabilities Capabilities =>
+        CaptchaServiceCapabilities.Phrases |
+        CaptchaServiceCapabilities.CaseSensitivity |
+        CaptchaServiceCapabilities.CharacterSets |
+        CaptchaServiceCapabilities.Calculations |
+        CaptchaServiceCapabilities.MinLength |
+        CaptchaServiceCapabilities.MaxLength;
+
+    private static List<(string, string)> ConvertCapabilities(ImageCaptchaOptions? options)
+    {
+        // If null, don't return any parameters
+        if (options is null)
+        {
+            return [];
+        }
+
+        var capabilities = new List<(string, string)> 
+        { 
+            ("iscase", options.CaseSensitive.ToString().ToLower()),
+            ("isphrase", options.IsPhrase.ToString().ToLower()),
+            ("ismath", options.RequiresCalculation.ToString().ToLower()),
+            ("minlength", options.MinLength.ToString()),
+            ("maxlength", options.MaxLength.ToString())
+        };
+
+        var alphanumeric = options.CharacterSet switch
+        {
+            CharacterSet.OnlyNumbers => 1,
+            CharacterSet.OnlyLetters => 2,
+            _ => 0
+        };
+
+        capabilities.Add(("alphanumeric", alphanumeric.ToString()));
+
+        return capabilities;
+    }
+    #endregion
 }

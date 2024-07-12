@@ -9,7 +9,7 @@ public class CaptchaResponse
     public long Id
     {
         get => long.Parse(IdString);
-        set => IdString = value.ToString();
+        init => IdString = value.ToString();
     }
 
     /// <summary>
