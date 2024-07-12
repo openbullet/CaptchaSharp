@@ -2,6 +2,7 @@
 using CaptchaSharp.Models;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -178,7 +179,6 @@ public class ServiceTests
         
     private async Task FunCaptchaTest(Proxy proxy)
     {
-        // TODO: Find a valid funcaptcha to test!
         var solution = await Service.SolveFuncaptchaAsync(
             publicKey: "3EE79F8D-13A6-474B-9278-448EA19F79B3",
             serviceUrl: "https://client-api.arkoselabs.com",
@@ -275,17 +275,45 @@ public class ServiceTests
     protected Task CapyTest_NoProxy() => CapyTest(null);
     protected Task CapyTest_WithProxy() => CapyTest(fixture.Config.Proxy);
 
+    // Proxy and User-Agent required
     private async Task DataDomeTest(Proxy proxy)
     {
-        // https://antoinevastel.com/bots/datadome
+        var site = "https://antoinevastel.com/bots/datadome";
+        
+        // If it doesn't work, try a few times until it triggers
+        // the captcha
+        var cookieContainer = new CookieContainer();
+        using var httpClientHandler = new HttpClientHandler();
+        httpClientHandler.UseCookies = true;
+        httpClientHandler.CookieContainer = cookieContainer;
+        using var httpClient = new HttpClient(httpClientHandler);
+        
+        // The User-Agent must be the same as the one used to get the page
+        httpClient.DefaultRequestHeaders.Add("User-Agent", proxy.UserAgent);
+        
+        using var response = await httpClient.GetAsync(site);
+        var pageSource = await response.Content.ReadAsStringAsync();
+        
+        var host = Regex.Match(pageSource, "'host':'([^']*)'").Groups[1].Value;
+        var initialCid = Regex.Match(pageSource, "'cid':'([^']*)'").Groups[1].Value;
+        var t = Regex.Match(pageSource, "'t':'([^']*)'").Groups[1].Value;
+        var s = Regex.Match(pageSource, @"'s':(\d+)").Groups[1].Value;
+        var e = Regex.Match(pageSource, "'e':'([^']*)'").Groups[1].Value;
+        var hsh = Regex.Match(pageSource, "'hsh':'([^']*)'").Groups[1].Value;
+        
+        // Get cid from "datadome" cookie
+        var cid = cookieContainer.GetCookies(new Uri(site))["datadome"]?.Value;
+
+        var captchaUrl =
+            $"https://{host}/captcha/?initialCid={WebUtility.UrlEncode(initialCid)}&hash={hsh}&cid={cid}&t={t}&referer={WebUtility.UrlEncode(site)}&s={s}&e={e}&dm=cd";
+        
         var solution = await Service.SolveDataDomeAsync(
-            siteUrl: "https://antoinevastel.com/bots/datadome", // Fill this when testing
-            captchaUrl: "", // Fill this when testing
+            siteUrl: site,
+            captchaUrl: captchaUrl,
             proxy);
 
         Assert.NotEqual(string.Empty, solution.Response);
     }
 
-    protected Task DataDomeTest_NoProxy() => DataDomeTest(null);
     protected Task DataDomeTest_WithProxy() => DataDomeTest(fixture.Config.Proxy);
 }

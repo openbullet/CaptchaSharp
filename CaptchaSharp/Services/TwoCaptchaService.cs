@@ -313,6 +313,32 @@ namespace CaptchaSharp.Services
                 : await TryGetResult(response, CaptchaType.Capy, cancellationToken).ConfigureAwait(false)
                 ) as CapyResponse;
         }
+
+        /// <inheritdoc/>
+        public override async Task<StringResponse> SolveDataDomeAsync(string siteUrl, string captchaUrl, Proxy proxy = null,
+            CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.PostMultipartToStringAsync
+                ("in.php",
+                    new StringPairCollection()
+                        .Add("key", ApiKey)
+                        .Add("method", "datadome")
+                        .Add("captcha_url", captchaUrl)
+                        .Add("pageurl", siteUrl)
+                        .Add("soft_id", softId)
+                        .Add("json", "1", UseJsonFlag)
+                        .Add("header_acao", "1", AddACAOHeader)
+                        .Add(ConvertProxy(proxy))
+                        .ToMultipartFormDataContent(),
+                    cancellationToken)
+                .ConfigureAwait(false);
+            
+            return (UseJsonFlag
+                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.DataDome, cancellationToken).ConfigureAwait(false)
+                : await TryGetResult(response, CaptchaType.DataDome, cancellationToken).ConfigureAwait(false)
+                ) as StringResponse;
+        }
+
         #endregion
 
         #region Getting the result
@@ -446,15 +472,22 @@ namespace CaptchaSharp.Services
         protected IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
         {
             if (proxy == null)
-                return new (string, string)[] { };
+                return [];
 
-            return new (string, string)[]
+            var proxyParams = new List<(string, string)>
             {
                 ("proxy", proxy.RequiresAuthentication 
                     ? $"{proxy.Username}:{proxy.Password}@{proxy.Host}:{proxy.Port}"
                     : $"{proxy.Host}:{proxy.Port}"),
                 ("proxytype", proxy.Type.ToString())
             };
+
+            if (proxy.UserAgent is not null)
+            {
+                proxyParams.Add(("userAgent", proxy.UserAgent));
+            }
+
+            return proxyParams;
         }
         #endregion
 

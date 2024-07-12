@@ -1250,6 +1250,9 @@
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveCapyAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <summary></summary>
         </member>
