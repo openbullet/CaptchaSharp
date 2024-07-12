@@ -313,7 +313,6 @@ namespace CaptchaSharp.Services
                 : await TryGetResult(response, CaptchaType.Capy, cancellationToken).ConfigureAwait(false)
                 ) as CapyResponse;
         }
-        #endregion
 
         /// <inheritdoc/>
         public async override Task<StringResponse> SolveTurnstileCaptchaAsync
