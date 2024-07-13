@@ -1041,14 +1041,14 @@
         <member name="P:CaptchaSharp.Services.CapSolverService.Capabilities">
             <inheritdoc/>
         </member>
-        <member name="T:CaptchaSharp.Services.CaptchasIOService">
+        <member name="T:CaptchaSharp.Services.CaptchasIoService">
             <summary>
             The service provided by <c>https://captchas.io/</c>
             </summary>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchasIOService.#ctor(System.String,System.Net.Http.HttpClient)">
+        <member name="M:CaptchaSharp.Services.CaptchasIoService.#ctor(System.String,System.Net.Http.HttpClient)">
             <summary>
-            Initializes a <see cref="T:CaptchaSharp.Services.CaptchasIOService"/>.
+            Initializes a <see cref="T:CaptchaSharp.Services.CaptchasIoService"/>.
             </summary>
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>

@@ -45,7 +45,7 @@ public class Credentials
     public string CapMonsterHost { get; set; } = string.Empty;
     public int CapMonsterPort { get; set; } = 80;
     public string AzCaptchaApiKey { get; set; } = string.Empty;
-    public string CaptchasIOApiKey { get; set; } = string.Empty;
+    public string CaptchasIoApiKey { get; set; } = string.Empty;
     public string RuCaptchaApiKey { get; set; } = string.Empty;
     public string SolveCaptchaApiKey { get; set; } = string.Empty;
     public string TrueCaptchaApiKey { get; set; } = string.Empty;

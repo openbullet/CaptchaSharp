@@ -22,6 +22,8 @@ public class AzCaptchaService : CustomTwoCaptchaService
         SupportedCaptchaTypes =
             CaptchaType.ImageCaptcha |
             CaptchaType.ReCaptchaV2 |
-            CaptchaType.ReCaptchaV3;
+            CaptchaType.ReCaptchaV3 |
+            CaptchaType.FunCaptcha |
+            CaptchaType.HCaptcha;
     }
 }
