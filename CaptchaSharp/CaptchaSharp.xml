@@ -1354,30 +1354,6 @@
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
-        <member name="T:CaptchaSharp.Services.SolveRecaptchaService">
-            <summary>
-            The service provided by <c>https://solverecaptcha.com/</c>
-            </summary>
-        </member>
-        <member name="M:CaptchaSharp.Services.SolveRecaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
-            <summary>
-            Initializes a <see cref="T:CaptchaSharp.Services.SolveRecaptchaService"/>.
-            </summary>
-            <param name="apiKey">The API key to use.</param>
-            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
-        </member>
-        <member name="M:CaptchaSharp.Services.SolveRecaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.SolveRecaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.SolveRecaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.SolveRecaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
         <member name="T:CaptchaSharp.Services.TrueCaptchaService">
             <summary>
             The service provided by <c>https://apitruecaptcha.org/</c>
