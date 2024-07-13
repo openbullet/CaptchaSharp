@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Extensions;
 
 namespace CaptchaSharp.Services.More;
@@ -49,12 +50,12 @@ public class TrueCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-            ("one/getbalance",
-                new StringPairCollection()
-                    .Add("username", UserId)
-                    .Add("apikey", ApiKey),
-                cancellationToken)
+        var response = await _httpClient.GetStringAsync(
+            "one/getbalance",
+            new StringPairCollection()
+                .Add("username", UserId)
+                .Add("apikey", ApiKey),
+            cancellationToken)
             .ConfigureAwait(false);
 
         if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out var balance))
@@ -69,16 +70,18 @@ public class TrueCaptchaService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync
         (string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var content = new JObject();
-        content.Add("userid", UserId);
-        content.Add("apikey", ApiKey);
-        content.Add("data", base64);
+        var content = new JObject
+        {
+            { "userid", UserId },
+            { "apikey", ApiKey },
+            { "data", base64 }
+        };
 
-        var response = await _httpClient.PostJsonToStringAsync
-            ("one/gettext",
-                content,
-                camelizeKeys: false,
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostJsonToStringAsync(
+            "one/gettext",
+            content,
+            camelizeKeys: false,
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         var jObject = JObject.Parse(response);
@@ -88,7 +91,43 @@ public class TrueCaptchaService : CaptchaService
         {
             throw new TaskSolutionException(response);
         }
+        
+        var requestId = jObject["requestId"]!.Value<string>()!;
             
-        return new StringResponse { Id = 0, Response = result.ToString() };
+        return new StringResponse { IdString = requestId, Response = result.ToString() };
+    }
+
+    /// <inheritdoc/>
+    public override Task ReportSolution(
+        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException("Use the string id overload instead.");
+    }
+
+    /// <inheritdoc/>
+    public override async Task ReportSolution(
+        string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+    {
+        var content = new JObject
+        {
+            { "userid", UserId },
+            { "apikey", ApiKey },
+            { "request_id", id }
+        };
+
+        var response = await _httpClient.PostJsonToStringAsync(
+                "one/report_error",
+                content,
+                camelizeKeys: false,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        var jObject = JObject.Parse(response);
+        var result = jObject["result"];
+
+        if (result is null || result.Value<string>() != "True")
+        {
+            throw new TaskReportException(response);
+        }
     }
 }
