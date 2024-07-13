@@ -40,8 +40,7 @@ namespace CaptchaSharp.Tests
         public bool CustomTwoCaptchaOverrideHostHeader { get; set; } = true;
         public string DeathByCaptchaUsername { get; set; } = string.Empty;
         public string DeathByCaptchaPassword { get; set; } = string.Empty;
-        public string DeCaptcherUsername { get; set; } = string.Empty;
-        public string DeCaptcherPassword { get; set; } = string.Empty;
+        public string DeCaptcherApiKey { get; set; } = string.Empty;
         public string ImageTyperzApiKey { get; set; } = string.Empty;
         public string CapMonsterHost { get; set; } = string.Empty;
         public int CapMonsterPort { get; set; } = 80;

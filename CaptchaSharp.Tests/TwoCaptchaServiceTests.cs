@@ -12,7 +12,8 @@ public class TwoCaptchaFixture : ServiceFixture
     }
 }
 
-public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture) : ServiceTests(fixture), IClassFixture<TwoCaptchaFixture>
+public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture) 
+    : ServiceTests(fixture), IClassFixture<TwoCaptchaFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
     [Fact] public Task ReportSolution_NoException() => ReportSolutionTest();
