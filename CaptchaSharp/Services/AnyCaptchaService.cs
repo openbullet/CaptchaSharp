@@ -2,7 +2,7 @@
 using System;
 using System.Net.Http;
 
-namespace CaptchaSharp.Services.More;
+namespace CaptchaSharp.Services;
 
 /// <summary>
 /// The service provided by <c>https://anycaptcha.com/</c>

@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Services.More;
+﻿using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
 

@@ -24,7 +24,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CaptchaSharp.Services.More\CaptchaSharp.Services.More.csproj" />
     <ProjectReference Include="..\CaptchaSharp\CaptchaSharp.csproj" />
   </ItemGroup>
 

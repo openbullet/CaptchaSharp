@@ -316,6 +316,8 @@ public class ImageTyperzService : CaptchaService
                 SecCode = geeTestResponse["geetest_seccode"]!.Value<string>()!
             } as T;
         }
+        
+        // TODO: Handle Capy response
 
         // If it's not a StringResponse, throw
         if (typeof(T) != typeof(StringResponse))
@@ -341,7 +343,9 @@ public class ImageTyperzService : CaptchaService
             .ConfigureAwait(false);
 
         if (response != "SUCCESS")
+        {
             throw new TaskReportException(response);
+        }
     }
     #endregion
 

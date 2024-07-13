@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Extensions;
 
-namespace CaptchaSharp.Services.More;
+namespace CaptchaSharp.Services;
 
 /// <summary>
 /// The service provided by <c>https://solverecaptcha.com/</c>

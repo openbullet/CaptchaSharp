@@ -2,20 +2,20 @@
 using System;
 using System.Net.Http;
 
-namespace CaptchaSharp.Services.More;
+namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://azcaptcha.com/</c>
+/// The service provided by <c>https://captchas.io/</c>
 /// </summary>
-public class AzCaptchaService : CustomTwoCaptchaService
+public class CaptchasIOService : CustomTwoCaptchaService
 {
     /// <summary>
-    /// Initializes a <see cref="AzCaptchaService"/>.
+    /// Initializes a <see cref="CaptchasIOService"/>.
     /// </summary>
     /// <param name="apiKey">The API key to use.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public AzCaptchaService(string apiKey, HttpClient? httpClient = null)
-        : base(apiKey, new Uri("http://azcaptcha.com"), httpClient, false)
+    public CaptchasIOService(string apiKey, HttpClient? httpClient = null)
+        : base(apiKey, new Uri("https://api.captchas.io"), httpClient, false) 
     {
         SupportedCaptchaTypes =
             CaptchaType.ImageCaptcha |

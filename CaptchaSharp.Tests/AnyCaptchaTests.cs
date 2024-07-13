@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Services.More;
+﻿using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -12,10 +12,8 @@ public class AnyCaptchaFixture : ServiceFixture
     }
 }
 
-public class AnyCaptchaServiceTests : ServiceTests, IClassFixture<AnyCaptchaFixture>
+public class AnyCaptchaServiceTests(AnyCaptchaFixture fixture) : ServiceTests(fixture), IClassFixture<AnyCaptchaFixture>
 {
-    public AnyCaptchaServiceTests(AnyCaptchaFixture fixture) : base(fixture) { }
-
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
     [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
