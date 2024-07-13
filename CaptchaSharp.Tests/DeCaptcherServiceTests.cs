@@ -2,22 +2,27 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CaptchaSharp.Tests
-{
-    public class DeCaptcherFixture : ServiceFixture
-    {
-        public DeCaptcherFixture()
-        {
-            Service = new DeCaptcherService(Config.Credentials.DeCaptcherApiKey);
-        }
-    }
+namespace CaptchaSharp.Tests;
 
-    public class DeCaptcherServiceTests(DeCaptcherFixture fixture)
-        : ServiceTests(fixture), IClassFixture<DeCaptcherFixture>
+public class DeCaptcherFixture : ServiceFixture
+{
+    public DeCaptcherFixture()
     {
-        [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
-        [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
-        [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
-        [Fact] public Task SolveRecaptchaV2Async_WithProxy_ValidSolution() => RecaptchaV2Test_WithProxy();
+        Service = new DeCaptcherService(Config.Credentials.DeCaptcherApiKey);
     }
+}
+
+public class DeCaptcherServiceTests(DeCaptcherFixture fixture)
+    : ServiceTests(fixture), IClassFixture<DeCaptcherFixture>
+{
+    [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
+        
+    // Do not overly use this test, or you will get banned.
+    [Fact] public Task ReportSolution_NoException() => ReportSolutionTest();
+        
+    [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
+    [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
+    [Fact] public Task SolveRecaptchaV2InvisibleAsync_NoProxy_ValidSolution() => RecaptchaV2InvisibleTest_NoProxy();
+    [Fact] public Task SolveRecaptchaV3Async_NoProxy_ValidSolution() => RecaptchaV3Test_NoProxy();
+    [Fact] public Task SolveRecaptchaV3EnterpriseAsync_NoProxy_ValidSolution() => RecaptchaV3EnterpriseTest_NoProxy();
 }

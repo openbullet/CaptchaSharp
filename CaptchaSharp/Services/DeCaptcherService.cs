@@ -12,7 +12,7 @@ using CaptchaSharp.Extensions;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://de-captcher.com/</c>
+/// The service provided by <c>https://captchacoder.com/</c>
 /// </summary>
 public class DeCaptcherService : CaptchaService
 {
@@ -33,7 +33,6 @@ public class DeCaptcherService : CaptchaService
         ApiKey = apiKey;
         this._httpClient = httpClient ?? new HttpClient();
         
-        // TODO: Use https instead of http if possible
         this._httpClient.BaseAddress = new Uri("http://api.captchacoder.com/");
             
         // Since this service replies directly with the solution to the task creation request
@@ -79,13 +78,13 @@ public class DeCaptcherService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-
-        if (DeCaptcherResponse.TryParse(response, out var resp))
+        
+        if (response.Contains("Error"))
         {
-            return new StringResponse { IdString = captchaId, Response = resp.Text };
+            throw new TaskSolutionException(response);
         }
 
-        throw new TaskSolutionException(response);
+        return new StringResponse { IdString = captchaId, Response = response };
     }
 
     /// <inheritdoc/>
@@ -113,12 +112,12 @@ public class DeCaptcherService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        if (DeCaptcherResponse.TryParse(response, out var resp))
+        if (response.Contains("Error"))
         {
-            return new StringResponse { IdString = captchaId, Response = resp.Text };
+            throw new TaskSolutionException(response);
         }
-
-        throw new TaskSolutionException(response);
+        
+        return new StringResponse { IdString = captchaId, Response = response };
     }
 
     /// <inheritdoc/>
@@ -147,12 +146,12 @@ public class DeCaptcherService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        if (DeCaptcherResponse.TryParse(response, out var resp))
+        if (response.Contains("Error"))
         {
-            return new StringResponse { IdString = captchaId, Response = resp.Text };
+            throw new TaskSolutionException(response);
         }
         
-        throw new TaskSolutionException(response);
+        return new StringResponse { IdString = captchaId, Response = response };
     }
 
     #endregion
@@ -178,7 +177,7 @@ public class DeCaptcherService : CaptchaService
                 .ToMultipartFormDataContent(), cancellationToken)
             .ConfigureAwait(false);
 
-        if (!response.Contains("ok"))
+        if (!response.Contains("ok", StringComparison.CurrentCultureIgnoreCase))
         {
             throw new TaskReportException(response);
         }

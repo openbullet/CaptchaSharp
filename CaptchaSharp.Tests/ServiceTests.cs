@@ -49,9 +49,17 @@ public class ServiceTests
         var solution = await Service.SolveImageCaptchaAsync(
             base64: _captchaImageBase64,
             options);
-            
-        await Service.ReportSolution(
-            solution.Id, CaptchaType.ImageCaptcha, correct: true);
+
+        if (solution.IsLongId)
+        {
+            await Service.ReportSolution(
+                solution.Id, CaptchaType.ImageCaptcha, correct: true);    
+        }
+        else
+        {
+            await Service.ReportSolution(
+                solution.IdString, CaptchaType.ImageCaptcha, correct: true);
+        }
             
         Assert.True(true);
     }
