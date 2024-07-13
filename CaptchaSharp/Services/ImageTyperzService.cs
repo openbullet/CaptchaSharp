@@ -41,7 +41,6 @@ public class ImageTyperzService : CaptchaService
         ApiKey = apiKey;
         this._httpClient = httpClient ?? new HttpClient();
         
-        // TODO: Use https instead of http if possible
         this._httpClient.BaseAddress = new Uri("http://captchatypers.com");
 
         // Since this service replies directly with the solution to the task creation request (for image captchas)

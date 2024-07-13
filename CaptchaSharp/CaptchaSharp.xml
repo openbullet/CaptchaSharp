@@ -741,6 +741,11 @@
         <member name="P:CaptchaSharp.Models.CaptchaResponse.Id">
             <summary>The captcha id which is needed to report the solution as bad.</summary>
         </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponse.IsLongId">
+            <summary>
+            Whether the captcha id is a long int or a string.
+            </summary>
+        </member>
         <member name="P:CaptchaSharp.Models.CaptchaResponse.IdString">
             <summary>
             The captcha id which is needed to report the solution, if it's
@@ -1108,7 +1113,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.DeCaptcherService">
             <summary>
-            The service provided by <c>https://de-captcher.com/</c>
+            The service provided by <c>https://captchacoder.com/</c>
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.DeCaptcherService.ApiKey">
