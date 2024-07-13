@@ -48,6 +48,9 @@ public class CustomTwoCaptchaService : TwoCaptchaService
         CaptchaType.FunCaptcha |
         CaptchaType.HCaptcha |
         CaptchaType.KeyCaptcha |
-        CaptchaType.GeeTest;
+        CaptchaType.GeeTest |
+        CaptchaType.Capy |
+        CaptchaType.DataDome |
+        CaptchaType.CloudflareTurnstile;
     #endregion
 }

@@ -1,6 +1,7 @@
 ﻿using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CaptchaSharp.Tests;
 
@@ -14,8 +15,8 @@ public class DeathByCaptchaFixture : ServiceFixture
     }
 }
 
-public class DeathByCaptchaServiceTests(DeathByCaptchaFixture fixture)
-    : ServiceTests(fixture), IClassFixture<DeathByCaptchaFixture>
+public class DeathByCaptchaServiceTests(DeathByCaptchaFixture fixture, ITestOutputHelper output)
+    : ServiceTests(fixture, output), IClassFixture<DeathByCaptchaFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();

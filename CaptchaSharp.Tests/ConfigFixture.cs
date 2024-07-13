@@ -6,20 +6,20 @@ namespace CaptchaSharp.Tests;
 
 public class ConfigFixture
 {
-    private readonly string credentialsFile = "config.json";
+    private const string _credentialsFile = "config.json";
     public Config Config { get; set; }
 
     public ConfigFixture()
     {
-        if (File.Exists(credentialsFile))
+        if (File.Exists(_credentialsFile))
         {
-            Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(credentialsFile));
+            Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(_credentialsFile))!;
         }
         else
         {
             // Write a blank structure if it doesn't exist so that we don't have to manually create it from scratch
             Config = new Config();
-            File.WriteAllText(credentialsFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
+            File.WriteAllText(_credentialsFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
         }
     }
 }
@@ -44,7 +44,7 @@ public class Credentials
     public string ImageTyperzApiKey { get; set; } = string.Empty;
     public string CapMonsterHost { get; set; } = string.Empty;
     public int CapMonsterPort { get; set; } = 80;
-    public string AZCaptchaApiKey { get; set; } = string.Empty;
+    public string AzCaptchaApiKey { get; set; } = string.Empty;
     public string CaptchasIOApiKey { get; set; } = string.Empty;
     public string RuCaptchaApiKey { get; set; } = string.Empty;
     public string SolveCaptchaApiKey { get; set; } = string.Empty;

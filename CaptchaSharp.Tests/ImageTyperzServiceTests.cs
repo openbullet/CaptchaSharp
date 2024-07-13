@@ -1,6 +1,7 @@
 ﻿using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CaptchaSharp.Tests;
 
@@ -12,8 +13,8 @@ public class ImageTyperzFixture : ServiceFixture
     }
 }
 
-public class ImageTyperzServiceTests(ImageTyperzFixture fixture)
-    : ServiceTests(fixture), IClassFixture<ImageTyperzFixture>
+public class ImageTyperzServiceTests(ImageTyperzFixture fixture, ITestOutputHelper output)
+    : ServiceTests(fixture, output), IClassFixture<ImageTyperzFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();

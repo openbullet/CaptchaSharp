@@ -1,6 +1,7 @@
 using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CaptchaSharp.Tests;
 
@@ -12,8 +13,8 @@ public class TwoCaptchaFixture : ServiceFixture
     }
 }
 
-public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture) 
-    : ServiceTests(fixture), IClassFixture<TwoCaptchaFixture>
+public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper output) 
+    : ServiceTests(fixture, output), IClassFixture<TwoCaptchaFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
     [Fact] public Task ReportSolution_NoException() => ReportSolutionTest();

@@ -2,12 +2,12 @@
 
 public abstract class ServiceFixture
 {
-    private readonly ConfigFixture configFixture;
-    public Config Config => configFixture.Config;
-    public CaptchaService Service { get; set; }
+    private readonly ConfigFixture _configFixture;
+    public Config Config => _configFixture.Config;
+    public CaptchaService Service { get; init; }
 
-    public ServiceFixture()
+    protected ServiceFixture()
     {
-        configFixture = new ConfigFixture();
+        _configFixture = new ConfigFixture();
     }
 }
