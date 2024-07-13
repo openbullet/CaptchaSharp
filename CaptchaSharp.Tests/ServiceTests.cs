@@ -250,14 +250,14 @@ public class ServiceTests
         var pageSource = await response.Content.ReadAsStringAsync();
         var obj = JObject.Parse(pageSource);
 
-        var gt = obj.Value<string>("gt");
-        var challenge = obj.Value<string>("challenge");
+        var gt = obj.Value<string>("gt")!;
+        var challenge = obj.Value<string>("challenge")!;
 
         var solution = await Service.SolveGeeTestAsync(
             gt,
             challenge,
-            apiServer: "api.geetest.com",
             siteUrl,
+            apiServer: "api.geetest.com",
             proxy);
 
         Assert.NotEqual("", solution.Challenge);

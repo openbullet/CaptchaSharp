@@ -146,7 +146,7 @@ public abstract class CaptchaService
         throw new NotSupportedException();
     }
 
-    /// <summary>Solves a FunCaptcha.</summary>
+    /// <summary>Solves a FunCaptcha (Arkose Labs).</summary>
     /// 
     /// <param name="publicKey">
     /// Can be found inside data-pkey parameter of funcaptcha's div element or inside an input element 
@@ -275,8 +275,8 @@ public abstract class CaptchaService
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<GeeTestResponse> SolveGeeTestAsync(
-        string gt, string challenge, string apiServer, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string gt, string challenge, string siteUrl, string? apiServer = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }

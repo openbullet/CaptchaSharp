@@ -26,7 +26,7 @@ public class CaptchaTask
     {
         IdString = id;
 
-        if (long.TryParse(id, out long parsed))
+        if (long.TryParse(id, out var parsed))
         {
             Id = parsed;
         }

@@ -293,7 +293,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
-        string gt, string challenge, string apiServer, string siteUrl,
+        string gt, string challenge, string siteUrl, string? apiServer = null,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -302,7 +302,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "geetest")
                 .Add("gt", gt)
                 .Add("challenge", challenge)
-                .Add("api_server", apiServer)
+                .Add("api_server", apiServer!, !string.IsNullOrEmpty(apiServer))
                 .Add("pageurl", siteUrl)
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)

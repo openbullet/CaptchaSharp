@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Extensions;
+using CaptchaSharp.Services.ImageTyperz;
+using Newtonsoft.Json.Linq;
 
 namespace CaptchaSharp.Services;
 
@@ -29,7 +31,7 @@ public class ImageTyperzService : CaptchaService
     /// <summary>
     /// The ID of the software developer.
     /// </summary>
-    private const int _affiliateId = 671869;
+    private const int _affiliateId = 109;
 
     /// <summary>
     /// Initializes a <see cref="ImageTyperzService"/>.
@@ -52,15 +54,17 @@ public class ImageTyperzService : CaptchaService
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync
-            ("Forms/RequestBalanceToken.ashx",
-                GetAuthPair()
-                    .Add("action", "REQUESTBALANCE"),
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostToStringAsync(
+            "Forms/RequestBalanceToken.ashx",
+            GetAuthPair()
+                .Add("action", "REQUESTBALANCE"),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         if (IsError(response))
+        {
             throw new BadAuthenticationException(GetErrorMessage(response));
+        }
 
         return decimal.Parse(response, CultureInfo.InvariantCulture);
     }
@@ -71,17 +75,19 @@ public class ImageTyperzService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync(
         string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync
-            ("Forms/UploadFileAndGetTextNEWToken.ashx",
-                GetAuthAffiliatePair()
-                    .Add("action", "UPLOADCAPTCHA")
-                    .Add("file", base64)
-                    .Add(ConvertCapabilities(options)),
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostToStringAsync(
+            "Forms/UploadFileAndGetTextNEWToken.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("file", base64)
+                .Add(ConvertCapabilities(options)),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         if (IsError(response))
+        {
             throw new TaskSolutionException(GetErrorMessage(response));
+        }
 
         var split = response.Split(['|'], 2);
         return new StringResponse { Id = long.Parse(split[0]), Response = split[1] };
@@ -92,17 +98,17 @@ public class ImageTyperzService : CaptchaService
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync
-            (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                    .Add("action", "UPLOADCAPTCHA")
-                    .Add("pageurl", siteUrl)
-                    .Add("googlekey", siteKey)
-                    .Add("recaptchatype", invisible ? 2 : 1, !enterprise)
-                    .Add("enterprise_type", "v2", enterprise)
-                    .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
-                    .Add(GetProxyParams(proxy)),
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostToStringAsync(
+            enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("pageurl", siteUrl)
+                .Add("googlekey", siteKey)
+                .Add("recaptchatype", invisible ? 2 : 1, !enterprise)
+                .Add("enterprise_type", "v2", enterprise)
+                .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
+                .Add(GetProxyParams(proxy)),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2, cancellationToken);
@@ -113,18 +119,18 @@ public class ImageTyperzService : CaptchaService
     (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
         bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync
-            (enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                    .Add("action", "UPLOADCAPTCHA")
-                    .Add("pageurl", siteUrl)
-                    .Add("googlekey", siteKey)
-                    .Add("captchaaction", action)
-                    .Add("score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
-                    .Add("recaptchatype", 3, !enterprise)
-                    .Add("enterprise_type", "v3", enterprise)
-                    .Add(GetProxyParams(proxy)),
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostToStringAsync(
+            enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("pageurl", siteUrl)
+                .Add("googlekey", siteKey)
+                .Add("captchaaction", action)
+                .Add("score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
+                .Add("recaptchatype", 3, !enterprise)
+                .Add("enterprise_type", "v3", enterprise)
+                .Add(GetProxyParams(proxy)),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
@@ -132,18 +138,40 @@ public class ImageTyperzService : CaptchaService
     }
 
     /// <inheritdoc/>
+    public override async Task<StringResponse> SolveFuncaptchaAsync(
+        string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync(
+            "captchaapi/UploadFunCaptcha.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("captchatype", 13)
+                .Add("pageurl", siteUrl)
+                .Add("sitekey", publicKey)
+                .Add("s_url", serviceUrl)
+                .Add(GetProxyParams(proxy)),
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(
+            response, CaptchaType.FunCaptcha, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync
-            ("captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                    .Add("action", "UPLOADCAPTCHA")
-                    .Add("pageurl", $"{siteUrl}--hcaptcha")
-                    .Add("googlekey", $"{siteKey}--hcaptcha")
-                    .Add(GetProxyParams(proxy)),
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostToStringAsync(
+            "captchaapi/UploadHCaptchaUser.ashx",
+            GetAuthAffiliatePair()
+                .Add("captchatype", 11)
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("pageurl", siteUrl)
+                .Add("sitekey", siteKey)
+                .Add(GetProxyParams(proxy)),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
@@ -152,17 +180,19 @@ public class ImageTyperzService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
-        string gt, string challenge, string apiServer, string siteUrl,
+        string gt, string challenge, string siteUrl, string? apiServer = null,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-            ("captchaapi/UploadGeeTestToken.ashx",
-                GetAuthAffiliatePair()
-                    .Add("action", "UPLOADCAPTCHA")
-                    .Add("gt", gt)
-                    .Add("challenge", challenge)
-                    .Add("domain", siteUrl),
-                cancellationToken)
+        var response = await _httpClient.GetStringAsync(
+            "captchaapi/UploadGeeTestToken.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("gt", gt)
+                .Add("challenge", challenge)
+                .Add("api_server", apiServer!, !string.IsNullOrEmpty(apiServer))
+                .Add("domain", siteUrl)
+                .Add(GetProxyParams(proxy)),
+            cancellationToken)
             .ConfigureAwait(false);
 
         return await GetResult<GeeTestResponse>(
@@ -174,20 +204,42 @@ public class ImageTyperzService : CaptchaService
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync
-            ("captchaapi/UploadRecaptchaToken.ashx",
-                GetAuthAffiliatePair()
-                    .Add("action", "UPLOADCAPTCHA")
-                    .Add("pageurl", $"{siteUrl}--capy")
-                    .Add("googlekey", $"{siteKey}--capy")
-                    .Add(GetProxyParams(proxy)),
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostToStringAsync(
+            "captchaapi/UploadCapyCaptchaUser.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("captchatype", 12)
+                .Add("pageurl", siteUrl)
+                .Add("sitekey", siteKey)
+                .Add(GetProxyParams(proxy)),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        // TODO: Check this, the get result method is not implemented for Capy
         return await GetResult<CapyResponse>(
             response, CaptchaType.Capy, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveCloudflareTurnstileAsync(
+        string siteKey, string siteUrl, string? action = null, string? data = null,
+        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostToStringAsync(
+            "captchaapi/Uploadturnstile.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("pageurl", siteUrl)
+                .Add("sitekey", siteKey)
+                .Add("taction", action!, !string.IsNullOrEmpty(action))
+                .Add("data", data!, !string.IsNullOrEmpty(data))
+                .Add(GetProxyParams(proxy)),
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(
+            response, CaptchaType.CloudflareTurnstile, cancellationToken);
+    }
+
     #endregion
 
     #region Getting the result
@@ -196,7 +248,16 @@ public class ImageTyperzService : CaptchaService
         where T : CaptchaResponse
     {
         if (IsError(response))
+        {
             throw new TaskCreationException(response);
+        }
+        
+        // If the response starts with a [, it's a JSON array
+        if (response.StartsWith('['))
+        {
+            var responses = response.Deserialize<ImageTyperzTaskCreatedResponse[]>(); 
+            response = responses[0].CaptchaId.ToString();
+        }
 
         var task = new CaptchaTask(response, type);
 
@@ -208,39 +269,33 @@ public class ImageTyperzService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        string response;
-
-        if (task.Type == CaptchaType.GeeTest)
+        var responseJson = await _httpClient.GetStringAsync(
+            "captchaapi/GetCaptchaResponseJson.ashx",
+            GetAuthPair()
+                .Add("action", "GETTEXT")
+                .Add("captchaid", task.Id),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        if (string.IsNullOrEmpty(responseJson))
         {
-            response = await _httpClient.GetStringAsync
-                ("captchaapi/getrecaptchatext.ashx",
-                    GetAuthPair()
-                        .Add("action", "GETTEXT")
-                        .Add("captchaID", task.Id),
-                    cancellationToken)
-                .ConfigureAwait(false);
+            throw new TaskSolutionException("Could not get the solution for the task");
         }
-        else
-        {
-            response = await _httpClient.PostToStringAsync
-                ("captchaapi/GetRecaptchaTextToken.ashx",
-                    GetAuthPair()
-                        .Add("action", "GETTEXT")
-                        .Add("captchaID", task.Id),
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-        }
+        
+        // For some reason, the response is an array with a single element
+        var responses = responseJson.Deserialize<ImageTyperzResponse[]>();
+        var response = responses[0];
 
-        if (response.Contains("NOT_DECODED"))
+        if (response.Status == "Pending")
         {
-            return default;
+            return null;
         }
 
         task.Completed = true;
 
-        if (IsError(response))
+        if (response.Status != "Solved")
         {
-            throw new TaskSolutionException(response);
+            throw new TaskSolutionException(response.Error);
         }
         
         // GeeTestResponse needs GeeTest captcha type
@@ -250,14 +305,15 @@ public class ImageTyperzService : CaptchaService
             {
                 throw new TaskSolutionException("The task is not a GeeTest captcha");   
             }
-            
-            var split = response.Split([";;;"], 3, StringSplitOptions.None);
+
+            var geeTestResponseJson = response.Response;
+            var geeTestResponse = JObject.Parse(geeTestResponseJson);
             
             return new GeeTestResponse
             {
-                Challenge = split[0],
-                Validate = split[1],
-                SecCode = split[2]
+                Challenge = geeTestResponse["geetest_challenge"]!.Value<string>()!,
+                Validate = geeTestResponse["geetest_validate"]!.Value<string>()!,
+                SecCode = geeTestResponse["geetest_seccode"]!.Value<string>()!
             } as T;
         }
 
@@ -267,7 +323,7 @@ public class ImageTyperzService : CaptchaService
             throw new NotSupportedException("Only StringResponse and GeeTestResponse are supported");
         }
         
-        return new StringResponse { Id = task.Id, Response = response } as T;
+        return new StringResponse { Id = task.Id, Response = response.Response } as T;
     }
     #endregion
 
@@ -276,12 +332,12 @@ public class ImageTyperzService : CaptchaService
     public override async Task ReportSolution
         (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync
-            ("Forms/SetBadImageToken.ashx",
-                GetAuthPair()
-                    .Add("imageid", id)
-                    .Add("action", "SETBADIMAGE"),
-                cancellationToken: cancellationToken)
+        var response = await _httpClient.PostToStringAsync(
+            "Forms/SetBadImageToken.ashx",
+            GetAuthPair()
+                .Add("imageid", id)
+                .Add("action", "SETBADIMAGE"),
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         if (response != "SUCCESS")
@@ -296,7 +352,7 @@ public class ImageTyperzService : CaptchaService
     private StringPairCollection GetAuthAffiliatePair()
         => GetAuthPair().Add("affiliateid", _affiliateId);
 
-    private static bool IsError(string response) 
+    private static bool IsError(string response)
         => response.StartsWith("ERROR:");
 
     private static string GetErrorMessage(string response)
@@ -309,23 +365,30 @@ public class ImageTyperzService : CaptchaService
             return [];
         }
 
-        if (proxy.Type != ProxyType.HTTP && proxy.Type != ProxyType.HTTPS)
-        {
-            throw new NotSupportedException("The api only supports HTTP proxies");
-        }
-
-        var proxyPairs = new List<(string, string)>
-        {
-            ("proxytype", "HTTP"),
-            proxy.RequiresAuthentication
-                ? ("proxy", $"{proxy.Host}:{proxy.Port}:{proxy.Username}:{proxy.Password}")
-                : ("proxy", $"{proxy.Host}:{proxy.Port}")
-        };
+        var proxyPairs = new List<(string, string)>();
 
         if (proxy.UserAgent is not null)
         {
             proxyPairs.Add(("useragent", proxy.UserAgent));
         }
+
+        if (string.IsNullOrEmpty(proxy.Host))
+        {
+            return proxyPairs;
+        }
+        
+        if (proxy.Type != ProxyType.HTTP && proxy.Type != ProxyType.HTTPS)
+        {
+            throw new NotSupportedException("The api only supports HTTP proxies");
+        }
+        
+        proxyPairs.AddRange(
+        [
+            ("proxytype", "HTTP"),
+            proxy.RequiresAuthentication
+                ? ("proxy", $"{proxy.Host}:{proxy.Port}:{proxy.Username}:{proxy.Password}")
+                : ("proxy", $"{proxy.Host}:{proxy.Port}")
+        ]);
 
         return proxyPairs;
     }

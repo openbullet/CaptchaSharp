@@ -280,8 +280,8 @@ public class AntiCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
-        string gt, string challenge, string apiServer, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string gt, string challenge, string siteUrl, string? apiServer = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
             

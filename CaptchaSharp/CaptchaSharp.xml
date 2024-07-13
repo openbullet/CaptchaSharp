@@ -120,7 +120,7 @@
             <exception cref="T:System.TimeoutException"></exception>
         </member>
         <member name="M:CaptchaSharp.CaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
-            <summary>Solves a FunCaptcha.</summary>
+            <summary>Solves a FunCaptcha (Arkose Labs).</summary>
             
             <param name="publicKey">
             Can be found inside data-pkey parameter of funcaptcha's div element or inside an input element 
@@ -1187,6 +1187,9 @@
         <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
@@ -1194,6 +1197,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveCapyAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.ImageTyperzService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
@@ -1204,6 +1210,41 @@
         </member>
         <member name="P:CaptchaSharp.Services.ImageTyperzService.Capabilities">
             <inheritdoc/>
+        </member>
+        <member name="T:CaptchaSharp.Services.ImageTyperz.ImageTyperzResponse">
+            <summary>
+            The response for a captcha task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.ImageTyperz.ImageTyperzResponse.CaptchaId">
+            <summary>
+            The captcha id.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.ImageTyperz.ImageTyperzResponse.Response">
+            <summary>
+            The response (if solved).
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.ImageTyperz.ImageTyperzResponse.Status">
+            <summary>
+            The status of the task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.ImageTyperz.ImageTyperzResponse.Error">
+            <summary>
+            The error message (if any).
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Services.ImageTyperz.ImageTyperzTaskCreatedResponse">
+            <summary>
+            The response for a captcha task after it's created.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.ImageTyperz.ImageTyperzTaskCreatedResponse.CaptchaId">
+            <summary>
+            The captcha id.
+            </summary>
         </member>
         <member name="T:CaptchaSharp.Services.NineKwService">
             <summary>
