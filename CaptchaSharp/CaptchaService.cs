@@ -365,7 +365,7 @@ public abstract class CaptchaService
     /// <exception cref="TaskCreationException"></exception>
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
-    public virtual Task<StringResponse> SolveCloudflareTurnstileAsync(
+    public virtual Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
         string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {

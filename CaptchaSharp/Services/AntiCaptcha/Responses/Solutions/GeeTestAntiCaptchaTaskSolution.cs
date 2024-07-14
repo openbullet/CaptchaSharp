@@ -2,7 +2,7 @@
 
 namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
 {
-    internal class GeeTestSolution : Solution
+    internal class GeeTestAntiCaptchaTaskSolution : AntiCaptchaTaskSolution
     {
         public string Challenge { get; set; }
         public string Validate { get; set; }

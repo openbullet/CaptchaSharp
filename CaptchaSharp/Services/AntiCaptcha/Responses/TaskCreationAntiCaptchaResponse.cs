@@ -1,6 +1,6 @@
 ﻿namespace CaptchaSharp.Services.AntiCaptcha.Responses
 {
-    internal class TaskCreationResponse : Response
+    internal class TaskCreationAntiCaptchaResponse : AntiCaptchaResponse
     {
         public int TaskId { get; set; }
     }

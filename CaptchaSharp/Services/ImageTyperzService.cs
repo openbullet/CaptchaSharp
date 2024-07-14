@@ -220,7 +220,7 @@ public class ImageTyperzService : CaptchaService
     }
 
     /// <inheritdoc/>
-    public override async Task<StringResponse> SolveCloudflareTurnstileAsync(
+    public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
         string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
@@ -236,7 +236,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResult<CloudflareTurnstileResponse>(
             response, CaptchaType.CloudflareTurnstile, cancellationToken);
     }
 
@@ -306,8 +306,7 @@ public class ImageTyperzService : CaptchaService
                 throw new TaskSolutionException("The task is not a GeeTest captcha");   
             }
 
-            var geeTestResponseJson = response.Response;
-            var geeTestResponse = JObject.Parse(geeTestResponseJson);
+            var geeTestResponse = JObject.Parse(response.Response);
             
             return new GeeTestResponse
             {
@@ -318,6 +317,22 @@ public class ImageTyperzService : CaptchaService
         }
         
         // TODO: Handle Capy response
+        
+        else if (typeof(T) == typeof(CloudflareTurnstileResponse))
+        {
+            if (task.Type is not CaptchaType.CloudflareTurnstile)
+            {
+                throw new TaskSolutionException("The task is not a Cloudflare Turnstile captcha");   
+            }
+            
+            var cloudflareResponse = JObject.Parse(response.Response);
+            
+            return new CloudflareTurnstileResponse
+            {
+                Response = cloudflareResponse["Response"]!.Value<string>()!,
+                UserAgent = cloudflareResponse["UserAgent"]!.Value<string>()!
+            } as T;
+        }
 
         // If it's not a StringResponse, throw
         if (typeof(T) != typeof(StringResponse))

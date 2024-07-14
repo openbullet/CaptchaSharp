@@ -19,7 +19,7 @@ public class DeCaptcherServiceTests(DeCaptcherFixture fixture, ITestOutputHelper
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
         
     // Do not overly use this test, or you will get banned.
-    [Fact] public Task ReportSolution_NoException() => ReportSolutionTest();
+    [Fact] public Task ReportSolution_NoException() => ReportImageSolutionTest();
         
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
     [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();

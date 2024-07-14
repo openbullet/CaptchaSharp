@@ -2,16 +2,16 @@
 
 namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
 {
-    internal class RecaptchaSolution : Solution
+    internal class FuncaptchaAntiCaptchaTaskSolution : AntiCaptchaTaskSolution
     {
-        public string GRecaptchaResponse { get; set; }
+        public string Token { get; set; }
 
         public override CaptchaResponse ToCaptchaResponse(long id)
         {
             return new StringResponse
             {
                 Id = id,
-                Response = GRecaptchaResponse
+                Response = Token
             };
         }
     }

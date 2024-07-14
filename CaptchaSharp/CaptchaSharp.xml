@@ -791,6 +791,22 @@
         <member name="P:CaptchaSharp.Models.CapyResponse.Answer">
             <summary></summary>
         </member>
+        <member name="T:CaptchaSharp.Models.CloudflareTurnstileResponse">
+            <summary>
+            A captcha response for Cloudflare's Turnstile.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CloudflareTurnstileResponse.Response">
+            <summary>
+            The response token.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CloudflareTurnstileResponse.UserAgent">
+            <summary>
+            The user agent used to solve the challenge. It must be also used
+            when submitting the response to the target website.
+            </summary>
+        </member>
         <member name="T:CaptchaSharp.Models.GeeTestResponse">
             <summary>The solution of a GeeTest captcha.</summary>
         </member>
@@ -947,6 +963,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveGeeTestAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
@@ -1490,6 +1509,11 @@
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.ImageCaptchaOptions)">
             <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.TwoCaptcha.TwoCaptchaCloudflareTurnstileResponse.UserAgent">
+            <summary>
+            The User-Agent used to solve the challenge.
+            </summary>
         </member>
     </members>
 </doc>

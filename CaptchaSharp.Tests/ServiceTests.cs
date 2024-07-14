@@ -36,7 +36,7 @@ public class ServiceTests
         _output.WriteLine($"Balance: {balance}");
     }
 
-    protected async Task ReportSolutionTest()
+    protected async Task ReportImageSolutionTest(bool correct = true)
     {
         var options = new ImageCaptchaOptions
         {
@@ -58,12 +58,35 @@ public class ServiceTests
         if (solution.IsLongId)
         {
             await Service.ReportSolution(
-                solution.Id, CaptchaType.ImageCaptcha, correct: true);    
+                solution.Id, CaptchaType.ImageCaptcha, correct);    
         }
         else
         {
             await Service.ReportSolution(
-                solution.IdString, CaptchaType.ImageCaptcha, correct: true);
+                solution.IdString, CaptchaType.ImageCaptcha, correct);
+        }
+            
+        Assert.True(true);
+    }
+    
+    protected async Task ReportRecaptchaSolutionTest(bool correct = true)
+    {
+        var solution = await Service.SolveRecaptchaV2Async(
+            siteKey: "6LfD3PIbAAAAAJs_eEHvoOl75_83eXSqpPSRFJ_u",
+            siteUrl: "https://2captcha.com/demo/recaptcha-v2",
+            dataS: "",
+            enterprise: false,
+            invisible: false);
+
+        if (solution.IsLongId)
+        {
+            await Service.ReportSolution(
+                solution.Id, CaptchaType.ReCaptchaV2, correct);    
+        }
+        else
+        {
+            await Service.ReportSolution(
+                solution.IdString, CaptchaType.ReCaptchaV2, correct);
         }
             
         Assert.True(true);
@@ -383,6 +406,7 @@ public class ServiceTests
         
         _output.WriteLine($"Captcha ID: {solution.IdString}");
         _output.WriteLine($"Response: {solution.Response}");
+        _output.WriteLine($"User-Agent: {solution.UserAgent}");
     }
     
     protected Task CloudflareTurnstileTest_NoProxy() => CloudflareTurnstileTest(new Proxy

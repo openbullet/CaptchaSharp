@@ -17,7 +17,7 @@ public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper
     : ServiceTests(fixture, output), IClassFixture<TwoCaptchaFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
-    [Fact] public Task ReportSolution_NoException() => ReportSolutionTest();
+    [Fact] public Task ReportSolution_NoException() => ReportImageSolutionTest();
     [Fact] public Task SolveTextCaptchaAsync_ValidCaptcha_ValidSolution() => TextCaptchaTest();
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
     [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
