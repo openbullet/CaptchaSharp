@@ -1,26 +1,26 @@
-﻿using CaptchaSharp.Services;
 using System.Threading.Tasks;
+using CaptchaSharp.Services;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace CaptchaSharp.Tests;
 
-public class DeCaptcherFixture : ServiceFixture
+public class HumanCoderFixture : ServiceFixture
 {
-    public DeCaptcherFixture()
+    public HumanCoderFixture()
     {
-        Service = new DeCaptcherService(Config.Credentials.DeCaptcherApiKey);
+        Service = new HumanCoderService(Config.Credentials.HumanCoderApiKey);
     }
 }
 
-public class DeCaptcherServiceTests(DeCaptcherFixture fixture, ITestOutputHelper output)
-    : ServiceTests(fixture, output), IClassFixture<DeCaptcherFixture>
+public class HumanCoderServiceTests(HumanCoderFixture fixture, ITestOutputHelper output)
+    : ServiceTests(fixture, output), IClassFixture<HumanCoderFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
-        
+
     // Do not overly use this test, or you will get banned.
     [Fact] public Task ReportSolution_NoException() => ReportImageSolutionTest();
-        
+
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
     [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
     [Fact] public Task SolveRecaptchaV2InvisibleAsync_NoProxy_ValidSolution() => RecaptchaV2InvisibleTest_NoProxy();

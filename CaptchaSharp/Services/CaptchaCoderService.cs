@@ -1,7 +1,6 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.DeCaptcher;
 using System;
 using System.Globalization;
 using System.Net.Http;
@@ -14,37 +13,36 @@ namespace CaptchaSharp.Services;
 /// <summary>
 /// The service provided by <c>https://captchacoder.com/</c>
 /// </summary>
-public class DeCaptcherService : CaptchaService
+public class CaptchaCoderService : CaptchaService
 {
     /// <summary>
     /// Your secret api key.
     /// </summary>
     public string ApiKey { get; set; }
 
-    /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
-    private readonly HttpClient _httpClient;
+    /// <summary>The default <see cref="System.Net.Http.HttpClient"/> used for requests.</summary>
+    protected readonly HttpClient HttpClient;
 
     /// <summary>
-    /// Initializes a <see cref="DeCaptcherService"/>.
+    /// Initializes a <see cref="CaptchaCoderService"/>.
     /// </summary>
-    /// 
-    public DeCaptcherService(string apiKey, HttpClient? httpClient = null)
+    public CaptchaCoderService(string apiKey, HttpClient? httpClient = null)
     {
         ApiKey = apiKey;
-        this._httpClient = httpClient ?? new HttpClient();
+        this.HttpClient = httpClient ?? new HttpClient();
         
-        this._httpClient.BaseAddress = new Uri("http://api.captchacoder.com/");
+        this.HttpClient.BaseAddress = new Uri("http://api.captchacoder.com/");
             
         // Since this service replies directly with the solution to the task creation request
         // we need to set a high timeout here, or it will not finish in time
-        this._httpClient.Timeout = Timeout;
+        this.HttpClient.Timeout = Timeout;
     }
 
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostMultipartToStringAsync(
+        var response = await HttpClient.PostMultipartToStringAsync(
             "Imagepost.ashx",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -68,7 +66,7 @@ public class DeCaptcherService : CaptchaService
     {
         var captchaId = Guid.NewGuid().ToString();
         
-        var response = await _httpClient.PostMultipartToStringAsync(
+        var response = await HttpClient.PostMultipartToStringAsync(
             "Imagepost.ashx",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -99,7 +97,7 @@ public class DeCaptcherService : CaptchaService
         
         var captchaId = Guid.NewGuid().ToString();
 
-        var response = await _httpClient.PostMultipartToStringAsync(
+        var response = await HttpClient.PostMultipartToStringAsync(
             "Imagepost.ashx",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -132,7 +130,7 @@ public class DeCaptcherService : CaptchaService
         
         var captchaId = Guid.NewGuid().ToString();
         
-        var response = await _httpClient.PostMultipartToStringAsync(
+        var response = await HttpClient.PostMultipartToStringAsync(
             "Imagepost.ashx",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -168,7 +166,7 @@ public class DeCaptcherService : CaptchaService
     public override async Task ReportSolution(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostMultipartToStringAsync(
+        var response = await HttpClient.PostMultipartToStringAsync(
             "Imagepost.ashx",
             new StringPairCollection()
                 .Add("key", ApiKey)

@@ -40,7 +40,8 @@ public class Credentials
     public bool CustomTwoCaptchaOverrideHostHeader { get; set; } = true;
     public string DeathByCaptchaUsername { get; set; } = string.Empty;
     public string DeathByCaptchaPassword { get; set; } = string.Empty;
-    public string DeCaptcherApiKey { get; set; } = string.Empty;
+    public string CaptchaCoderApiKey { get; set; } = string.Empty;
+    public string HumanCoderApiKey { get; set; } = string.Empty;
     public string ImageTyperzApiKey { get; set; } = string.Empty;
     public string CapMonsterHost { get; set; } = string.Empty;
     public int CapMonsterPort { get; set; } = 80;

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace CaptchaSharp.Services.DeathByCaptcha.Tasks;
 
-namespace CaptchaSharp.Services.DeathByCaptcha.Tasks
+internal class DbcTaskProxyless
 {
-    internal class DBCTaskProxyless
-    {
-    }
+    
 }

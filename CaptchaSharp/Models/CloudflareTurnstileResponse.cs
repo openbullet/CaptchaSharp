@@ -14,5 +14,5 @@ public class CloudflareTurnstileResponse : CaptchaResponse
     /// The user agent used to solve the challenge. It must be also used
     /// when submitting the response to the target website.
     /// </summary>
-    public required string UserAgent { get; set; }
+    public string? UserAgent { get; set; }
 }

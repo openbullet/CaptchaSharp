@@ -727,13 +727,12 @@
         <member name="M:CaptchaSharp.Extensions.StringExtensions.Deserialize``1(System.String)">
             <summary>Deserializes a json string to a given type.</summary>
         </member>
+        <member name="M:CaptchaSharp.Extensions.StringExtensions.Serialize``1(``0)">
+            <summary>Serializes an object to a json string.</summary>
+        </member>
         <member name="M:CaptchaSharp.Extensions.StringExtensions.SerializeCamelCase``1(``0)">
             <summary>Serializes an object to a json string and converts the property names 
             to a camelCase based convention.</summary>
-        </member>
-        <member name="M:CaptchaSharp.Extensions.StringExtensions.SerializeLowerCase``1(``0)">
-            <summary>Serializes an object to a json string and converts the property names 
-            to a lowercase based convention.</summary>
         </member>
         <member name="T:CaptchaSharp.Models.CaptchaResponse">
             <summary>A generic captcha response.</summary>
@@ -1060,6 +1059,42 @@
         <member name="P:CaptchaSharp.Services.CapSolverService.Capabilities">
             <inheritdoc/>
         </member>
+        <member name="T:CaptchaSharp.Services.CaptchaCoderService">
+            <summary>
+            The service provided by <c>https://captchacoder.com/</c>
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.CaptchaCoderService.ApiKey">
+            <summary>
+            Your secret api key.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.CaptchaCoderService.HttpClient">
+            <summary>The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.</summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.CaptchaCoderService"/>.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:CaptchaSharp.Services.CaptchasIoService">
             <summary>
             The service provided by <c>https://captchas.io/</c>
@@ -1148,48 +1183,39 @@
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveKeyCaptchaAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveGeeTestAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveCapyAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="T:CaptchaSharp.Services.DeCaptcherService">
+        <member name="T:CaptchaSharp.Services.HumanCoderService">
             <summary>
-            The service provided by <c>https://captchacoder.com/</c>
+            The service provided by <c>https://humancoder.com/</c>
             </summary>
         </member>
-        <member name="P:CaptchaSharp.Services.DeCaptcherService.ApiKey">
+        <member name="M:CaptchaSharp.Services.HumanCoderService.#ctor(System.String,System.Net.Http.HttpClient)">
             <summary>
-            Your secret api key.
+            Initializes a <see cref="T:CaptchaSharp.Services.HumanCoderService"/>.
             </summary>
-        </member>
-        <member name="F:CaptchaSharp.Services.DeCaptcherService._httpClient">
-            <summary>The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.</summary>
-        </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.#ctor(System.String,System.Net.Http.HttpClient)">
-            <summary>
-            Initializes a <see cref="T:CaptchaSharp.Services.DeCaptcherService"/>.
-            </summary>
-            
-        </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.GetBalanceAsync(System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CaptchaSharp.Services.DeCaptcherService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
-            <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.ImageTyperzService">
             <summary>

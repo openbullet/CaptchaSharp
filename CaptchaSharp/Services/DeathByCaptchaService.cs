@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using CaptchaSharp.Extensions;
+using CaptchaSharp.Services.DeathByCaptcha.Responses;
 
 namespace CaptchaSharp.Services;
 
@@ -53,7 +54,6 @@ public class DeathByCaptchaService : CaptchaService
         Password = password;
         this._httpClient = httpClient ?? new HttpClient();
         
-        // TODO: Use https instead of http if possible
         this._httpClient.BaseAddress = new Uri("http://api.dbcapi.me/api/");
     }
 
@@ -91,8 +91,8 @@ public class DeathByCaptchaService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync(
         string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostAsync
-        ("captcha",
+        var response = await _httpClient.PostAsync(
+            "captcha",
             GetAuthPair()
                 .Add("captchafile", $"base64:{base64}")
                 .ToMultipartFormDataContent(),
@@ -107,11 +107,11 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DBCTaskProxyless task;
+        DbcTaskProxyless task;
 
         if (proxy is not null)
         {
-            task = new RecaptchaV2Task
+            task = new RecaptchaV2DbcTask
             {
                 GoogleKey = siteKey,
                 PageUrl = siteUrl
@@ -119,7 +119,7 @@ public class DeathByCaptchaService : CaptchaService
         }
         else
         {
-            task = new RecaptchaV2TaskProxyless
+            task = new RecaptchaV2DbcTaskProxyless
             {
                 GoogleKey = siteKey,
                 PageUrl = siteUrl
@@ -130,7 +130,7 @@ public class DeathByCaptchaService : CaptchaService
                 "captcha",
                 GetAuthPair()
                     .Add("type", 4)
-                    .Add("token_params", task.SerializeLowerCase()),
+                    .Add("token_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
@@ -141,29 +141,29 @@ public class DeathByCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
-        string siteKey, string siteUrl, string action, float minScore, bool enterprise = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
+        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DBCTaskProxyless task;
+        DbcTaskProxyless task;
 
         if (proxy is not null)
         {
-            task = new RecaptchaV3Task
+            task = new RecaptchaV3DbcTask
             {
                 GoogleKey = siteKey,
                 PageUrl = siteUrl,
                 Action = action,
-                Min_Score = minScore
+                MinScore = minScore
             }.SetProxy(proxy);
         }
         else
         {
-            task = new RecaptchaV3TaskProxyless
+            task = new RecaptchaV3DbcTaskProxyless
             {
                 GoogleKey = siteKey,
                 PageUrl = siteUrl,
                 Action = action,
-                Min_Score = minScore
+                MinScore = minScore
             };
         }
 
@@ -171,7 +171,7 @@ public class DeathByCaptchaService : CaptchaService
                 "captcha",
                 GetAuthPair()
                     .Add("type", 5)
-                    .Add("token_params", task.SerializeLowerCase()),
+                    .Add("token_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
@@ -185,11 +185,11 @@ public class DeathByCaptchaService : CaptchaService
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DBCTaskProxyless task;
+        DbcTaskProxyless task;
 
         if (proxy is not null)
         {
-            task = new FuncaptchaTask
+            task = new FunCaptchaDbcTask
             {
                 PublicKey = publicKey,
                 PageUrl = siteUrl
@@ -197,7 +197,7 @@ public class DeathByCaptchaService : CaptchaService
         }
         else
         {
-            task = new FuncaptchaTaskProxyless
+            task = new FunCaptchaDbcTaskProxyless
             {
                 PublicKey = publicKey,
                 PageUrl = siteUrl
@@ -208,13 +208,234 @@ public class DeathByCaptchaService : CaptchaService
                 "captcha",
                 GetAuthPair()
                     .Add("type", 6)
-                    .Add("funcaptcha_params", task.SerializeLowerCase()),
+                    .Add("funcaptcha_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
             CaptchaType.FunCaptcha, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveHCaptchaAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+
+        if (proxy is not null)
+        {
+            task = new HCaptchaDbcTask
+            {
+                SiteKey = siteKey,
+                PageUrl = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new HCaptchaDbcTaskProxyless
+            {
+                SiteKey = siteKey,
+                PageUrl = siteUrl
+            };
+        }
+
+        var response = await _httpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 7)
+                    .Add("hcaptcha_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.HCaptcha, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveKeyCaptchaAsync(
+        string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+
+        if (proxy is not null)
+        {
+            task = new KeyCaptchaDbcTask
+            {
+                UserId = userId,
+                SessionId = sessionId,
+                WebServerSign = webServerSign1,
+                WebServerSign2 = webServerSign2,
+                PageUrl = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new KeyCaptchaDbcTaskProxyless
+            {
+                UserId = userId,
+                SessionId = sessionId,
+                WebServerSign = webServerSign1,
+                WebServerSign2 = webServerSign2,
+                PageUrl = siteUrl
+            };
+        }
+
+        var response = await _httpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 10)
+                    .Add("keycaptcha_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.KeyCaptcha, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestResponse> SolveGeeTestAsync(
+        string gt, string challenge, string siteUrl, string? apiServer = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+        
+        if (proxy is not null)
+        {
+            task = new GeeTestDbcTask
+            {
+                Gt = gt,
+                Challenge = challenge,
+                PageUrl = siteUrl,
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new GeeTestDbcTaskProxyless
+            {
+                Gt = gt,
+                Challenge = challenge,
+                PageUrl = siteUrl,
+            };
+        }
+        
+        var response = await _httpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 8)
+                    .Add("geetest_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<GeeTestResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.GeeTest, cancellationToken);
+    }
+    
+    /// <inheritdoc/>
+    public override async Task<CapyResponse> SolveCapyAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+        
+        if (proxy is not null)
+        {
+            task = new CapyDbcTask
+            {
+                CaptchaKey = siteKey,
+                PageUrl = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new CapyDbcTaskProxyless
+            {
+                CaptchaKey = siteKey,
+                PageUrl = siteUrl
+            };
+        }
+        
+        var response = await _httpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 15)
+                    .Add("capy_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<CapyResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.Capy, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveDataDomeAsync(
+        string siteUrl, string captchaUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (proxy?.Host is null)
+        {
+            throw new ArgumentNullException(
+                nameof(proxy), "DataDome captchas require a proxy");
+        }
+
+        // The DBC API will use the User-Agent defined on this page
+        // to solve the captcha, so the same one MUST be used to submit
+        // the response: https://deathbycaptcha.com/api/datadome
+        
+        var task = new DataDomeDbcTask
+        {
+            PageUrl = siteUrl,
+            CaptchaUrl = captchaUrl
+        }.SetProxy(proxy);
+        
+        var response = await _httpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 21)
+                    .Add("datadome_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.DataDome, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
+        string siteKey, string siteUrl, string? action = null, string? data = null,
+        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        if (proxy?.Host is null)
+        {
+            throw new ArgumentNullException(
+                nameof(proxy), "Cloudflare Turnstile captchas require a proxy");
+        }
+        
+        var task = new CloudflareTurnstileDbcTask
+        {
+            SiteKey = siteKey,
+            PageUrl = siteUrl,
+            Action = action,
+        }.SetProxy(proxy);
+        
+        var response = await _httpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 12)
+                    .Add("turnstile_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<CloudflareTurnstileResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.CloudflareTurnstile, cancellationToken);
     }
     #endregion
 
@@ -261,8 +482,40 @@ public class DeathByCaptchaService : CaptchaService
         {
             throw new TaskSolutionException(GetErrorMessage(query));
         }
+
+        if (typeof(T) == typeof(GeeTestResponse))
+        {
+            var geeTestResponse = text.Deserialize<GeeTestDbcResponse>();
+            return new GeeTestResponse
+            {
+                Id = task.Id,
+                Challenge = geeTestResponse.Challenge,
+                Validate = geeTestResponse.Validate,
+                SecCode = geeTestResponse.Seccode
+            } as T;
+        }
         
-        // Only StringResponse is supported
+        if (typeof(T) == typeof(CapyResponse))
+        {
+            var capyResponse = text.Deserialize<CapyDbcResponse>();
+            return new CapyResponse
+            {
+                Id = task.Id,
+                CaptchaKey = capyResponse.CaptchaKey,
+                ChallengeKey = capyResponse.ChallengeKey,
+                Answer = capyResponse.Answer
+            } as T;
+        }
+        
+        if (typeof(T) == typeof(CloudflareTurnstileResponse))
+        {
+            return new CloudflareTurnstileResponse
+            {
+                Id = task.Id,
+                Response = text,
+            } as T;
+        }
+        
         if (typeof(T) != typeof(StringResponse))
         {
             throw new NotSupportedException();
@@ -278,7 +531,9 @@ public class DeathByCaptchaService : CaptchaService
         long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         if (correct)
+        {
             throw new NotSupportedException("This service doesn't allow reporting of good solutions");
+        }
 
         var response = await _httpClient.PostAsync(
                 $"captcha/{id}/report",
