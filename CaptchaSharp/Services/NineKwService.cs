@@ -3,12 +3,11 @@ using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Extensions;
+using CaptchaSharp.Services.NineKw;
 
 namespace CaptchaSharp.Services;
 
@@ -47,55 +46,66 @@ public class NineKwService : CaptchaService
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchaguthaben"),
-                cancellationToken)
+        var json = await _httpClient.GetStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchaguthaben")
+                .Add("json", 1),
+            cancellationToken)
             .ConfigureAwait(false);
+
+        var response = json.Deserialize<NineKwBalanceResponse>();
 
         if (IsError(response))
         {
             throw new BadAuthenticationException(GetErrorMessage(response));   
         }
 
-        return decimal.Parse(response, CultureInfo.InvariantCulture);
+        return Convert.ToDecimal(response.Credits);
     }
     #endregion
 
     #region Solve Methods
     /// <inheritdoc/>
-    public override async Task<StringResponse> SolveTextCaptchaAsync
-        (string text, TextCaptchaOptions? options = default, CancellationToken cancellationToken = default)
+    public override async Task<StringResponse> SolveTextCaptchaAsync(
+        string text, TextCaptchaOptions? options = default, 
+        CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostMultipartToStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchaupload")
-                    .Add("file-upload-01", text)
-                    .Add("textonly", 1)
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
+        var json = await _httpClient.PostMultipartToStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchaupload")
+                .Add("file-upload-01", text)
+                .Add("textonly", 1)
+                .Add("json", 1)
+                .ToMultipartFormDataContent(),
+            cancellationToken)
             .ConfigureAwait(false);
+        
+        var response = json.Deserialize<NineKwSubmitResponse>();
         
         return await GetResult<StringResponse>(
             response, CaptchaType.TextCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public override async Task<StringResponse> SolveImageCaptchaAsync
-        (string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
+    public override async Task<StringResponse> SolveImageCaptchaAsync(
+        string base64, ImageCaptchaOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostMultipartToStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchaupload")
-                    .Add("file-upload-01", base64)
-                    .Add("base64", 1)
-                    .Add(ConvertCapabilities(options))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
+        var json = await _httpClient.PostMultipartToStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchaupload")
+                .Add("file-upload-01", base64)
+                .Add("base64", 1)
+                .Add("json", 1)
+                .Add(ConvertCapabilities(options))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
             .ConfigureAwait(false);
+        
+        var response = json.Deserialize<NineKwSubmitResponse>();
 
         if (IsError(response))
         {
@@ -111,17 +121,20 @@ public class NineKwService : CaptchaService
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchaupload")
-                    .Add("interactive", 1)
-                    .Add("oldsource", "recaptchav2")
-                    .Add("file-upload-01", siteKey)
-                    .Add("pageurl", siteUrl)
-                    .Add(ConvertProxy(proxy)),
-                cancellationToken)
+        var json = await _httpClient.GetStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchaupload")
+                .Add("interactive", 1)
+                .Add("oldsource", "recaptchav2")
+                .Add("file-upload-01", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("json", 1)
+                .Add(ConvertProxy(proxy)),
+            cancellationToken)
             .ConfigureAwait(false);
+        
+        var response = json.Deserialize<NineKwSubmitResponse>();
 
         return await GetResult<StringResponse>(
             response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
@@ -132,20 +145,23 @@ public class NineKwService : CaptchaService
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
         bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchaupload")
-                    .Add("interactive", 1)
-                    .Add("oldsource", "recaptchav3")
-                    .Add("file-upload-01", siteKey)
-                    .Add("pageurl", siteUrl)
-                    .Add(ConvertProxy(proxy)),
-                cancellationToken)
+        var json = await _httpClient.GetStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchaupload")
+                .Add("interactive", 1)
+                .Add("oldsource", "recaptchav3")
+                .Add("file-upload-01", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("json", 1)
+                .Add(ConvertProxy(proxy)),
+            cancellationToken)
             .ConfigureAwait(false);
 
+        var response = json.Deserialize<NineKwSubmitResponse>();
+        
         return await GetResult<StringResponse>(
-            response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
+            response, CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -153,54 +169,61 @@ public class NineKwService : CaptchaService
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchaupload")
-                    .Add("interactive", 1)
-                    .Add("oldsource", "funcaptcha")
-                    .Add("file-upload-01", publicKey)
-                    .Add("pageurl", siteUrl)
-                    .Add(ConvertProxy(proxy)),
-                cancellationToken)
+        var json = await _httpClient.GetStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchaupload")
+                .Add("interactive", 1)
+                .Add("oldsource", "funcaptcha")
+                .Add("file-upload-01", publicKey)
+                .Add("pageurl", siteUrl)
+                .Add("json", 1)
+                .Add(ConvertProxy(proxy)),
+            cancellationToken)
             .ConfigureAwait(false);
+        
+        var response = json.Deserialize<NineKwSubmitResponse>();
 
         return await GetResult<StringResponse>(
-            response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
+            response, CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public override async Task<StringResponse> SolveHCaptchaAsync
-        (string siteKey, string siteUrl, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    public override async Task<StringResponse> SolveHCaptchaAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchaupload")
-                    .Add("interactive", 1)
-                    .Add("oldsource", "hcaptcha")
-                    .Add("file-upload-01", siteKey)
-                    .Add("pageurl", siteUrl)
-                    .Add(ConvertProxy(proxy)),
-                cancellationToken)
+        var json = await _httpClient.GetStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchaupload")
+                .Add("interactive", 1)
+                .Add("oldsource", "hcaptcha")
+                .Add("file-upload-01", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("json", 1)
+                .Add(ConvertProxy(proxy)),
+            cancellationToken)
             .ConfigureAwait(false);
+        
+        var response = json.Deserialize<NineKwSubmitResponse>();
 
         return await GetResult<StringResponse>(
-            response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
+            response, CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
     private async Task<T> GetResult<T>(
-        string response, CaptchaType type, CancellationToken cancellationToken = default)
+        NineKwSubmitResponse response, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
         if (IsError(response))
         {
-            throw new TaskCreationException(response);
+            throw new TaskCreationException(GetErrorMessage(response));
         }
 
-        var task = new CaptchaTask(response, type);
+        var task = new CaptchaTask(response.CaptchaId, type);
 
         return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
     }
@@ -210,25 +233,33 @@ public class NineKwService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var response = await _httpClient.GetStringAsync
-            ("index.cgi",
-                GetAuthPair()
-                    .Add("action", "usercaptchacorrectdata")
-                    .Add("id", task.Id),
-                cancellationToken)
+        var json = await _httpClient.GetStringAsync(
+            "index.cgi",
+            GetAuthPair()
+                .Add("action", "usercaptchacorrectdata")
+                .Add("id", task.Id)
+                .Add("json", 1),
+            cancellationToken)
             .ConfigureAwait(false);
-
+        
+        var response = json.Deserialize<NineKwCheckResponse>();
+        
         // Not solved yet
-        if (string.IsNullOrEmpty(response) || response.Contains("CAPTCHA_NOT_READY"))
+        if (response.TryAgain is 1)
         {
             return null;
         }
 
         task.Completed = true;
 
-        if (IsError(response) || response.Contains("ERROR_NO_USER"))
+        if (response.Answer == "ERROR NO USER")
         {
-            throw new TaskSolutionException(response);
+            throw new TaskSolutionException("No workers available");
+        }
+        
+        if (IsError(response))
+        {
+            throw new TaskSolutionException(GetErrorMessage(response));
         }
 
         // Only StringResponse is supported
@@ -237,7 +268,7 @@ public class NineKwService : CaptchaService
             throw new NotSupportedException();
         }
         
-        return new StringResponse { Id = task.Id, Response = response } as T;
+        return new StringResponse { Id = task.Id, Response = response.Answer } as T;
     }
     #endregion
 
@@ -246,16 +277,21 @@ public class NineKwService : CaptchaService
     public override async Task ReportSolution(
         long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync
-        ("index.cgi",
+        var json = await _httpClient.GetStringAsync(
+            "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchacorrectback")
                 .Add("id", id.ToString())
-                .Add("correct", correct ? 1 : 2),
+                .Add("correct", correct ? 1 : 2)
+                .Add("json", 1),
             cancellationToken);
+        
+        var response = json.Deserialize<NineKwResponse>();
 
         if (IsError(response))
-            throw new TaskReportException(response);
+        {
+            throw new TaskReportException(GetErrorMessage(response));
+        }
     }
     #endregion
 
@@ -263,11 +299,11 @@ public class NineKwService : CaptchaService
     private StringPairCollection GetAuthPair()
         => new StringPairCollection().Add("apikey", ApiKey);
 
-    private static bool IsError(string response)
-        => Regex.IsMatch(response, @"^\d{4} ");
+    private static bool IsError(NineKwResponse response)
+        => !string.IsNullOrEmpty(response.Error);
 
-    private static string GetErrorMessage(string response)
-        => Regex.Replace(response, @"^\d{4} ", "");
+    private static string GetErrorMessage(NineKwResponse response)
+        => response.Error ?? "Unknown error";
     #endregion
 
     #region Proxies
@@ -290,8 +326,20 @@ public class NineKwService : CaptchaService
         {
             proxyParams.Add(("cookies", proxy.GetCookieString()));
         }
-        
-        // TODO: Check if credentials are supported
+
+        if (!string.IsNullOrEmpty(proxy.Username))
+        {
+            throw new NotSupportedException(
+                "9kw.eu does not support proxies with authentication.");
+        }
+
+        if (proxy.Type is not ProxyType.HTTP && 
+            proxy.Type is not ProxyType.HTTPS &&
+            proxy.Type is not ProxyType.SOCKS5)
+        {
+            throw new NotSupportedException(
+                "9kw.eu only supports HTTP, HTTPS and SOCKS5 proxies.");
+        }
         
         if (!string.IsNullOrEmpty(proxy.Host))
         {
