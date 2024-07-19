@@ -1505,6 +1505,28 @@
         <member name="M:CaptchaSharp.Services.NineKwService.ConvertCapabilities(CaptchaSharp.Models.ImageCaptchaOptions)">
             <summary></summary>
         </member>
+        <member name="T:CaptchaSharp.Services.NoCaptchaAiService">
+            <summary>
+            The service provided by <c>https://nocaptchaai.com/</c>
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.NoCaptchaAiService.ApiKey">
+            <summary>
+            Your secret api key.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.NoCaptchaAiService._httpClient">
+            <summary>
+            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.NoCaptchaAiService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.NoCaptchaAiService"/>.
+            </summary>
+            <param name="apiKey">The API key to use.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
         <member name="T:CaptchaSharp.Services.RuCaptchaService">
             <summary>
             The service provided by <c>https://rucaptcha.com/</c>
