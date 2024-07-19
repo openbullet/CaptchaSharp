@@ -461,7 +461,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("action", "get")
                 .Add("id", task.Id.ToString())
                 .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (response.Contains("CAPCHA_NOT_READY"))
         {

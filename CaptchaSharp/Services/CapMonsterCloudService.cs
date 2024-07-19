@@ -25,13 +25,13 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
         : base(apiKey, new Uri("https://api.capmonster.cloud"), httpClient)
     {
         SupportedCaptchaTypes = 
-            Enums.CaptchaType.ImageCaptcha |
-            Enums.CaptchaType.ReCaptchaV2 |
-            Enums.CaptchaType.ReCaptchaV3 |
-            Enums.CaptchaType.HCaptcha |
-            Enums.CaptchaType.GeeTest |
-            Enums.CaptchaType.CloudflareTurnstile |
-            Enums.CaptchaType.DataDome;
+            CaptchaType.ImageCaptcha |
+            CaptchaType.ReCaptchaV2 |
+            CaptchaType.ReCaptchaV3 |
+            CaptchaType.HCaptcha |
+            CaptchaType.GeeTest |
+            CaptchaType.CloudflareTurnstile |
+            CaptchaType.DataDome;
     }
 
     /// <inheritdoc />

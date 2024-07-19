@@ -54,4 +54,8 @@ public class Credentials
     public string NineKWApiKey { get; set; } = string.Empty;
     public string CapSolverApiKey { get; set; } = string.Empty;
     public string CapMonsterCloudApiKey { get; set; } = string.Empty;
+    public string MetaBypassTechClientId { get; set; } = string.Empty;
+    public string MetaBypassTechClientSecret { get; set; } = string.Empty;
+    public string MetaBypassTechUsername { get; set; } = string.Empty;
+    public string MetaBypassTechPassword { get; set; } = string.Empty;
 }

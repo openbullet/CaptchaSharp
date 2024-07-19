@@ -716,6 +716,11 @@
             response as a <see cref="T:System.String"/>.</summary>
             <returns>The <see cref="T:System.Net.Http.HttpResponseMessage"/> content converted to a <see cref="T:System.String"/>.</returns>
         </member>
+        <member name="M:CaptchaSharp.Extensions.HttpClientExtensions.PostJsonAsync``1(System.Net.Http.HttpClient,System.String,``0,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Automatically builds a POST json string from a given object using <see cref="P:System.Text.Encoding.UTF8"/> encoding
+            </summary>
+        </member>
         <member name="M:CaptchaSharp.Extensions.HttpClientExtensions.PostJsonToStringAsync``1(System.Net.Http.HttpClient,System.String,``0,System.Boolean,System.Threading.CancellationToken)">
             <summary>Automatically builds a POST json string from a given object using <see cref="P:System.Text.Encoding.UTF8"/> encoding 
             and application/json Content-Type.</summary>
@@ -1347,6 +1352,66 @@
             <summary>
             The captcha id.
             </summary>
+        </member>
+        <member name="T:CaptchaSharp.Services.MetaBypassTechService">
+            <summary>
+            The service provided by <c>https://metabypass.tech/</c>.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.MetaBypassTechService.ClientId">
+            <summary>
+            The client ID to use.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.MetaBypassTechService.ClientSecret">
+            <summary>
+            The client secret to use.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.MetaBypassTechService.Username">
+            <summary>
+            The username.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.MetaBypassTechService.Password">
+            <summary>
+            The password.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.MetaBypassTechService._httpClient">
+            <summary>
+            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.MetaBypassTechService._accessToken">
+            <summary>
+            The current access token.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.#ctor(System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.MetaBypassTechService"/>.
+            </summary>
+            <param name="clientId">The client ID to use.</param>
+            <param name="clientSecret">The client secret to use.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+            <inheritdoc />
         </member>
         <member name="T:CaptchaSharp.Services.NineKwService">
             <summary>

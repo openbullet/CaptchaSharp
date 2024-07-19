@@ -72,6 +72,22 @@ public static class HttpClientExtensions
         var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
+    
+    /// <summary>
+    /// Automatically builds a POST json string from a given object using <see cref="Encoding.UTF8"/> encoding
+    /// </summary>
+    public static async Task<HttpResponseMessage> PostJsonAsync<T>(
+        this HttpClient httpClient, string url, T content, bool camelizeKeys = true,
+        CancellationToken cancellationToken = default) where T : class
+    {
+        var json = camelizeKeys 
+            ? content.SerializeCamelCase()
+            : JsonConvert.SerializeObject(content);
+
+        return await httpClient.PostAsync(url,
+            new StringContent(json, Encoding.UTF8, "application/json"),
+            cancellationToken);
+    }
 
     /// <summary>Automatically builds a POST json string from a given object using <see cref="Encoding.UTF8"/> encoding 
     /// and application/json Content-Type.</summary>

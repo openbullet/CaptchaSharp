@@ -34,12 +34,12 @@ public class NineKwService : CaptchaService
     public NineKwService(string apiKey, HttpClient? httpClient = null)
     {
         ApiKey = apiKey;
-        this._httpClient = httpClient ?? new HttpClient();
-        this._httpClient.BaseAddress = new Uri("https://www.9kw.eu/");
+        _httpClient = httpClient ?? new HttpClient();
+        _httpClient.BaseAddress = new Uri("https://www.9kw.eu/");
 
         // Since this service replies directly with the solution to the task creation request (for image captchas)
         // we need to set a high timeout here, or it will not finish in time
-        this._httpClient.Timeout = Timeout;
+        _httpClient.Timeout = Timeout;
     }
 
     #region Getting the Balance
