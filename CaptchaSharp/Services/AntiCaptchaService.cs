@@ -34,7 +34,7 @@ public class AntiCaptchaService : CaptchaService
     /// <summary>
     /// The ID of the software developer.
     /// </summary>
-    private const int _softId = 934;
+    protected int? SoftId = 934;
 
     /// <summary>
     /// Initializes a <see cref="AntiCaptchaService"/>.
@@ -79,7 +79,7 @@ public class AntiCaptchaService : CaptchaService
                     new CaptchaTaskRequest
                     {
                         ClientKey = ApiKey,
-                        SoftId = _softId,
+                        SoftId = SoftId,
                         Task = new ImageCaptchaTask
                         {
                             Body = base64
@@ -169,11 +169,6 @@ public class AntiCaptchaService : CaptchaService
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f, bool enterprise = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        if (proxy is not null)
-        {
-            throw new NotSupportedException("Proxies are not supported for ReCaptchaV3");
-        }
-
         if (minScore != 0.3f && minScore != 0.7f && minScore != 0.9f)
         {
             throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
@@ -507,7 +502,7 @@ public class AntiCaptchaService : CaptchaService
         return new CaptchaTaskRequest
         {
             ClientKey = ApiKey,
-            SoftId = _softId
+            SoftId = SoftId
         };
     }
     #endregion

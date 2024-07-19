@@ -936,7 +936,7 @@
             The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.AntiCaptchaService._softId">
+        <member name="F:CaptchaSharp.Services.AntiCaptchaService.SoftId">
             <summary>
             The ID of the software developer.
             </summary>
@@ -995,6 +995,26 @@
         </member>
         <member name="P:CaptchaSharp.Services.AntiCaptchaService.Capabilities">
             <inheritdoc/>
+        </member>
+        <member name="T:CaptchaSharp.Services.AntiCaptcha.Requests.CaptchaTaskRequest">
+            <summary>
+            A request to solve a captcha task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.AntiCaptcha.Requests.CaptchaTaskRequest.Task">
+            <summary>
+            The task to solve.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.AntiCaptcha.Requests.CaptchaTaskRequest.SoftId">
+            <summary>
+            The soft ID to use. Default is 0.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.AntiCaptcha.Requests.CaptchaTaskRequest.LanguagePool">
+            <summary>
+            The language pool to use. Default is "en".
+            </summary>
         </member>
         <member name="T:CaptchaSharp.Services.AzCaptchaService">
             <summary>
@@ -1412,6 +1432,18 @@
         </member>
         <member name="M:CaptchaSharp.Services.MetaBypassTechService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc />
+        </member>
+        <member name="T:CaptchaSharp.Services.NextCaptchaService">
+            <summary>
+            The service offered by <c>https://nextcaptcha.com/</c>
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.NextCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.NextCaptchaService"/>.
+            </summary>
+            <param name="apiKey">The API key to use.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
         <member name="T:CaptchaSharp.Services.NineKwService">
             <summary>

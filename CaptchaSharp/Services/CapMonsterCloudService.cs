@@ -24,7 +24,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
     public CapMonsterCloudService(string apiKey, HttpClient? httpClient = null)
         : base(apiKey, new Uri("https://api.capmonster.cloud"), httpClient)
     {
-        SupportedCaptchaTypes = 
+        SupportedCaptchaTypes =
             CaptchaType.ImageCaptcha |
             CaptchaType.ReCaptchaV2 |
             CaptchaType.ReCaptchaV3 |
@@ -32,6 +32,8 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
             CaptchaType.GeeTest |
             CaptchaType.CloudflareTurnstile |
             CaptchaType.DataDome;
+
+        SoftId = 80;
     }
 
     /// <inheritdoc />
