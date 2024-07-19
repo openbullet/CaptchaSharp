@@ -1527,6 +1527,54 @@
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
+        <member name="T:CaptchaSharp.Services.NopechaService">
+            <summary>
+            The service provided by <c>https://nopecha.com/</c>
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.NopechaService.ApiKey">
+            <summary>
+            Your secret api key.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.NopechaService._httpClient">
+            <summary>
+            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.NopechaService"/>.
+            </summary>
+            <param name="apiKey">The API key to use.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.NopechaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="P:CaptchaSharp.Services.Nopecha.NopechaCookie.ExpirationDate">
+            <summary>
+            Seconds since UNIX epoch.
+            </summary>
+        </member>
         <member name="T:CaptchaSharp.Services.RuCaptchaService">
             <summary>
             The service provided by <c>https://rucaptcha.com/</c>

@@ -60,4 +60,5 @@ public class Credentials
     public string MetaBypassTechPassword { get; set; } = string.Empty;
     public string NextCaptchaApiKey { get; set; } = string.Empty;
     public string NoCaptchaAiApiKey { get; set; } = string.Empty;
+    public string NopechaApiKey { get; set; } = string.Empty;
 }
