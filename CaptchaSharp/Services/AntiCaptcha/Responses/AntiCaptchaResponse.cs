@@ -2,7 +2,7 @@
 
 namespace CaptchaSharp.Services.AntiCaptcha.Responses;
 
-internal class AntiCaptchaResponse
+public class AntiCaptchaResponse
 {
     public int ErrorId { get; set; }
     public string? ErrorCode { get; set; }

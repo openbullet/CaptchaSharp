@@ -18,7 +18,7 @@ public class CustomAntiCaptchaService : AntiCaptchaService
     public CustomAntiCaptchaService(string apiKey, Uri baseUri, HttpClient? httpClient = null)
         : base(apiKey, httpClient)
     {
-        httpClient.BaseAddress = baseUri;
+        HttpClient.BaseAddress = baseUri;
     }
 
     #region Supported Types

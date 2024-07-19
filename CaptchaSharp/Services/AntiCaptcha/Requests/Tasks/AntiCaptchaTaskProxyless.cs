@@ -1,7 +1,6 @@
-﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks
+﻿namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks;
+
+public class AntiCaptchaTaskProxyless
 {
-    internal class AntiCaptchaTaskProxyless
-    {
-        public string Type { get; set; }
-    }
+    public string Type { get; set; }
 }

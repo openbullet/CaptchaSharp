@@ -53,4 +53,5 @@ public class Credentials
     public string TrueCaptchaUsername { get; set; } = string.Empty;
     public string NineKWApiKey { get; set; } = string.Empty;
     public string CapSolverApiKey { get; set; } = string.Empty;
+    public string CapMonsterCloudApiKey { get; set; } = string.Empty;
 }

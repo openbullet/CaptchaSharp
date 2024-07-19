@@ -27,9 +27,9 @@ public class AntiCaptchaService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
+    /// The default <see cref="System.Net.Http.HttpClient"/> used for requests.
     /// </summary>
-    private readonly HttpClient _httpClient;
+    protected readonly HttpClient HttpClient;
 
     /// <summary>
     /// The ID of the software developer.
@@ -40,19 +40,19 @@ public class AntiCaptchaService : CaptchaService
     /// Initializes a <see cref="AntiCaptchaService"/>.
     /// </summary>
     /// <param name="apiKey">Your secret api key.</param>
-    /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
+    /// <param name="httpClient">The <see cref="System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
     public AntiCaptchaService(string apiKey, HttpClient? httpClient = null)
     {
         ApiKey = apiKey;
-        this._httpClient = httpClient ?? new HttpClient();
-        this._httpClient.BaseAddress = new Uri("https://api.anti-captcha.com");
+        this.HttpClient = httpClient ?? new HttpClient();
+        this.HttpClient.BaseAddress = new Uri("https://api.anti-captcha.com");
     }
 
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
             "getBalance", new Request { ClientKey = ApiKey },
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -73,7 +73,7 @@ public class AntiCaptchaService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 AddImageCapabilities(
                     new CaptchaTaskRequest
@@ -153,7 +153,7 @@ public class AntiCaptchaService : CaptchaService
             }
         }
             
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -190,7 +190,7 @@ public class AntiCaptchaService : CaptchaService
             IsEnterprise = enterprise
         };
 
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -232,7 +232,7 @@ public class AntiCaptchaService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -267,7 +267,7 @@ public class AntiCaptchaService : CaptchaService
             };
         }
             
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -306,7 +306,7 @@ public class AntiCaptchaService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -345,7 +345,7 @@ public class AntiCaptchaService : CaptchaService
             };
         }
             
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -359,7 +359,10 @@ public class AntiCaptchaService : CaptchaService
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    /// <summary>
+    /// Gets the result of a task.
+    /// </summary>
+    protected async Task<T> GetResult<T>(
         TaskCreationAntiCaptchaResponse antiCaptchaResponse, CaptchaType type,
         CancellationToken cancellationToken = default)
         where T : CaptchaResponse
@@ -379,7 +382,7 @@ public class AntiCaptchaService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
             "getTaskResult",
             new GetTaskResultRequest { ClientKey = ApiKey, TaskId = (int)task.Id },
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -419,6 +422,14 @@ public class AntiCaptchaService : CaptchaService
 
         return result.AntiCaptchaTaskSolution.ToCaptchaResponse(task.Id) as T;
     }
+
+    /// <summary>
+    /// Parses the solution of a DataDome captcha.
+    /// </summary>
+    protected virtual StringResponse ParseDataDomeSolution(JToken? solution)
+    {
+        throw new NotImplementedException();
+    }
     #endregion
 
     #region Reporting the solution
@@ -435,7 +446,7 @@ public class AntiCaptchaService : CaptchaService
                     "Reporting correct solutions is only supported for ReCaptchaV2 and ReCaptchaV3");
             }
             
-            await _httpClient.PostJsonToStringAsync(
+            await HttpClient.PostJsonToStringAsync(
                 "reportCorrectRecaptcha",
                 new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
                 cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -449,7 +460,7 @@ public class AntiCaptchaService : CaptchaService
         switch (type)
         {
             case CaptchaType.ImageCaptcha:
-                response = await _httpClient.PostJsonToStringAsync(
+                response = await HttpClient.PostJsonToStringAsync(
                     "reportIncorrectImageCaptcha",
                     new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
                     cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -459,7 +470,7 @@ public class AntiCaptchaService : CaptchaService
 
             case CaptchaType.ReCaptchaV2:
             case CaptchaType.ReCaptchaV3:
-                response = await _httpClient.PostJsonToStringAsync(
+                response = await HttpClient.PostJsonToStringAsync(
                     "reportIncorrectRecaptcha",
                     new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
                     cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -468,7 +479,7 @@ public class AntiCaptchaService : CaptchaService
                 break;
             
             case CaptchaType.HCaptcha:
-                response = await _httpClient.PostJsonToStringAsync(
+                response = await HttpClient.PostJsonToStringAsync(
                     "reportIncorrectHcaptcha",
                     new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
                     cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -488,7 +499,10 @@ public class AntiCaptchaService : CaptchaService
     #endregion
 
     #region Private Methods
-    private CaptchaTaskRequest CreateTaskRequest()
+    /// <summary>
+    /// Creates a new <see cref="CaptchaTaskRequest"/>.
+    /// </summary>
+    protected CaptchaTaskRequest CreateTaskRequest()
     {
         return new CaptchaTaskRequest
         {

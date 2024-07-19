@@ -378,6 +378,7 @@ public class ServiceTests
         
         // Get cid from "datadome" cookie
         var cid = cookieContainer.GetCookies(new Uri(site))["datadome"]?.Value;
+        proxy.Cookies = [("datadome", cid!)];
 
         var captchaUrl =
             $"https://{host}/captcha/?initialCid={WebUtility.UrlEncode(initialCid)}&hash={hsh}&cid={cid}&t={t}&referer={WebUtility.UrlEncode(site)}&s={s}&e={e}&dm=cd";

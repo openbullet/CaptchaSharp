@@ -926,7 +926,7 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.AntiCaptchaService._httpClient">
+        <member name="F:CaptchaSharp.Services.AntiCaptchaService.HttpClient">
             <summary>
             The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
             </summary>
@@ -967,11 +967,26 @@
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.GetResult``1(CaptchaSharp.Services.AntiCaptcha.Responses.TaskCreationAntiCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
+            <summary>
+            Gets the result of a task.
+            </summary>
+        </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.ParseDataDomeSolution(Newtonsoft.Json.Linq.JToken)">
+            <summary>
+            Parses the solution of a DataDome captcha.
+            </summary>
+        </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.ReportSolution(System.Int64,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.CreateTaskRequest">
+            <summary>
+            Creates a new <see cref="T:CaptchaSharp.Services.AntiCaptcha.Requests.CaptchaTaskRequest"/>.
+            </summary>
         </member>
         <member name="P:CaptchaSharp.Services.AntiCaptchaService.Capabilities">
             <inheritdoc/>
@@ -987,6 +1002,24 @@
             </summary>
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="T:CaptchaSharp.Services.CapMonsterCloudService">
+            <summary>
+            The service provided by <c>https://capmonster.cloud/</c>
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.CapMonsterCloudService"/>.
+            </summary>
+            <param name="apiKey">The API key to use.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.ParseDataDomeSolution(Newtonsoft.Json.Linq.JToken)">
+            <inheritdoc />
         </member>
         <member name="T:CaptchaSharp.Services.CapMonsterService">
             <summary>
@@ -1383,18 +1416,6 @@
         <member name="M:CaptchaSharp.Services.RuCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
             <summary>
             Initializes a <see cref="T:CaptchaSharp.Services.RuCaptchaService"/>.
-            </summary>
-            <param name="apiKey">The API key to use.</param>
-            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
-        </member>
-        <member name="T:CaptchaSharp.Services.SolveCaptchaService">
-            <summary>
-            The service provided by <c>https://solvecaptcha.com/</c>
-            </summary>
-        </member>
-        <member name="M:CaptchaSharp.Services.SolveCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
-            <summary>
-            Initializes a <see cref="T:CaptchaSharp.Services.SolveCaptchaService"/>.
             </summary>
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
