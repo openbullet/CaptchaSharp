@@ -1,18 +1,17 @@
 ﻿using CaptchaSharp.Models;
 
-namespace CaptchaSharp.Services.CapSolver.Responses.Solutions
-{
-    internal class DataDomeSolution : Solution
-    {
-        public string Cookie { get; set; }
+namespace CaptchaSharp.Services.CapSolver.Responses.Solutions;
 
-        public override CaptchaResponse ToCaptchaResponse(string id)
+internal class DataDomeSolution : Solution
+{
+    public string Cookie { get; set; }
+
+    public override CaptchaResponse ToCaptchaResponse(string id)
+    {
+        return new StringResponse
         {
-            return new StringResponse
-            {
-                IdString = id,
-                Response = Cookie
-            };
-        }
+            IdString = id,
+            Response = Cookie
+        };
     }
 }

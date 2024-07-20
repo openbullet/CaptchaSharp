@@ -1,14 +1,18 @@
-﻿namespace CaptchaSharp.Services.CapSolver.Requests.Tasks
-{
-    internal class RecaptchaV2EnterpriseTaskProxyless : CapSolverTaskProxyless
-    {
-        public string WebsiteURL { get; set; }
-        public string WebsiteKey { get; set; }
-        public string EnterprisePayload { get; set; }
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-        public RecaptchaV2EnterpriseTaskProxyless()
-        {
-            Type = "RecaptchaV2EnterpriseTaskProxyless";
-        }
+namespace CaptchaSharp.Services.CapSolver.Requests.Tasks;
+
+internal class RecaptchaV2EnterpriseTaskProxyless : CapSolverTaskProxyless
+{
+    public string WebsiteURL { get; set; }
+    public string WebsiteKey { get; set; }
+        
+    [JsonProperty("enterprisePayload", NullValueHandling = NullValueHandling.Ignore)]
+    public JObject? EnterprisePayload { get; set; }
+
+    public RecaptchaV2EnterpriseTaskProxyless()
+    {
+        Type = "RecaptchaV2EnterpriseTaskProxyless";
     }
 }

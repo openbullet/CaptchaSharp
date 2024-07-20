@@ -1,42 +1,51 @@
 ﻿using CaptchaSharp.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
-namespace CaptchaSharp.Services.CapSolver.Requests.Tasks.Proxied
+namespace CaptchaSharp.Services.CapSolver.Requests.Tasks.Proxied;
+
+internal class CapSolverTask : CapSolverTaskProxyless
 {
-    internal class CapSolverTask : CapSolverTaskProxyless
+    public string? ProxyType { get; set; }
+    public string? ProxyAddress { get; set; }
+    public int ProxyPort { get; set; }
+    
+    [JsonProperty("proxyLogin", NullValueHandling = NullValueHandling.Ignore)]
+    public string? ProxyLogin { get; set; }
+    
+    [JsonProperty("proxyPassword", NullValueHandling = NullValueHandling.Ignore)]
+    public string? ProxyPassword { get; set; }
+    
+    [JsonProperty("userAgent", NullValueHandling = NullValueHandling.Ignore)]
+    public string? UserAgent { get; set; }
+    
+    [JsonProperty("cookies", NullValueHandling = NullValueHandling.Ignore)]
+    public CapSolverCookie[]? Cookies { get; set; }
+
+    public CapSolverTask SetProxy(Proxy proxy)
     {
-        public string ProxyType { get; set; }
-        public string ProxyAddress { get; set; }
-        public int ProxyPort { get; set; }
-        public string ProxyLogin { get; set; }
-        public string ProxyPassword { get; set; }
-        public string UserAgent { get; set; }
-        public string Cookies { get; set; } // Format cookiename1=cookievalue1; cookiename2=cookievalue2
+        ProxyAddress = proxy.Host;
+        ProxyPort = proxy.Port;
+        ProxyType = proxy.Type.ToString().ToLower();
+        ProxyLogin = proxy.Username;
+        ProxyPassword = proxy.Password;
+        UserAgent = proxy.UserAgent;
 
-        public CapSolverTask SetProxy(Proxy proxy)
+        if (proxy.Cookies is not null)
         {
-            if (!System.Net.IPAddress.TryParse(proxy.Host, out _))
-                throw new NotSupportedException($"Only IP addresses are supported for the proxy host");
-
-            ProxyAddress = proxy.Host;
-            ProxyPort = proxy.Port;
-            ProxyType = proxy.Type.ToString().ToLower();
-            ProxyLogin = proxy.Username;
-            ProxyPassword = proxy.Password;
-            UserAgent = proxy.UserAgent;
-            SetCookies(proxy.Cookies);
-
-            return this;
+            Cookies = proxy.Cookies.Select(c => new CapSolverCookie
+            {
+                Name = c.Item1,
+                Value = c.Item2
+            }).ToArray();
         }
 
-        private void SetCookies(IEnumerable<(string, string)> cookies)
-        {
-            if (cookies == null)
-                return;
-
-            Cookies = string.Join("; ", cookies.Select(c => $"{c.Item1}={c.Item2}"));
-        }
+        return this;
     }
+}
+
+internal class CapSolverCookie
+{
+    public required string Name { get; set; }
+    public required string Value { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace CaptchaSharp.Services.CapSolver.Requests
+﻿namespace CaptchaSharp.Services.CapSolver.Requests;
+
+internal class Request
 {
-    internal class Request
-    {
-        public string ClientKey { get; set; } = "";
-    }
+    public required string ClientKey { get; set; }
 }

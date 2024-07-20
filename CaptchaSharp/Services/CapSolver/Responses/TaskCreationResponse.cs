@@ -1,7 +1,6 @@
-﻿namespace CaptchaSharp.Services.CapSolver.Responses
+﻿namespace CaptchaSharp.Services.CapSolver.Responses;
+
+internal class TaskCreationResponse : Response
 {
-    internal class TaskCreationResponse : Response
-    {
-        public string TaskId { get; set; }
-    }
+    public required string TaskId { get; set; }
 }

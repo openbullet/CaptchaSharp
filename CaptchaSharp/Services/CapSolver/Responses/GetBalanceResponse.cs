@@ -1,7 +1,6 @@
-﻿namespace CaptchaSharp.Services.CapSolver.Responses
+﻿namespace CaptchaSharp.Services.CapSolver.Responses;
+
+internal class GetBalanceResponse : Response
 {
-    internal class GetBalanceResponse : Response
-    {
-        public float Balance { get; set; }
-    }
+    public float Balance { get; set; }
 }

@@ -111,7 +111,12 @@ public class CapSolverService : CaptchaService
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-
+        
+        // If dataS is not null or empty, the enterprise payload is { "s": dataS }
+        var enterprisePayload = string.IsNullOrEmpty(dataS)
+            ? null
+            : JObject.Parse($"{{ \"s\": \"{dataS}\" }}");
+        
         if (enterprise)
         {
             if (proxy is not null)
@@ -120,7 +125,7 @@ public class CapSolverService : CaptchaService
                 {
                     WebsiteKey = siteKey,
                     WebsiteURL = siteUrl,
-                    EnterprisePayload = dataS
+                    EnterprisePayload = enterprisePayload
                 }.SetProxy(proxy);
             }
             else
@@ -129,7 +134,7 @@ public class CapSolverService : CaptchaService
                 {
                     WebsiteKey = siteKey,
                     WebsiteURL = siteUrl,
-                    EnterprisePayload = dataS
+                    EnterprisePayload = enterprisePayload
                 };
             }
         }
@@ -142,7 +147,6 @@ public class CapSolverService : CaptchaService
                     WebsiteKey = siteKey,
                     WebsiteURL = siteUrl,
                     IsInvisible = invisible,
-                    RecaptchaDataSValue = dataS
                 }.SetProxy(proxy);
             }
             else
@@ -152,7 +156,6 @@ public class CapSolverService : CaptchaService
                     WebsiteKey = siteKey,
                     WebsiteURL = siteUrl,
                     IsInvisible = invisible,
-                    RecaptchaDataSValue = dataS
                 };
             }
         }
@@ -354,6 +357,35 @@ public class CapSolverService : CaptchaService
             response.Deserialize<TaskCreationResponse>(), CaptchaType.DataDome, 
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
+        string siteKey, string siteUrl, string? action = null, string? data = null,
+        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+
+        content.Task = new AntiTurnstileTaskProxyless
+        {
+            WebsiteKey = siteKey,
+            WebsiteURL = siteUrl,
+            Metadata = new TurnstileMetadata
+            {
+                Action = string.IsNullOrEmpty(action) ? null : action,
+                CData = string.IsNullOrEmpty(data) ? null : data
+            }
+        };
+        
+        var response = await _httpClient.PostJsonToStringAsync(
+            "createTask",
+            content,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<CloudflareTurnstileResponse>(
+            response.Deserialize<TaskCreationResponse>(), CaptchaType.CloudflareTurnstile,
+            cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -412,10 +444,39 @@ public class CapSolverService : CaptchaService
             CaptchaType.ImageCaptcha => solution.ToObject<ImageCaptchaSolution>(),
             CaptchaType.GeeTest => solution.ToObject<GeeTestSolution>(),
             CaptchaType.DataDome => solution.ToObject<DataDomeSolution>(),
+            CaptchaType.CloudflareTurnstile => solution.ToObject<CloudflareTurnstileSolution>(),
             _ => throw new NotSupportedException($"The captcha type {task.Type} is not supported")
         } ?? throw new TaskSolutionException("The solution is null");
 
         return result.Solution.ToCaptchaResponse(task.IdString) as T;
+    }
+    #endregion
+    
+    #region Reporting the solution
+    /// <inheritdoc/>
+    public override async Task ReportSolution(string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PostJsonToStringAsync(
+                "feedbackTask",
+                new CaptchaTaskFeedbackRequest
+                {
+                    ClientKey = ApiKey,
+                    AppId = _appId,
+                    TaskId = id,
+                    Result = new TaskResultFeedback
+                    {
+                        Invalid = !correct
+                    }
+                },
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        var result = response.Deserialize<CaptchaTaskFeedbackResponse>();
+
+        if (result.IsError)
+        {
+            throw new TaskReportException($"{result.ErrorCode}: {result.ErrorDescription}");
+        }
     }
     #endregion
 
