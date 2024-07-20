@@ -35,8 +35,8 @@ internal class CapSolverTask : CapSolverTaskProxyless
         {
             Cookies = proxy.Cookies.Select(c => new CapSolverCookie
             {
-                Name = c.Item1,
-                Value = c.Item2
+                Name = c.Name,
+                Value = c.Value
             }).ToArray();
         }
 

@@ -64,7 +64,8 @@ public class TwoCaptchaService : CaptchaService
                 .Add("key", ApiKey)
                 .Add("action", "getbalance")
                 .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
-            cancellationToken);
+            cancellationToken)
+            .ConfigureAwait(false);
 
         if (UseJsonFlag)
         {
@@ -72,10 +73,10 @@ public class TwoCaptchaService : CaptchaService
 
             if (tcResponse.IsErrorCode)
             {
-                throw new BadAuthenticationException(tcResponse.Request);
+                throw new BadAuthenticationException(tcResponse.Request!);
             }
 
-            return decimal.Parse(tcResponse.Request, CultureInfo.InvariantCulture);
+            return decimal.Parse(tcResponse.Request!, CultureInfo.InvariantCulture);
         }
 
         if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal balance))

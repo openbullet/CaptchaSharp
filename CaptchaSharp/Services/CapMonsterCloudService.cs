@@ -51,7 +51,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
         }
         
         // The cookie must contain datadome=... and nothing else
-        var datadomeCookie = Array.Find(proxy.Cookies, c => c.Item1 == "datadome").Item2;
+        var datadomeCookie = Array.Find(proxy.Cookies, c => c.Name == "datadome").Value;
         
         if (string.IsNullOrEmpty(datadomeCookie) || proxy.Cookies.Length > 1)
         {

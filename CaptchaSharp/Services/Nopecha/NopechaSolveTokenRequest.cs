@@ -46,8 +46,8 @@ internal class NopechaSolveTokenRequest : NopechaSolveRequest
             
             Cookies = proxy.Cookies.Select(c => new NopechaCookie
             {
-                Name = c.Item1,
-                Value = c.Item2,
+                Name = c.Name,
+                Value = c.Value,
                 Domain = uri.Host,
                 Path = uri.AbsolutePath,
                 Secure = uri.Scheme == "https",

@@ -28,7 +28,7 @@ public class Proxy
     public string? UserAgent { get; set; }
 
     /// <summary>The cookies needed to get to the page where the captcha is shown.</summary>
-    public (string, string)[]? Cookies { get; set; }
+    public (string Name, string Value)[]? Cookies { get; set; }
 
     /// <summary>Whether the proxy requires authentication.</summary>
     [JsonIgnore]
@@ -48,5 +48,5 @@ public class Proxy
     }
 
     internal string GetCookieString()
-        => Cookies != null ? string.Join("; ", Cookies.Select(c => $"{c.Item1}={c.Item2}")) : string.Empty;
+        => Cookies != null ? string.Join("; ", Cookies.Select(c => $"{c.Name}={c.Value}")) : string.Empty;
 }

@@ -42,14 +42,14 @@ namespace CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied
             return this;
         }
 
-        private void SetCookies(IEnumerable<(string, string)>? cookies)
+        private void SetCookies(IEnumerable<(string Name, string Value)>? cookies)
         {
             if (cookies == null)
             {
                 return;
             }
 
-            Cookies = string.Join("; ", cookies.Select(c => $"{c.Item1}={c.Item2}"));
+            Cookies = string.Join("; ", cookies.Select(c => $"{c.Name}={c.Value}"));
         }
     }
 }
