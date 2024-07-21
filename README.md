@@ -16,9 +16,9 @@ This library supports the following captcha types
 - GeeTest
 - Capy
 
-Not every captcha type is supported by each service. You can find a table of the supported captcha types for each major service at the following link
+Not every captcha type is supported by each service. You can find a spreadsheet with a breakdown of the supported captcha types for each implemented service at the following link
 
-[Captcha availability table](https://example.com)
+[CaptchaSharp Services Availability](https://1drv.ms/x/s!Al8HxSfx2JL3ePfRK23aUt34eCk?e=WNCPh9)
 
 ## Adding CaptchaSharp to your project
 Simply install the nuget package via
@@ -71,6 +71,9 @@ The returned solution will contain two fields:
 
 If a method or some of its parameters are not supported, a `NotSupportedException` or `ArgumentException` will be thrown.
 
+## The service I want to use is not implemented
+If the service you want to use is not implemented, you can easily implement it yourself by deriving from the `CaptchaService` class and implementing the abstract methods, or you can open an issue, and we will try to implement it as soon as possible.
+
 ## Unit Tests
 Unit tests are included in the `CaptchaSharp.Tests` project. In order to test, you need to:
 1. Run any test once and let it fail. It will create a file called `config.json` in your `bin/Debug/net8.0` folder.
@@ -79,4 +82,7 @@ Unit tests are included in the `CaptchaSharp.Tests` project. In order to test, y
 4. If you need to test a captcha on a specific website, you can edit the `ServiceTests` class and change the parameters as you need.
 
 ## What needs to be improved
-- Implement better exception handling, for example when there is zero balance or when a solver method returns a bad authentication, they will currently fall in the generic `TaskCreationException` type.
+- Drop `Newtonsoft.Json` for `System.Text.Json`
+- `StringPairCollection.Add()` should also take null values, and by default ignore the key-value pair if the value is null.
+- Implement better exception handling for specific error codes. For example when there is zero balance or when a solver method returns a bad authentication, they will currently fall in the generic `TaskCreationException` type.
+- Add support for recognition APIs (right now only token-based APIs are supported).
