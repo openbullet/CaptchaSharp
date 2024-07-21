@@ -540,7 +540,7 @@ public class TwoCaptchaService : CaptchaService
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolution(
-        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+        string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var action = correct ? "reportgood" : "reportbad";
 
@@ -548,7 +548,7 @@ public class TwoCaptchaService : CaptchaService
             new StringPairCollection()
                 .Add("key", ApiKey)
                 .Add("action", action)
-                .Add("id", id.ToString())
+                .Add("id", id)
                 .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
             cancellationToken);
 
@@ -557,7 +557,7 @@ public class TwoCaptchaService : CaptchaService
             var tcResponse = response.Deserialize<TwoCaptchaResponse>();
 
             if (tcResponse.IsErrorCode)
-                throw new TaskReportException(tcResponse.Request);
+                throw new TaskReportException(tcResponse.Request!);
         }
         else
         {

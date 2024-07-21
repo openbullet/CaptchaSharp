@@ -13,7 +13,7 @@ internal class CapySolution
     public string? ChallengeKey { get; set; }
     public string? Answer { get; set; }
 
-    public CapyResponse ToCapyResponse(long id)
+    public CapyResponse ToCapyResponse(string id)
     {
         return new CapyResponse()
         {

@@ -234,7 +234,7 @@ public class NopechaService : CaptchaService
             "",
             new StringPairCollection()
                 .Add("key", ApiKey)
-                .Add("id", task.IdString),
+                .Add("id", task.Id),
             cancellationToken)
             .ConfigureAwait(false);
 
@@ -255,7 +255,7 @@ public class NopechaService : CaptchaService
         {
             return new CloudflareTurnstileResponse
             {
-                IdString = task.IdString,
+                Id = task.Id,
                 Response = response.Data!.ToString()
             } as T;
         }
@@ -274,7 +274,7 @@ public class NopechaService : CaptchaService
         
         return new StringResponse
         {
-            IdString = task.IdString,
+            Id = task.Id,
             Response = result
         } as T;
     }

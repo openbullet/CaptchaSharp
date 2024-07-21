@@ -139,7 +139,7 @@ public class MetaBypassTechService : CaptchaService
         
         return new StringResponse
         {
-            Id = 0,
+            Id = "0",
             Response = response.Data!["result"]!.ToString()
         };
     }
@@ -223,7 +223,7 @@ public class MetaBypassTechService : CaptchaService
         
         return new StringResponse
         {
-            Id = 0,
+            Id = "0",
             Response = response.Data!["RecaptchaResponse"]!.ToString()
         };
     }
@@ -262,7 +262,7 @@ public class MetaBypassTechService : CaptchaService
 
         return new StringResponse
         {
-            IdString = task.IdString,
+            Id = task.Id,
             Response = response.Data!["RecaptchaResponse"]!.ToString()
         } as T;
     }

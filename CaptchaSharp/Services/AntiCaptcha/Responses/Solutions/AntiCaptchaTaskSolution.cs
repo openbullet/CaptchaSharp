@@ -5,7 +5,7 @@ namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
 
 internal class AntiCaptchaTaskSolution
 {
-    public virtual CaptchaResponse ToCaptchaResponse(long id)
+    public virtual CaptchaResponse ToCaptchaResponse(string id)
     {
         throw new NotImplementedException();
     }

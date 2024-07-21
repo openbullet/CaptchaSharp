@@ -6,7 +6,7 @@ namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
     {
         public string Token { get; set; }
 
-        public override CaptchaResponse ToCaptchaResponse(long id)
+        public override CaptchaResponse ToCaptchaResponse(string id)
         {
             return new StringResponse
             {

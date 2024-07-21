@@ -11,7 +11,7 @@ namespace CaptchaSharp.Services.CapSolver.Responses.Solutions
         {
             return new StringResponse
             {
-                IdString = id,
+                Id = id,
                 Response = Text
             };
         }

@@ -11,7 +11,7 @@ internal class TwoCaptchaCloudflareTurnstileResponse : TwoCaptchaResponse
     [JsonProperty("useragent")]
     public string? UserAgent { get; set; }
 
-    public CloudflareTurnstileResponse ToCloudflareTurnstileResponse(long id)
+    public CloudflareTurnstileResponse ToCloudflareTurnstileResponse(string id)
     {
         return new CloudflareTurnstileResponse()
         {

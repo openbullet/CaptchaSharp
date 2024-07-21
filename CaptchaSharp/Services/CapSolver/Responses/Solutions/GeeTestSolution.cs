@@ -12,7 +12,7 @@ namespace CaptchaSharp.Services.CapSolver.Responses.Solutions
         {
             return new GeeTestResponse()
             {
-                IdString = id,
+                Id = id,
                 Challenge = Challenge,
                 Validate = Validate,
                 SecCode = SecCode

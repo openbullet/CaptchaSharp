@@ -12,7 +12,7 @@ internal class CloudflareTurnstileSolution : Solution
     {
         return new CloudflareTurnstileResponse
         {
-            IdString = id,
+            Id = id,
             Response = Token,
             UserAgent = UserAgent
         };

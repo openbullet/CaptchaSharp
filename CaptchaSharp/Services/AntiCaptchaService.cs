@@ -367,7 +367,7 @@ public class AntiCaptchaService : CaptchaService
             throw new TaskCreationException($"{antiCaptchaResponse.ErrorCode}: {antiCaptchaResponse.ErrorDescription}");
         }
 
-        var task = new CaptchaTask(antiCaptchaResponse.TaskId, type);
+        var task = new CaptchaTask(antiCaptchaResponse.TaskId.ToString(), type);
 
         return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
     }
@@ -379,7 +379,7 @@ public class AntiCaptchaService : CaptchaService
     {
         var response = await HttpClient.PostJsonToStringAsync(
             "getTaskResult",
-            new GetTaskResultRequest { ClientKey = ApiKey, TaskId = (int)task.Id },
+            new GetTaskResultRequest { ClientKey = ApiKey, TaskId = int.Parse(task.Id) },
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var result = response.Deserialize<GetTaskResultAntiCaptchaResponse>();
@@ -403,6 +403,11 @@ public class AntiCaptchaService : CaptchaService
         {
             throw new TaskSolutionException(response);
         }
+        
+        if (task.Type == CaptchaType.DataDome)
+        {
+            return ParseDataDomeSolution(task.Id, solution) as T;
+        }
 
         result.AntiCaptchaTaskSolution = task.Type switch
         {
@@ -421,16 +426,16 @@ public class AntiCaptchaService : CaptchaService
     /// <summary>
     /// Parses the solution of a DataDome captcha.
     /// </summary>
-    protected virtual StringResponse ParseDataDomeSolution(JToken? solution)
+    protected virtual StringResponse ParseDataDomeSolution(string taskId, JToken? solution)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("DataDome captcha solving is not supported");
     }
     #endregion
 
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolution(
-        long id, CaptchaType type, bool correct = false,
+        string id, CaptchaType type, bool correct = false,
         CancellationToken cancellationToken = default)
     {
         if (correct)
@@ -443,7 +448,7 @@ public class AntiCaptchaService : CaptchaService
             
             await HttpClient.PostJsonToStringAsync(
                 "reportCorrectRecaptcha",
-                new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
+                new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                 cancellationToken: cancellationToken).ConfigureAwait(false);
             
             return;
@@ -457,7 +462,7 @@ public class AntiCaptchaService : CaptchaService
             case CaptchaType.ImageCaptcha:
                 response = await HttpClient.PostJsonToStringAsync(
                     "reportIncorrectImageCaptcha",
-                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
+                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                     cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 incAntiCaptchaResponse = response.Deserialize<ReportIncorrectCaptchaAntiCaptchaResponse>();
@@ -467,7 +472,7 @@ public class AntiCaptchaService : CaptchaService
             case CaptchaType.ReCaptchaV3:
                 response = await HttpClient.PostJsonToStringAsync(
                     "reportIncorrectRecaptcha",
-                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
+                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                     cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 incAntiCaptchaResponse = response.Deserialize<ReportIncorrectCaptchaAntiCaptchaResponse>();
@@ -476,7 +481,7 @@ public class AntiCaptchaService : CaptchaService
             case CaptchaType.HCaptcha:
                 response = await HttpClient.PostJsonToStringAsync(
                     "reportIncorrectHcaptcha",
-                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = id },
+                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                     cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 incAntiCaptchaResponse = response.Deserialize<ReportIncorrectCaptchaAntiCaptchaResponse>();

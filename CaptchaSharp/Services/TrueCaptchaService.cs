@@ -94,16 +94,9 @@ public class TrueCaptchaService : CaptchaService
         
         var requestId = jObject["requestId"]!.Value<string>()!;
             
-        return new StringResponse { IdString = requestId, Response = result.ToString() };
+        return new StringResponse { Id = requestId, Response = result.ToString() };
     }
-
-    /// <inheritdoc/>
-    public override Task ReportSolution(
-        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-    {
-        throw new NotSupportedException("Use the string id overload instead.");
-    }
-
+    
     /// <inheritdoc/>
     public override async Task ReportSolution(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)

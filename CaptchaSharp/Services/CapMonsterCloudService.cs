@@ -83,7 +83,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
     }
 
     /// <inheritdoc />
-    protected override StringResponse ParseDataDomeSolution(JToken? solution)
+    protected override StringResponse ParseDataDomeSolution(string taskId, JToken? solution)
     {
         // The solution is like { "domains": { "site.com": { "cookies": { "datadome": "..." } } } }
         // We want to return the datadome cookie. Since site.com varies, we need to
@@ -94,6 +94,6 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
             ?.SelectToken("cookies.datadome")
             ?.Value<string>() ?? "";
         
-        return new StringResponse { Response = cookie };
+        return new StringResponse { Id = taskId, Response = cookie };
     }
 }

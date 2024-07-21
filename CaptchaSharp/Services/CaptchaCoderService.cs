@@ -82,7 +82,7 @@ public class CaptchaCoderService : CaptchaService
             throw new TaskSolutionException(response);
         }
 
-        return new StringResponse { IdString = captchaId, Response = response };
+        return new StringResponse { Id = captchaId, Response = response };
     }
 
     /// <inheritdoc/>
@@ -115,7 +115,7 @@ public class CaptchaCoderService : CaptchaService
             throw new TaskSolutionException(response);
         }
         
-        return new StringResponse { IdString = captchaId, Response = response };
+        return new StringResponse { Id = captchaId, Response = response };
     }
 
     /// <inheritdoc/>
@@ -149,19 +149,12 @@ public class CaptchaCoderService : CaptchaService
             throw new TaskSolutionException(response);
         }
         
-        return new StringResponse { IdString = captchaId, Response = response };
+        return new StringResponse { Id = captchaId, Response = response };
     }
 
     #endregion
 
     #region Reporting the solution
-    /// <inheritdoc/>
-    public override Task ReportSolution(
-        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-    {
-        throw new NotSupportedException("Use the string id overload instead.");
-    }
-
     /// <inheritdoc/>
     public override async Task ReportSolution(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)

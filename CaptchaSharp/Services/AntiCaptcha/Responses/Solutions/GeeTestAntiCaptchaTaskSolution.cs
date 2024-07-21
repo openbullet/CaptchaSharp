@@ -8,7 +8,7 @@ namespace CaptchaSharp.Services.AntiCaptcha.Responses.Solutions
         public string Validate { get; set; }
         public string SecCode { get; set; }
 
-        public override CaptchaResponse ToCaptchaResponse(long id)
+        public override CaptchaResponse ToCaptchaResponse(string id)
         {
             return new GeeTestResponse()
             {

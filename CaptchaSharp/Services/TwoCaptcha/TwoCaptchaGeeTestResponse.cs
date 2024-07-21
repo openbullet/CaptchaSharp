@@ -19,7 +19,7 @@ internal class GeeTestSolution
     [JsonProperty(PropertyName = "geetest_seccode")]
     public string Seccode { get; set; }
 
-    public GeeTestResponse ToGeeTestResponse(long id)
+    public GeeTestResponse ToGeeTestResponse(string id)
     {
         return new GeeTestResponse()
         {

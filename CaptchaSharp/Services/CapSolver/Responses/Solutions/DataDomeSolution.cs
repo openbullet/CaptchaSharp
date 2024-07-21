@@ -10,7 +10,7 @@ internal class DataDomeSolution : Solution
     {
         return new StringResponse
         {
-            IdString = id,
+            Id = id,
             Response = Cookie
         };
     }

@@ -528,7 +528,7 @@ public class DeathByCaptchaService : CaptchaService
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolution(
-        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+        string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         if (correct)
         {

@@ -42,7 +42,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -69,7 +69,7 @@ public abstract class CaptchaService
     /// 
     /// /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -101,7 +101,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -132,7 +132,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -174,7 +174,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -204,7 +204,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -236,7 +236,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -267,7 +267,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="GeeTestResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and three solution parameters 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and three solution parameters 
     /// (Challenge, Validate and SecCode) that you will need to provide when you submit the form.
     /// </returns>
     /// 
@@ -296,7 +296,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -326,7 +326,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext (a.k.a. a valid datadome session cookie).
     /// </returns>
     /// 
@@ -358,7 +358,7 @@ public abstract class CaptchaService
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(long, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -371,40 +371,18 @@ public abstract class CaptchaService
     {
         throw new NotSupportedException();
     }
-
-    /// <summary>
-    /// Reports a captcha solution as good or bad to the service.
-    /// Mostly used for reporting bad solutions for image captchas and get the funds back.
-    /// Make sure to not abuse this system or the service might ban you from accessing it!
-    /// </summary>
-    /// 
-    /// <param name="id">The ID of the captcha that you got inside your <see cref="CaptchaResponse"/>.</param>
-    /// <param name="type">The type of captcha you want to report.</param>
-    /// 
-    /// <param name="correct">
-    /// If true, the captcha will be reported as correctly solved (this is not supported by most services).
-    /// </param>
-    /// 
-    /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
-    /// 
-    /// <exception cref="TaskReportException"></exception>
-    public virtual Task ReportSolution(
-        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-    {
-        throw new NotSupportedException();
-    }
     
     /// <summary>
     /// Reports a captcha solution as good or bad to the service.
     /// Mostly used for reporting bad solutions for image captchas and get the funds back.
-    /// Make sure to not abuse this system or the service might ban you from accessing it!
+    /// Make sure to not abuse this system or the service might ban your account!
     /// </summary>
     /// 
     /// <param name="id">The string ID of the captcha that you got inside your <see cref="CaptchaResponse"/>.</param>
     /// <param name="type">The type of captcha you want to report.</param>
     /// 
     /// <param name="correct">
-    /// If true, the captcha will be reported as correctly solved (this is not supported by most services).
+    /// If true, the captcha will be reported as correctly solved (this is not supported by some services).
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -412,7 +390,9 @@ public abstract class CaptchaService
     /// <exception cref="TaskReportException"></exception>
     public virtual Task ReportSolution(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-        => ReportSolution(long.Parse(id), type, correct, cancellationToken);
+    {
+        throw new NotSupportedException();
+    }
 
     /// <summary></summary>
     protected async Task<T> GetResult<T>(

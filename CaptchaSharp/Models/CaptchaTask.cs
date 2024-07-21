@@ -13,33 +13,15 @@ public class CaptchaTask
     public CaptchaType Type { get; set; }
 
     /// <summary>The id of the task</summary>
-    public long Id { get; }
-
-    /// <summary>The id of the task as a string</summary>
-    public string IdString { get; }
+    public string Id { get; }
 
     /// <summary>Whether the task is completed</summary>
-    public bool Completed { get; set; } = false;
+    public bool Completed { get; set; }
 
     /// <summary>Creates a <see cref="CaptchaTask"/> from a string id</summary>
     public CaptchaTask(string id, CaptchaType type)
     {
-        IdString = id;
-
-        if (long.TryParse(id, out var parsed))
-        {
-            Id = parsed;
-        }
-
-        Type = type;
-        CreationDate = DateTime.Now;
-    }
-
-    /// <summary>Creates a <see cref="CaptchaTask"/> from a long id</summary>
-    public CaptchaTask(long id, CaptchaType type)
-    {
         Id = id;
-        IdString = id.ToString();
         Type = type;
         CreationDate = DateTime.Now;
     }

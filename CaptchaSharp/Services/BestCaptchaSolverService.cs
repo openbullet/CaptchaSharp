@@ -323,7 +323,7 @@ public class BestCaptchaSolverService : CaptchaService
             throw new TaskCreationException(response.Error!);
         }
 
-        var task = new CaptchaTask(response.Id, type);
+        var task = new CaptchaTask(response.Id.ToString(), type);
 
         return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
     }
@@ -433,7 +433,7 @@ public class BestCaptchaSolverService : CaptchaService
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolution(
-        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+        string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         if (correct)
         {

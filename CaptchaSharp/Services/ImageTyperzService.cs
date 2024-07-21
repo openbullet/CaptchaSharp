@@ -90,7 +90,7 @@ public class ImageTyperzService : CaptchaService
         }
 
         var split = response.Split(['|'], 2);
-        return new StringResponse { Id = long.Parse(split[0]), Response = split[1] };
+        return new StringResponse { Id = split[0], Response = split[1] };
     }
 
     /// <inheritdoc/>
@@ -310,6 +310,7 @@ public class ImageTyperzService : CaptchaService
             
             return new GeeTestResponse
             {
+                Id = task.Id,
                 Challenge = geeTestResponse["geetest_challenge"]!.Value<string>()!,
                 Validate = geeTestResponse["geetest_validate"]!.Value<string>()!,
                 SecCode = geeTestResponse["geetest_seccode"]!.Value<string>()!
@@ -329,6 +330,7 @@ public class ImageTyperzService : CaptchaService
             
             return new CloudflareTurnstileResponse
             {
+                Id = task.Id,
                 Response = cloudflareResponse["Response"]!.Value<string>()!,
                 UserAgent = cloudflareResponse["UserAgent"]!.Value<string>()!
             } as T;
@@ -346,8 +348,8 @@ public class ImageTyperzService : CaptchaService
 
     #region Reporting the solution
     /// <inheritdoc/>
-    public override async Task ReportSolution
-        (long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+    public override async Task ReportSolution(
+        string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.PostToStringAsync(
             "Forms/SetBadImageToken.ashx",

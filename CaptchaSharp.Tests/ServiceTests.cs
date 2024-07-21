@@ -55,16 +55,8 @@ public class ServiceTests
             base64: _captchaImageBase64,
             options);
 
-        if (solution.IsLongId)
-        {
-            await Service.ReportSolution(
-                solution.Id, CaptchaType.ImageCaptcha, correct);    
-        }
-        else
-        {
-            await Service.ReportSolution(
-                solution.IdString, CaptchaType.ImageCaptcha, correct);
-        }
+        await Service.ReportSolution(
+            solution.Id, CaptchaType.ImageCaptcha, correct);
             
         Assert.True(true);
     }
@@ -78,16 +70,8 @@ public class ServiceTests
             enterprise: false,
             invisible: false);
 
-        if (solution.IsLongId)
-        {
-            await Service.ReportSolution(
-                solution.Id, CaptchaType.ReCaptchaV2, correct);    
-        }
-        else
-        {
-            await Service.ReportSolution(
-                solution.IdString, CaptchaType.ReCaptchaV2, correct);
-        }
+        await Service.ReportSolution(
+            solution.Id, CaptchaType.ReCaptchaV2, correct);
             
         Assert.True(true);
     }
@@ -141,7 +125,7 @@ public class ServiceTests
 
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
 
@@ -161,7 +145,7 @@ public class ServiceTests
             
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
         
@@ -181,7 +165,7 @@ public class ServiceTests
 
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
         
@@ -201,7 +185,7 @@ public class ServiceTests
 
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
 
@@ -220,7 +204,7 @@ public class ServiceTests
             
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
         
@@ -239,7 +223,7 @@ public class ServiceTests
 
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
 
@@ -255,7 +239,7 @@ public class ServiceTests
 
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
 
@@ -285,7 +269,7 @@ public class ServiceTests
 
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
 
@@ -316,7 +300,7 @@ public class ServiceTests
         Assert.NotEqual("", solution.SecCode);
         Assert.NotEqual("", solution.Validate);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Challenge: {solution.Challenge}");
         _output.WriteLine($"SecCode: {solution.SecCode}");
         _output.WriteLine($"Validate: {solution.Validate}");
@@ -336,7 +320,7 @@ public class ServiceTests
         Assert.NotEqual(string.Empty, solution.CaptchaKey);
         Assert.NotEqual(string.Empty, solution.Answer);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"ChallengeKey: {solution.ChallengeKey}");
         _output.WriteLine($"CaptchaKey: {solution.CaptchaKey}");
         _output.WriteLine($"Answer: {solution.Answer}");
@@ -390,7 +374,7 @@ public class ServiceTests
 
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
 
@@ -405,7 +389,7 @@ public class ServiceTests
         
         Assert.NotEqual(string.Empty, solution.Response);
         
-        _output.WriteLine($"Captcha ID: {solution.IdString}");
+        _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
         _output.WriteLine($"User-Agent: {solution.UserAgent}");
     }

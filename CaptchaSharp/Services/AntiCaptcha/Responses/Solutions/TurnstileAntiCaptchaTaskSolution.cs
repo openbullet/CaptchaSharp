@@ -8,7 +8,7 @@ internal class TurnstileAntiCaptchaTaskSolution : AntiCaptchaTaskSolution
 
     public required string UserAgent { get; set; }
     
-    public override CaptchaResponse ToCaptchaResponse(long id)
+    public override CaptchaResponse ToCaptchaResponse(string id)
     {
         return new CloudflareTurnstileResponse
         {

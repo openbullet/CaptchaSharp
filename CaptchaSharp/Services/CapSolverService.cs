@@ -411,7 +411,7 @@ public class CapSolverService : CaptchaService
     {
         var response = await _httpClient.PostJsonToStringAsync(
             "getTaskResult",
-            new GetTaskResultRequest { ClientKey = ApiKey, TaskId = task.IdString },
+            new GetTaskResultRequest { ClientKey = ApiKey, TaskId = task.Id },
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var result = response.Deserialize<GetTaskResultResponse>();
@@ -448,7 +448,7 @@ public class CapSolverService : CaptchaService
             _ => throw new NotSupportedException($"The captcha type {task.Type} is not supported")
         } ?? throw new TaskSolutionException("The solution is null");
 
-        return result.Solution.ToCaptchaResponse(task.IdString) as T;
+        return result.Solution.ToCaptchaResponse(task.Id) as T;
     }
     #endregion
     

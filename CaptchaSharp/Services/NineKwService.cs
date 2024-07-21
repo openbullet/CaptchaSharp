@@ -275,13 +275,13 @@ public class NineKwService : CaptchaService
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolution(
-        long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+        string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var json = await _httpClient.GetStringAsync(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchacorrectback")
-                .Add("id", id.ToString())
+                .Add("id", id)
                 .Add("correct", correct ? 1 : 2)
                 .Add("json", 1),
             cancellationToken);
