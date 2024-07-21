@@ -23,8 +23,6 @@ public class EzCaptchaServiceTests(EzCaptchaFixture fixture, ITestOutputHelper o
     [Fact] public Task SolveRecaptchaV3Async_NoProxy_ValidSolution() => RecaptchaV3Test_NoProxy();
     [Fact] public Task SolveRecaptchaV3EnterpriseAsync_NoProxy_ValidSolution() => RecaptchaV3EnterpriseTest_NoProxy();
     [Fact] public Task SolveFunCaptchaAsync_NoProxy_ValidSolution() => FunCaptchaTest_NoProxy();
-    [Fact] public Task SolveFunCaptchaAsync_WithProxy_ValidSolution() => FunCaptchaTest_WithProxy();
     [Fact] public Task SolveHCaptchaAsync_NoProxy_ValidSolution() => HCaptchaTest_NoProxy();
-    [Fact] public Task SolveHCaptchaAsync_WithProxy_ValidSolution() => HCaptchaTest_WithProxy();
     [Fact] public Task SolveDataDomeAsync_WithProxy_ValidSolution() => DataDomeTest_WithProxy();
 }

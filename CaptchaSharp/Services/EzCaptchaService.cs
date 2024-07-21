@@ -120,6 +120,99 @@ public class EzCaptchaService : CaptchaService
         return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaV3Async(
+        string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
+        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+
+        if (enterprise)
+        {
+            content.Task = new ReCaptchaV3EnterpriseTaskProxyless()
+            {
+                WebsiteKey = siteKey,
+                WebsiteURL = siteUrl,
+                PageAction = string.IsNullOrEmpty(action) ? null : action,
+            };
+        }
+        else
+        {
+            if (Math.Abs(minScore - 0.9f) < 0.000001)
+            {
+                content.Task = new ReCaptchaV3TaskProxylessS9()
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    PageAction = string.IsNullOrEmpty(action) ? null : action,
+                };
+            }
+            else
+            {
+                content.Task = new ReCaptchaV3TaskProxyless()
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    PageAction = string.IsNullOrEmpty(action) ? null : action,
+                };
+            }
+        }
+        
+        var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV3,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveFuncaptchaAsync(
+        string publicKey, string serviceUrl, string siteUrl, bool noJs = false, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+        content.Task = new FuncaptchaTaskProxyless
+        {
+            WebsiteKey = publicKey,
+            WebsiteURL = siteUrl,
+            FuncaptchaApiJSSubdomain = serviceUrl
+        };
+        
+        var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(response, CaptchaType.FunCaptcha,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveHCaptchaAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+        content.Task = new HcaptchaTaskProxyless
+        {
+            WebsiteKey = siteKey,
+            WebsiteURL = siteUrl
+        };
+        
+        var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(response, CaptchaType.HCaptcha,
+            cancellationToken).ConfigureAwait(false);
+    }
     #endregion
     
     #region Getting the result
