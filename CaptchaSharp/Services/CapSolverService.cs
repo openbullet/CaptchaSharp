@@ -1,11 +1,11 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.CapSolver.Requests;
-using CaptchaSharp.Services.CapSolver.Requests.Tasks;
-using CaptchaSharp.Services.CapSolver.Requests.Tasks.Proxied;
-using CaptchaSharp.Services.CapSolver.Responses;
-using CaptchaSharp.Services.CapSolver.Responses.Solutions;
+using CaptchaSharp.Models.CapSolver.Requests;
+using CaptchaSharp.Models.CapSolver.Requests.Tasks;
+using CaptchaSharp.Models.CapSolver.Requests.Tasks.Proxied;
+using CaptchaSharp.Models.CapSolver.Responses;
+using CaptchaSharp.Models.CapSolver.Responses.Solutions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;

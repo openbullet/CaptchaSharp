@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using CaptchaSharp.Enums;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.AntiCaptcha.Responses;
-using CaptchaSharp.Services.CapMonsterCloud.Requests.Tasks;
+using CaptchaSharp.Models.AntiCaptcha.Responses;
+using CaptchaSharp.Models.CapMonsterCloud.Requests.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace CaptchaSharp.Services;

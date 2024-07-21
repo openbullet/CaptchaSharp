@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.TwoCaptcha;
+using CaptchaSharp.Models.TwoCaptcha;
 using System.Collections.Generic;
 using System;
 using CaptchaSharp.Extensions;

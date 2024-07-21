@@ -1,4 +1,6 @@
-﻿namespace CaptchaSharp.Tests;
+﻿using CaptchaSharp.Services;
+
+namespace CaptchaSharp.Tests;
 
 public abstract class ServiceFixture
 {

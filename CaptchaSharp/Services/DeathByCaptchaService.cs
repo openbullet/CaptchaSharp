@@ -1,8 +1,8 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.DeathByCaptcha.Tasks;
-using CaptchaSharp.Services.DeathByCaptcha.Tasks.Proxied;
+using CaptchaSharp.Models.DeathByCaptcha.Tasks;
+using CaptchaSharp.Models.DeathByCaptcha.Tasks.Proxied;
 using System;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using CaptchaSharp.Extensions;
-using CaptchaSharp.Services.DeathByCaptcha.Responses;
+using CaptchaSharp.Models.DeathByCaptcha.Responses;
 
 namespace CaptchaSharp.Services;
 

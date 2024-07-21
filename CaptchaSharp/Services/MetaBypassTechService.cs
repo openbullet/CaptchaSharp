@@ -6,7 +6,7 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.MetaBypassTech;
+using CaptchaSharp.Models.MetaBypassTech;
 
 namespace CaptchaSharp.Services;
 
@@ -43,7 +43,7 @@ public class MetaBypassTechService : CaptchaService
     /// <summary>
     /// The current access token.
     /// </summary>
-    private MetaBypassTechAccessTokenResponse? _accessToken;
+    private MbtAccessTokenResponse? _accessToken;
 
     /// <summary>
     /// Initializes a <see cref="MetaBypassTechService"/>.
@@ -81,7 +81,7 @@ public class MetaBypassTechService : CaptchaService
                 cancellationToken)
             .ConfigureAwait(false);
         
-        var response = json.Deserialize<MetaBypassTechResponse>();
+        var response = json.Deserialize<MbtResponse>();
 
         if (!response.Ok)
         {
@@ -115,7 +115,7 @@ public class MetaBypassTechService : CaptchaService
             };
         }
         
-        var payload = new MetaBypassTechSolveImageCaptchaRequest
+        var payload = new MbtSolveImageCaptchaRequest
         {
             Base64Image = base64,
             Numeric = numeric,
@@ -129,7 +129,7 @@ public class MetaBypassTechService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        var response = json.Deserialize<MetaBypassTechResponse>();
+        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {
@@ -159,7 +159,7 @@ public class MetaBypassTechService : CaptchaService
         // When using version "invisible", we get "Service Failed" as a response
         // so we're just going to ignore it and use version "2" instead
         
-        var payload = new MetaBypassTechSolveRecaptchaRequest
+        var payload = new MbtSolveRecaptchaRequest
         {
             SiteKey = siteKey,
             Url = siteUrl,
@@ -172,7 +172,7 @@ public class MetaBypassTechService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        var response = json.Deserialize<MetaBypassTechResponse>();
+        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {
@@ -200,7 +200,7 @@ public class MetaBypassTechService : CaptchaService
         
         await EnsureAccessTokenAsync().ConfigureAwait(false);
         
-        var payload = new MetaBypassTechSolveRecaptchaRequest
+        var payload = new MbtSolveRecaptchaRequest
         {
             SiteKey = siteKey,
             Url = siteUrl,
@@ -213,7 +213,7 @@ public class MetaBypassTechService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        var response = json.Deserialize<MetaBypassTechResponse>();
+        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {
@@ -247,7 +247,7 @@ public class MetaBypassTechService : CaptchaService
                 .Add("recaptcha_id", task.Id),
             cancellationToken).ConfigureAwait(false);
         
-        var response = json.Deserialize<MetaBypassTechResponse>();
+        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {
@@ -285,7 +285,7 @@ public class MetaBypassTechService : CaptchaService
 
     private async Task GetAccessTokenAsync()
     {
-        var payload = new MetaBypassTechAccessTokenRequest
+        var payload = new MbtAccessTokenRequest
         {
             GrantType = "password",
             ClientId = ClientId,
@@ -304,20 +304,20 @@ public class MetaBypassTechService : CaptchaService
 
         if (!response.IsSuccessStatusCode)
         {
-            var serviceResponse = json.Deserialize<MetaBypassTechResponse>();
+            var serviceResponse = json.Deserialize<MbtResponse>();
             
             throw new BadAuthenticationException(
                 serviceResponse.Message ?? "Unknown error");
         }
         
-        _accessToken = json.Deserialize<MetaBypassTechAccessTokenResponse>();
+        _accessToken = json.Deserialize<MbtAccessTokenResponse>();
         _httpClient.DefaultRequestHeaders.Add("Authorization",
             $"{_accessToken.TokenType} {_accessToken.AccessToken}");
     }
 
-    private async Task RefreshAccessTokenAsync(MetaBypassTechAccessTokenResponse tokenResponse)
+    private async Task RefreshAccessTokenAsync(MbtAccessTokenResponse tokenResponse)
     {
-        var payload = new MetaBypassTechRefreshAccessTokenRequest
+        var payload = new MbtRefreshAccessTokenRequest
         {
             GrantType = "refresh_token",
             ClientId = ClientId,
@@ -335,13 +335,13 @@ public class MetaBypassTechService : CaptchaService
         
         if (!response.IsSuccessStatusCode)
         {
-            var serviceResponse = json.Deserialize<MetaBypassTechResponse>();
+            var serviceResponse = json.Deserialize<MbtResponse>();
             
             throw new BadAuthenticationException(
                 serviceResponse.Message ?? "Unknown error");
         }
         
-        _accessToken = json.Deserialize<MetaBypassTechAccessTokenResponse>();
+        _accessToken = json.Deserialize<MbtAccessTokenResponse>();
         _httpClient.DefaultRequestHeaders.Add("Authorization",
             $"{_accessToken.TokenType} {_accessToken.AccessToken}");
     }

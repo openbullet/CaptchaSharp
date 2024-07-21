@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Extensions;
-using CaptchaSharp.Services.NineKw;
+using CaptchaSharp.Models.NineKw;
 
 namespace CaptchaSharp.Services;
 

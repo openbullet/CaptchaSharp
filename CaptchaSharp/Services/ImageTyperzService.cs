@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Extensions;
-using CaptchaSharp.Services.ImageTyperz;
+using CaptchaSharp.Models.ImageTyperz;
 using Newtonsoft.Json.Linq;
 
 namespace CaptchaSharp.Services;

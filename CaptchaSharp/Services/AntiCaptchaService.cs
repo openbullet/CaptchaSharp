@@ -1,11 +1,11 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.AntiCaptcha.Requests;
-using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks;
-using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied;
-using CaptchaSharp.Services.AntiCaptcha.Responses;
-using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
+using CaptchaSharp.Models.AntiCaptcha.Requests;
+using CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
+using CaptchaSharp.Models.AntiCaptcha.Requests.Tasks.Proxied;
+using CaptchaSharp.Models.AntiCaptcha.Responses;
+using CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

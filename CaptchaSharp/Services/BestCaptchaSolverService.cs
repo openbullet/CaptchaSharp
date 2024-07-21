@@ -6,8 +6,8 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.BestCaptchaSolver.Requests;
-using CaptchaSharp.Services.BestCaptchaSolver.Responses;
+using CaptchaSharp.Models.BestCaptchaSolver.Requests;
+using CaptchaSharp.Models.BestCaptchaSolver.Responses;
 
 namespace CaptchaSharp.Services;
 
