@@ -10,7 +10,7 @@ using CaptchaSharp.Models;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://captchaai.com/</c>
+/// The service provided by https://captchaai.com/
 /// </summary>
 public class CaptchaAiService : CustomTwoCaptchaService
 {

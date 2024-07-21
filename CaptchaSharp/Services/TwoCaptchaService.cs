@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://2captcha.com/</c>
+/// The service provided by https://2captcha.com/
 /// </summary>
 public class TwoCaptchaService : CaptchaService
 {

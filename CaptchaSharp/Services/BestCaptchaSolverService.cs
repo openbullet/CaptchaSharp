@@ -12,7 +12,7 @@ using CaptchaSharp.Models.BestCaptchaSolver.Responses;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service offered by <c>https://bestcaptchasolver.com/</c>
+/// The service offered by https://bestcaptchasolver.com/
 /// </summary>
 public class BestCaptchaSolverService : CaptchaService
 {

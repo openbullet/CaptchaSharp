@@ -1,17 +1,17 @@
-﻿using CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
+using CaptchaSharp.Models.EzCaptcha.Requests.Tasks;
 using Newtonsoft.Json;
 
-namespace CaptchaSharp.Models.AntiCaptcha.Requests;
+namespace CaptchaSharp.Models.EzCaptcha.Requests;
 
 /// <summary>
 /// A request to solve a captcha task.
 /// </summary>
-public class CaptchaTaskRequest : Request
+public class CaptchaTaskEzCaptchaRequest : EzCaptchaRequest
 {
     /// <summary>
     /// The task to solve.
     /// </summary>
-    public AntiCaptchaTaskProxyless Task { get; set; } = null!;
+    public EzCaptchaTaskProxyless Task { get; set; } = null!;
     
     /// <summary>
     /// The soft ID to use. Default is 0.
@@ -25,3 +25,4 @@ public class CaptchaTaskRequest : Request
     [JsonProperty("languagePool", DefaultValueHandling = DefaultValueHandling.Ignore)]
     public string? LanguagePool { get; set; }
 }
+

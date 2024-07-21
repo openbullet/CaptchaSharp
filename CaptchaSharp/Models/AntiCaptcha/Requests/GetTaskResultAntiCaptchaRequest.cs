@@ -1,6 +1,6 @@
 ﻿namespace CaptchaSharp.Models.AntiCaptcha.Requests;
 
-internal class GetTaskResultRequest : Request
+internal class GetTaskResultAntiCaptchaRequest : AntiCaptchaRequest
 {
     public int TaskId { get; set; }
 }

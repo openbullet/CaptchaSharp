@@ -17,7 +17,7 @@ using CaptchaSharp.Extensions;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://anti-captcha.com/</c>
+/// The service provided by https://anti-captcha.com/
 /// </summary>
 public class AntiCaptchaService : CaptchaService
 {
@@ -47,7 +47,7 @@ public class AntiCaptchaService : CaptchaService
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostJsonAsync<GetBalanceAntiCaptchaResponse>(
-            "getBalance", new Request { ClientKey = ApiKey },
+            "getBalance", new AntiCaptchaRequest { ClientKey = ApiKey },
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (response.IsError)
@@ -55,7 +55,7 @@ public class AntiCaptchaService : CaptchaService
             throw new BadAuthenticationException($"{response.ErrorCode}: {response.ErrorDescription}");
         }
 
-        return new decimal(response.Balance);
+        return response.Balance;
     }
     #endregion
 
@@ -68,7 +68,7 @@ public class AntiCaptchaService : CaptchaService
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 AddImageCapabilities(
-                    new CaptchaTaskRequest
+                    new CaptchaTaskAntiCaptchaRequest
                     {
                         ClientKey = ApiKey,
                         SoftId = SoftId,
@@ -361,7 +361,7 @@ public class AntiCaptchaService : CaptchaService
     {
         var response = await HttpClient.PostJsonToStringAsync(
             "getTaskResult",
-            new GetTaskResultRequest { ClientKey = ApiKey, TaskId = int.Parse(task.Id) },
+            new GetTaskResultAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(task.Id) },
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var result = response.Deserialize<GetTaskResultAntiCaptchaResponse>();
@@ -430,7 +430,7 @@ public class AntiCaptchaService : CaptchaService
             
             await HttpClient.PostJsonToStringAsync(
                 "reportCorrectRecaptcha",
-                new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                 cancellationToken: cancellationToken).ConfigureAwait(false);
             
             return;
@@ -440,17 +440,17 @@ public class AntiCaptchaService : CaptchaService
         {
             CaptchaType.ImageCaptcha => await HttpClient.PostJsonAsync<ReportIncorrectCaptchaAntiCaptchaResponse>(
                     "reportIncorrectImageCaptcha",
-                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                    new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false),
             CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 => await HttpClient
                 .PostJsonAsync<ReportIncorrectCaptchaAntiCaptchaResponse>("reportIncorrectRecaptcha",
-                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                    new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false),
             CaptchaType.HCaptcha => await HttpClient.PostJsonAsync<ReportIncorrectCaptchaAntiCaptchaResponse>(
                     "reportIncorrectHcaptcha",
-                    new ReportIncorrectCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                    new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false),
             _ => throw new NotSupportedException("Reporting is not supported for this captcha type")
@@ -465,11 +465,11 @@ public class AntiCaptchaService : CaptchaService
 
     #region Private Methods
     /// <summary>
-    /// Creates a new <see cref="CaptchaTaskRequest"/>.
+    /// Creates a new <see cref="CaptchaTaskAntiCaptchaRequest"/>.
     /// </summary>
-    protected CaptchaTaskRequest CreateTaskRequest()
+    protected CaptchaTaskAntiCaptchaRequest CreateTaskRequest()
     {
-        return new CaptchaTaskRequest
+        return new CaptchaTaskAntiCaptchaRequest
         {
             ClientKey = ApiKey,
             SoftId = SoftId
@@ -489,14 +489,14 @@ public class AntiCaptchaService : CaptchaService
         CaptchaServiceCapabilities.MaxLength |
         CaptchaServiceCapabilities.Instructions;
 
-    private static CaptchaTaskRequest AddImageCapabilities(CaptchaTaskRequest request, ImageCaptchaOptions? options)
+    private static CaptchaTaskAntiCaptchaRequest AddImageCapabilities(CaptchaTaskAntiCaptchaRequest antiCaptchaRequest, ImageCaptchaOptions? options)
     {
         if (options == null)
         {
-            return request;
+            return antiCaptchaRequest;
         }
 
-        if (request.Task is not ImageCaptchaTask task)
+        if (antiCaptchaRequest.Task is not ImageCaptchaTask task)
         {
             throw new NotSupportedException(
                 "Image options are only supported for image captchas");
@@ -517,7 +517,7 @@ public class AntiCaptchaService : CaptchaService
         task.MaxLength = options.MaxLength;
         task.Comment = options.TextInstructions;
 
-        request.LanguagePool = options.CaptchaLanguage switch
+        antiCaptchaRequest.LanguagePool = options.CaptchaLanguage switch
         {
             CaptchaLanguage.NotSpecified or CaptchaLanguage.English => "en",
             CaptchaLanguage.Russian or CaptchaLanguage.Ukrainian or CaptchaLanguage.Kazakh
@@ -525,7 +525,7 @@ public class AntiCaptchaService : CaptchaService
             _ => throw new NotSupportedException($"The {options.CaptchaLanguage} language is not supported")
         };
 
-        return request;
+        return antiCaptchaRequest;
     }
     #endregion
 }

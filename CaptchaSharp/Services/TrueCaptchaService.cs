@@ -12,7 +12,7 @@ using CaptchaSharp.Extensions;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://apitruecaptcha.org/</c>
+/// The service provided by https://apitruecaptcha.org/
 /// </summary>
 public class TrueCaptchaService : CaptchaService
 {

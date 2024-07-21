@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
-namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
+namespace CaptchaSharp.Models.EzCaptcha.Responses.Solutions;
 
-internal class AntiCaptchaTaskSolution
+internal class EzCaptchaTaskSolution
 {
     public virtual CaptchaResponse ToCaptchaResponse(string id)
     {

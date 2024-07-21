@@ -1,6 +1,6 @@
 ﻿namespace CaptchaSharp.Models.AntiCaptcha.Requests;
 
-internal class ReportIncorrectCaptchaRequest : Request
+internal class ReportIncorrectAntiCaptchaRequest : AntiCaptchaRequest
 {
     public long TaskId { get; set; }
 }

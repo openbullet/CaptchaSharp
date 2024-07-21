@@ -5,7 +5,7 @@ using System.Net.Http;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://captchas.io/</c>
+/// The service provided by https://captchas.io/
 /// </summary>
 public class CaptchasIoService : CustomTwoCaptchaService
 {

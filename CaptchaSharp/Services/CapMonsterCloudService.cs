@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://capmonster.cloud/</c>
+/// The service provided by https://capmonster.cloud/
 /// </summary>
 public class CapMonsterCloudService : CustomAntiCaptchaService
 {

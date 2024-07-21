@@ -2,5 +2,5 @@
 
 internal class GetBalanceAntiCaptchaResponse : AntiCaptchaResponse
 {
-    public float Balance { get; set; }
+    public decimal Balance { get; set; }
 }

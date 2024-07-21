@@ -420,34 +420,34 @@
             <summary>Serializes an object to a json string and converts the property names 
             to a camelCase based convention.</summary>
         </member>
-        <member name="T:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskRequest">
-            <summary>
-            A request to solve a captcha task.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskRequest.Task">
-            <summary>
-            The task to solve.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskRequest.SoftId">
-            <summary>
-            The soft ID to use. Default is 0.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskRequest.LanguagePool">
-            <summary>
-            The language pool to use. Default is "en".
-            </summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.AntiCaptcha.Requests.Request">
+        <member name="T:CaptchaSharp.Models.AntiCaptcha.Requests.AntiCaptchaRequest">
             <summary>
             Represents a request to the AntiCaptcha API.
             </summary>
         </member>
-        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.Request.ClientKey">
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.AntiCaptchaRequest.ClientKey">
             <summary>
             Your AntiCaptcha API key.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskAntiCaptchaRequest">
+            <summary>
+            A request to solve a captcha task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskAntiCaptchaRequest.Task">
+            <summary>
+            The task to solve.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskAntiCaptchaRequest.SoftId">
+            <summary>
+            The soft ID to use. Default is 0.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskAntiCaptchaRequest.LanguagePool">
+            <summary>
+            The language pool to use. Default is "en".
             </summary>
         </member>
         <member name="T:CaptchaSharp.Models.AntiCaptcha.Requests.Tasks.AntiCaptchaTaskProxyless">
@@ -548,6 +548,81 @@
             <summary>
             The user agent used to solve the challenge. It must be also used
             when submitting the response to the target website.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.EzCaptcha.Requests.CaptchaTaskEzCaptchaRequest">
+            <summary>
+            A request to solve a captcha task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Requests.CaptchaTaskEzCaptchaRequest.Task">
+            <summary>
+            The task to solve.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Requests.CaptchaTaskEzCaptchaRequest.SoftId">
+            <summary>
+            The soft ID to use. Default is 0.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Requests.CaptchaTaskEzCaptchaRequest.LanguagePool">
+            <summary>
+            The language pool to use. Default is "en".
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.EzCaptcha.Requests.EzCaptchaRequest">
+            <summary>
+            Represents a request to the EzCaptcha API.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Requests.EzCaptchaRequest.ClientKey">
+            <summary>
+            Your EzCaptcha API key.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.EzCaptcha.Requests.Tasks.EzCaptchaTaskProxyless">
+            <summary>
+            A task that does not require a proxy.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Requests.Tasks.EzCaptchaTaskProxyless.Type">
+            <summary>
+            The type of the task.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.EzCaptcha.Responses.EzCaptchaResponse">
+            <summary>
+            Represents the response from the EzCaptcha API.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Responses.EzCaptchaResponse.ErrorId">
+            <summary>
+            The ID of the error.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Responses.EzCaptchaResponse.ErrorCode">
+            <summary>
+            The error code.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Responses.EzCaptchaResponse.ErrorDescription">
+            <summary>
+            The error description.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Responses.EzCaptchaResponse.IsError">
+            <summary>
+            Whether the response is an error.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.EzCaptcha.Responses.TaskCreationEzCaptchaResponse">
+            <summary>
+            Represents the response from the EzCaptcha API when creating a task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.EzCaptcha.Responses.TaskCreationEzCaptchaResponse.TaskId">
+            <summary>
+            The ID of the created task.
             </summary>
         </member>
         <member name="T:CaptchaSharp.Models.GeeTestResponse">
@@ -707,7 +782,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.AntiCaptchaService">
             <summary>
-            The service provided by <c>https://anti-captcha.com/</c>
+            The service provided by https://anti-captcha.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.AntiCaptchaService.ApiKey">
@@ -769,7 +844,7 @@
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.CreateTaskRequest">
             <summary>
-            Creates a new <see cref="T:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskRequest"/>.
+            Creates a new <see cref="T:CaptchaSharp.Models.AntiCaptcha.Requests.CaptchaTaskAntiCaptchaRequest"/>.
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.AntiCaptchaService.Capabilities">
@@ -777,7 +852,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.AzCaptchaService">
             <summary>
-            The service provided by <c>https://azcaptcha.com/</c>
+            The service provided by https://azcaptcha.com/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.AzCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -789,7 +864,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.BestCaptchaSolverService">
             <summary>
-            The service offered by <c>https://bestcaptchasolver.com/</c>
+            The service offered by https://bestcaptchasolver.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.BestCaptchaSolverService.ApiKey">
@@ -839,7 +914,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.CapMonsterCloudService">
             <summary>
-            The service provided by <c>https://capmonster.cloud/</c>
+            The service provided by https://capmonster.cloud/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.CapMonsterCloudService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -871,7 +946,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.CapSolverService">
             <summary>
-            The service provided by <c>https://capsolver.com/</c>
+            The service provided by https://capsolver.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.CapSolverService.ApiKey">
@@ -929,7 +1004,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.CaptchaAiService">
             <summary>
-            The service provided by <c>https://captchaai.com/</c>
+            The service provided by https://captchaai.com/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.CaptchaAiService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -944,7 +1019,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.CaptchaCoderService">
             <summary>
-            The service provided by <c>https://captchacoder.com/</c>
+            The service provided by https://captchacoder.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.CaptchaCoderService.ApiKey">
@@ -1321,7 +1396,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.CaptchasIoService">
             <summary>
-            The service provided by <c>https://captchas.io/</c>
+            The service provided by https://captchas.io/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.CaptchasIoService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -1366,7 +1441,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.DeathByCaptchaService">
             <summary>
-            The service provided by <c>https://www.deathbycaptcha.com/</c>
+            The service provided by https://www.deathbycaptcha.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.DeathByCaptchaService.Username">
@@ -1426,9 +1501,53 @@
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="T:CaptchaSharp.Services.EzCaptchaService">
+            <summary>
+            The service offered by https://www.ez-captcha.com/
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.EzCaptchaService.ApiKey">
+            <summary>
+            Your secret api key.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.EzCaptchaService._softId">
+            <summary>
+            The ID of the software developer.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.EzCaptchaService"/>.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.GetResult``1(CaptchaSharp.Models.EzCaptcha.Responses.TaskCreationEzCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
+            <summary>
+            Gets the result of a task.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.ParseDataDomeSolution(System.String,Newtonsoft.Json.Linq.JToken)">
+            <summary>
+            Parses the solution of a DataDome captcha.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.CreateTaskRequest">
+            <summary>
+            Creates a new <see cref="T:CaptchaSharp.Models.EzCaptcha.Requests.CaptchaTaskEzCaptchaRequest"/>.
+            </summary>
+        </member>
         <member name="T:CaptchaSharp.Services.HumanCoderService">
             <summary>
-            The service provided by <c>https://humancoder.com/</c>
+            The service provided by https://humancoder.com/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.HumanCoderService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -1438,7 +1557,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.ImageTyperzService">
             <summary>
-            The service provided by <c>https://www.imagetyperz.com/</c>
+            The service provided by https://www.imagetyperz.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.ImageTyperzService.ApiKey">
@@ -1496,7 +1615,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.MetaBypassTechService">
             <summary>
-            The service provided by <c>https://metabypass.tech/</c>.
+            The service provided by https://metabypass.tech/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.MetaBypassTechService.ClientId">
@@ -1551,7 +1670,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.NextCaptchaService">
             <summary>
-            The service offered by <c>https://nextcaptcha.com/</c>
+            The service offered by https://nextcaptcha.com/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.NextCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -1563,7 +1682,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.NineKwService">
             <summary>
-            The service provided by <c>https://www.9kw.eu/</c>
+            The service provided by https://www.9kw.eu/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.NineKwService.ApiKey">
@@ -1618,7 +1737,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.NoCaptchaAiService">
             <summary>
-            The service provided by <c>https://nocaptchaai.com/</c>
+            The service provided by https://nocaptchaai.com/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.NoCaptchaAiService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -1630,7 +1749,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.NopechaService">
             <summary>
-            The service provided by <c>https://nopecha.com/</c>
+            The service provided by https://nopecha.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.NopechaService.ApiKey">
@@ -1668,7 +1787,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.RuCaptchaService">
             <summary>
-            The service provided by <c>https://rucaptcha.com/</c>
+            The service provided by https://rucaptcha.com/
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.RuCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -1680,7 +1799,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.TrueCaptchaService">
             <summary>
-            The service provided by <c>https://apitruecaptcha.org/</c>
+            The service provided by https://apitruecaptcha.org/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.TrueCaptchaService.UserId">
@@ -1712,7 +1831,7 @@
         </member>
         <member name="T:CaptchaSharp.Services.TwoCaptchaService">
             <summary>
-            The service provided by <c>https://2captcha.com/</c>
+            The service provided by https://2captcha.com/
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.TwoCaptchaService.ApiKey">

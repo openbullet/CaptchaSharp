@@ -5,7 +5,7 @@ using CaptchaSharp.Enums;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service offered by <c>https://nextcaptcha.com/</c>
+/// The service offered by https://nextcaptcha.com/
 /// </summary>
 public class NextCaptchaService : CustomAntiCaptchaService
 {

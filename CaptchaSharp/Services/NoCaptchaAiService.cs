@@ -5,7 +5,7 @@ using CaptchaSharp.Enums;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://nocaptchaai.com/</c>
+/// The service provided by https://nocaptchaai.com/
 /// </summary>
 public class NoCaptchaAiService : CustomTwoCaptchaService
 {

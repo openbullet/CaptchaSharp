@@ -4,7 +4,7 @@ using System.Net.Http;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://humancoder.com/</c>
+/// The service provided by https://humancoder.com/
 /// </summary>
 public class HumanCoderService : CaptchaCoderService
 {

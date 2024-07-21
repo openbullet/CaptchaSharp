@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://www.imagetyperz.com/</c>
+/// The service provided by https://www.imagetyperz.com/
 /// </summary>
 public class ImageTyperzService : CaptchaService
 {

@@ -11,7 +11,7 @@ using CaptchaSharp.Extensions;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://captchacoder.com/</c>
+/// The service provided by https://captchacoder.com/
 /// </summary>
 public class CaptchaCoderService : CaptchaService
 {

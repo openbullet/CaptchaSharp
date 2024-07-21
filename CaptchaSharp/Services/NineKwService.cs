@@ -12,7 +12,7 @@ using CaptchaSharp.Models.NineKw;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://www.9kw.eu/</c>
+/// The service provided by https://www.9kw.eu/
 /// </summary>
 public class NineKwService : CaptchaService
 {

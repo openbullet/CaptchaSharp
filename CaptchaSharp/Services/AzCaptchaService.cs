@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://azcaptcha.com/</c>
+/// The service provided by https://azcaptcha.com/
 /// </summary>
 public class AzCaptchaService : CustomTwoCaptchaService
 {

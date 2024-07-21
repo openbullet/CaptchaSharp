@@ -11,7 +11,7 @@ using CaptchaSharp.Models.MetaBypassTech;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://metabypass.tech/</c>.
+/// The service provided by https://metabypass.tech/
 /// </summary>
 public class MetaBypassTechService : CaptchaService
 {

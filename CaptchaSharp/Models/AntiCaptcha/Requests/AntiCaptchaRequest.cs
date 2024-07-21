@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a request to the AntiCaptcha API.
 /// </summary>
-public class Request
+public class AntiCaptchaRequest
 {
     /// <summary>
     /// Your AntiCaptcha API key.

@@ -4,7 +4,7 @@ using System.Net.Http;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://rucaptcha.com/</c>
+/// The service provided by https://rucaptcha.com/
 /// </summary>
 public class RuCaptchaService : CustomTwoCaptchaService
 {

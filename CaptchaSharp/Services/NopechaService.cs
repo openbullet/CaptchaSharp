@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://nopecha.com/</c>
+/// The service provided by https://nopecha.com/
 /// </summary>
 public class NopechaService : CaptchaService
 {

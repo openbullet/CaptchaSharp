@@ -18,7 +18,7 @@ using CaptchaSharp.Models.DeathByCaptcha.Responses;
 namespace CaptchaSharp.Services;
 
 /// <summary>
-/// The service provided by <c>https://www.deathbycaptcha.com/</c>
+/// The service provided by https://www.deathbycaptcha.com/
 /// </summary>
 public class DeathByCaptchaService : CaptchaService
 {
