@@ -79,7 +79,7 @@ public class TwoCaptchaService : CaptchaService
             return decimal.Parse(tcResponse.Request!, CultureInfo.InvariantCulture);
         }
 
-        if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal balance))
+        if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out var balance))
         {
             return balance;
         }
@@ -421,7 +421,6 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.CloudflareTurnstile,
                 cancellationToken).ConfigureAwait(false);
     }
-
     #endregion
 
     #region Getting the result
@@ -460,7 +459,7 @@ public class TwoCaptchaService : CaptchaService
             new StringPairCollection()
                 .Add("key", ApiKey)
                 .Add("action", "get")
-                .Add("id", task.Id.ToString())
+                .Add("id", task.Id)
                 .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
             cancellationToken).ConfigureAwait(false);
 
@@ -614,7 +613,7 @@ public class TwoCaptchaService : CaptchaService
     /// <summary>For non-json response.</summary>
     protected static string TakeSecondSlice(string str)
     {
-        return str.Split('|')[1];
+        return str.Split('|')[1].Replace("\r\n", "").Trim();
     }
     #endregion
 

@@ -71,14 +71,13 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
             }
         };
         
-        var response = await HttpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask", 
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
-            response.Deserialize<TaskCreationAntiCaptchaResponse>(), CaptchaType.DataDome,
+        return await GetResult<StringResponse>(response, CaptchaType.DataDome,
             cancellationToken).ConfigureAwait(false);
     }
 

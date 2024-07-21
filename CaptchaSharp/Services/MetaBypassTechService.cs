@@ -76,13 +76,12 @@ public class MetaBypassTechService : CaptchaService
     {
         await EnsureAccessTokenAsync().ConfigureAwait(false);
         
-        var json = await _httpClient.GetStringAsync(
+        var response = await _httpClient.GetJsonAsync<MbtResponse>(
                 "api/v1/me",
+                new StringPairCollection(),
                 cancellationToken)
             .ConfigureAwait(false);
         
-        var response = json.Deserialize<MbtResponse>();
-
         if (!response.Ok)
         {
             throw new BadAuthenticationException(
@@ -123,13 +122,11 @@ public class MetaBypassTechService : CaptchaService
             MaxLength = options?.MaxLength ?? 0
         };
         
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/captchaSolver",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
-        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {
@@ -166,13 +163,11 @@ public class MetaBypassTechService : CaptchaService
             Version = "2"
         };
         
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/bypassReCaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
-        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {
@@ -207,13 +202,11 @@ public class MetaBypassTechService : CaptchaService
             Version = "3"
         };
         
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/bypassReCaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
-        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {
@@ -241,13 +234,11 @@ public class MetaBypassTechService : CaptchaService
                 "The getCaptchaResult method is only supported for ReCaptchaV2 tasks");
         }
         
-        var json = await _httpClient.GetStringAsync(
+        var response = await _httpClient.GetJsonAsync<MbtResponse>(
             "api/v1/services/getCaptchaResult",
             new StringPairCollection()
                 .Add("recaptcha_id", task.Id),
             cancellationToken).ConfigureAwait(false);
-        
-        var response = json.Deserialize<MbtResponse>();
         
         if (!response.Ok)
         {

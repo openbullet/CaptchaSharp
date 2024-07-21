@@ -45,14 +45,12 @@ public class NopechaService : CaptchaService
     public override async Task<decimal> GetBalanceAsync(
         CancellationToken cancellationToken = default)
     {
-        var json = await _httpClient.GetStringAsync(
+        var response = await _httpClient.GetJsonAsync<NopechaStatusResponse>(
             "status",
             new StringPairCollection()
                 .Add("key", ApiKey),
             cancellationToken)
             .ConfigureAwait(false);
-
-        var response = json.Deserialize<NopechaStatusResponse>();
 
         if (!response.IsSuccess)
         {
@@ -75,14 +73,14 @@ public class NopechaService : CaptchaService
             ImageData = [base64]
         };
 
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
             "",
             payload,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
-                json, CaptchaType.ImageCaptcha, cancellationToken)
+                response, CaptchaType.ImageCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -104,14 +102,14 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
             "token",
             payload,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-                json, CaptchaType.ReCaptchaV2, cancellationToken)
+                response, CaptchaType.ReCaptchaV2, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -134,14 +132,14 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-                json, CaptchaType.ReCaptchaV3, cancellationToken)
+                response, CaptchaType.ReCaptchaV3, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -159,14 +157,14 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-                json, CaptchaType.HCaptcha, cancellationToken)
+                response, CaptchaType.HCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -197,25 +195,23 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var json = await _httpClient.PostJsonToStringAsync(
+        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
         return await GetResult<CloudflareTurnstileResponse>(
-                json, CaptchaType.CloudflareTurnstile, cancellationToken)
+                response, CaptchaType.CloudflareTurnstile, cancellationToken)
             .ConfigureAwait(false);
     }
     #endregion
     
     #region Getting the result
     private async Task<T> GetResult<T>(
-        string json, CaptchaType captchaType, CancellationToken cancellationToken)
+        NopechaDataResponse response, CaptchaType captchaType, CancellationToken cancellationToken)
         where T : CaptchaResponse
     {
-        var response = json.Deserialize<NopechaDataResponse>();
-        
         if (!response.IsSuccess)
         {
             throw new TaskCreationException(response.Message!);
@@ -230,15 +226,13 @@ public class NopechaService : CaptchaService
     protected override async Task<T?> CheckResult<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
-        var json = await _httpClient.GetStringAsync(
+        var response = await _httpClient.GetJsonAsync<NopechaDataResponse>(
             "",
             new StringPairCollection()
                 .Add("key", ApiKey)
                 .Add("id", task.Id),
             cancellationToken)
             .ConfigureAwait(false);
-
-        var response = json.Deserialize<NopechaDataResponse>();
 
         if (!response.IsSuccess)
         {

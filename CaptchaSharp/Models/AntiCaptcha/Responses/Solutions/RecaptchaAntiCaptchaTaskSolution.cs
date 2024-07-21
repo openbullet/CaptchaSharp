@@ -1,18 +1,15 @@
-﻿using CaptchaSharp.Models;
+﻿namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
 
-namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions
+internal class RecaptchaAntiCaptchaTaskSolution : AntiCaptchaTaskSolution
 {
-    internal class RecaptchaAntiCaptchaTaskSolution : AntiCaptchaTaskSolution
-    {
-        public string GRecaptchaResponse { get; set; }
+    public string? GRecaptchaResponse { get; set; }
 
-        public override CaptchaResponse ToCaptchaResponse(string id)
+    public override CaptchaResponse ToCaptchaResponse(string id)
+    {
+        return new StringResponse
         {
-            return new StringResponse
-            {
-                Id = id,
-                Response = GRecaptchaResponse
-            };
-        }
+            Id = id,
+            Response = GRecaptchaResponse!
+        };
     }
 }
