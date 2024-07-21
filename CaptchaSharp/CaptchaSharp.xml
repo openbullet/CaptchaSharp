@@ -36,7 +36,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -58,7 +58,7 @@
             
             /// <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -85,7 +85,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -111,7 +111,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -148,7 +148,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -172,7 +172,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -199,7 +199,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -225,7 +225,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.GeeTestResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and three solution parameters 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and three solution parameters 
             (Challenge, Validate and SecCode) that you will need to provide when you submit the form.
             </returns>
             
@@ -249,7 +249,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -274,7 +274,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext (a.k.a. a valid datadome session cookie).
             </returns>
             
@@ -301,7 +301,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="!:ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1138,6 +1138,21 @@
             <inheritdoc/>
         </member>
         <member name="P:CaptchaSharp.Services.CapSolverService.Capabilities">
+            <inheritdoc/>
+        </member>
+        <member name="T:CaptchaSharp.Services.CaptchaAiService">
+            <summary>
+            The service provided by <c>https://captchaai.com/</c>
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaAiService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.CaptchaAiService"/>.
+            </summary>
+            <param name="apiKey">The API key to use.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaAiService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.CaptchaCoderService">

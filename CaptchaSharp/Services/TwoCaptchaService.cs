@@ -557,12 +557,16 @@ public class TwoCaptchaService : CaptchaService
             var tcResponse = response.Deserialize<TwoCaptchaResponse>();
 
             if (tcResponse.IsErrorCode)
+            {
                 throw new TaskReportException(tcResponse.Request!);
+            }
         }
         else
         {
             if (IsErrorCode(response))
+            {
                 throw new TaskReportException(response);
+            }
         }
     }
     #endregion
