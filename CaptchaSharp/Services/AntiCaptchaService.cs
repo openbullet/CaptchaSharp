@@ -27,11 +27,6 @@ public class AntiCaptchaService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The default <see cref="System.Net.Http.HttpClient"/> used for requests.
-    /// </summary>
-    protected readonly HttpClient HttpClient;
-
-    /// <summary>
     /// The ID of the software developer.
     /// </summary>
     protected int? SoftId = 934;
@@ -41,10 +36,9 @@ public class AntiCaptchaService : CaptchaService
     /// </summary>
     /// <param name="apiKey">Your secret api key.</param>
     /// <param name="httpClient">The <see cref="System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public AntiCaptchaService(string apiKey, HttpClient? httpClient = null)
+    public AntiCaptchaService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        this.HttpClient = httpClient ?? new HttpClient();
         this.HttpClient.BaseAddress = new Uri("https://api.anti-captcha.com");
     }
 
@@ -110,7 +104,7 @@ public class AntiCaptchaService : CaptchaService
 
                 if (!string.IsNullOrEmpty(dataS))
                 {
-                    ((RecaptchaV2EnterpriseTask)content.Task).EnterprisePayload.Add("s", dataS);
+                    ((RecaptchaV2EnterpriseTask)content.Task).EnterprisePayload?.Add("s", dataS);
                 }
             }
             else
@@ -124,7 +118,7 @@ public class AntiCaptchaService : CaptchaService
 
                 if (!string.IsNullOrEmpty(dataS))
                 {
-                    ((RecaptchaV2EnterpriseTaskProxyless)content.Task).EnterprisePayload.Add("s", dataS);
+                    ((RecaptchaV2EnterpriseTaskProxyless)content.Task).EnterprisePayload?.Add("s", dataS);
                 }
             }
         }
@@ -165,10 +159,7 @@ public class AntiCaptchaService : CaptchaService
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f, bool enterprise = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        if (minScore != 0.3f && minScore != 0.7f && minScore != 0.9f)
-        {
-            throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
-        }
+        // Only min scores of 0.3, 0.7 and 0.9 are supported
 
         var content = CreateTaskRequest();
 

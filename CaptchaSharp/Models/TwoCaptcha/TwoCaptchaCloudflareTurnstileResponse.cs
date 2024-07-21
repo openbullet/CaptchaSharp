@@ -1,4 +1,3 @@
-using CaptchaSharp.Models;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.TwoCaptcha;
@@ -16,7 +15,7 @@ internal class TwoCaptchaCloudflareTurnstileResponse : TwoCaptchaResponse
         return new CloudflareTurnstileResponse()
         {
             Id = id,
-            Response = Request,
+            Response = Request!,
             UserAgent = UserAgent
         };
     }

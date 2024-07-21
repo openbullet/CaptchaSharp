@@ -2,8 +2,8 @@
 
 internal class RecaptchaV2Task : AntiCaptchaTask
 {
-    public string WebsiteURL { get; set; }
-    public string WebsiteKey { get; set; }
+    public string? WebsiteURL { get; set; }
+    public string? WebsiteKey { get; set; }
     public bool IsInvisible { get; set; }
 
     public RecaptchaV2Task()

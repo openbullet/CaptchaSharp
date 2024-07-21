@@ -2,13 +2,14 @@
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CaptchaSharp.Services;
 
 /// <summary>Abstract class for a generic captcha solving service.</summary>
-public abstract class CaptchaService
+public abstract class CaptchaService : IDisposable
 {
     /// <summary>The maximum allowed time for captcha completion.
     /// If this <see cref="TimeSpan"/> is exceeded, a <see cref="TimeoutException"/> is thrown.</summary>
@@ -20,6 +21,22 @@ public abstract class CaptchaService
     /// <summary>Returns a list of flags that denote the capabilities of the service in terms of additional 
     /// parameters to provide when solving text or image based captchas.</summary>
     public virtual CaptchaServiceCapabilities Capabilities => CaptchaServiceCapabilities.None;
+    
+    /// <summary>
+    /// The default <see cref="HttpClient"/> used for requests.
+    /// </summary>
+    protected readonly HttpClient HttpClient;
+    
+    private readonly bool _disposeHttpClient;
+
+    /// <summary>
+    /// Initializes a <see cref="CaptchaService"/> with a custom <see cref="HttpClient"/>.
+    /// </summary>
+    protected CaptchaService(HttpClient? httpClient = null)
+    {
+        HttpClient = httpClient ?? new HttpClient();
+        _disposeHttpClient = httpClient is null;
+    }
 
     /// <summary>Retrieves the remaining balance in USD as a <see cref="double"/>.</summary>
     /// <exception cref="BadAuthenticationException">Thrown when the provided credentials are invalid.</exception>
@@ -399,7 +416,7 @@ public abstract class CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
-        var start = DateTime.Now;
+        var start = DateTime.UtcNow;
         T? result;
 
         // Initial delay
@@ -412,7 +429,7 @@ public abstract class CaptchaService
             result = await CheckResult<T>(task, cancellationToken);
             await Task.Delay(PollingInterval, cancellationToken);
         }
-        while (!task.Completed && DateTime.Now - start < Timeout);
+        while (!task.Completed && DateTime.UtcNow - start < Timeout);
 
         if (!task.Completed || result is null)
         {
@@ -428,5 +445,23 @@ public abstract class CaptchaService
         where T : CaptchaResponse
     {
         throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    /// <summary>
+    /// Disposes the <see cref="HttpClient"/> if it was created by this instance.
+    /// </summary>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing && _disposeHttpClient)
+        {
+            HttpClient.Dispose();
+        }
     }
 }

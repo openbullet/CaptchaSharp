@@ -6,7 +6,7 @@ namespace CaptchaSharp.Models.CapMonsterCloud.Requests.Tasks;
 internal abstract class CustomTaskProxyless : AntiCaptchaTaskProxyless
 {
     [JsonProperty("class")]
-    public string Class { get; set; }
+    public string? Class { get; set; }
 
     protected CustomTaskProxyless()
     {

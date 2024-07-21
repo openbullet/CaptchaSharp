@@ -1,21 +1,19 @@
-﻿using CaptchaSharp.Models;
-
-namespace CaptchaSharp.Models.CapSolver.Responses.Solutions;
+﻿namespace CaptchaSharp.Models.CapSolver.Responses.Solutions;
 
 internal class GeeTestSolution : Solution
 {
-    public string Challenge { get; set; }
-    public string Validate { get; set; }
-    public string SecCode { get; set; }
+    public string? Challenge { get; set; }
+    public string? Validate { get; set; }
+    public string? SecCode { get; set; }
 
     public override CaptchaResponse ToCaptchaResponse(string id)
     {
-        return new GeeTestResponse()
+        return new GeeTestResponse
         {
             Id = id,
-            Challenge = Challenge,
-            Validate = Validate,
-            SecCode = SecCode
+            Challenge = Challenge!,
+            Validate = Validate!,
+            SecCode = SecCode!
         };
     }
 }

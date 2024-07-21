@@ -20,17 +20,12 @@ public class CaptchaCoderService : CaptchaService
     /// </summary>
     public string ApiKey { get; set; }
 
-    /// <summary>The default <see cref="System.Net.Http.HttpClient"/> used for requests.</summary>
-    protected readonly HttpClient HttpClient;
-
     /// <summary>
     /// Initializes a <see cref="CaptchaCoderService"/>.
     /// </summary>
-    public CaptchaCoderService(string apiKey, HttpClient? httpClient = null)
+    public CaptchaCoderService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        this.HttpClient = httpClient ?? new HttpClient();
-        
         this.HttpClient.BaseAddress = new Uri("http://api.captchacoder.com/");
             
         // Since this service replies directly with the solution to the task creation request

@@ -23,21 +23,14 @@ public class NopechaService : CaptchaService
     public string ApiKey { get; set; }
     
     /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
-    
-    /// <summary>
     /// Initializes a <see cref="NopechaService"/>.
     /// </summary>
     /// <param name="apiKey">The API key to use.</param>
-    /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public NopechaService(string apiKey, HttpClient? httpClient = null)
+    /// <param name="httpClient">The <see cref="System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+    public NopechaService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        _httpClient = httpClient ?? new HttpClient();
-        
-        _httpClient.BaseAddress = new Uri("https://api.nopecha.com");
+        HttpClient.BaseAddress = new Uri("https://api.nopecha.com");
     }
     
     #region Getting the Balance
@@ -45,7 +38,7 @@ public class NopechaService : CaptchaService
     public override async Task<decimal> GetBalanceAsync(
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<NopechaStatusResponse>(
+        var response = await HttpClient.GetJsonAsync<NopechaStatusResponse>(
             "status",
             new StringPairCollection()
                 .Add("key", ApiKey),
@@ -73,7 +66,7 @@ public class NopechaService : CaptchaService
             ImageData = [base64]
         };
 
-        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
+        var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
             "",
             payload,
             cancellationToken: cancellationToken)
@@ -102,7 +95,7 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
+        var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
             "token",
             payload,
             cancellationToken: cancellationToken)
@@ -132,7 +125,7 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
+        var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
@@ -157,7 +150,7 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
+        var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
@@ -195,7 +188,7 @@ public class NopechaService : CaptchaService
         
         payload.SetProxy(proxy, siteUrl);
         
-        var response = await _httpClient.PostJsonAsync<NopechaDataResponse>(
+        var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
@@ -226,7 +219,7 @@ public class NopechaService : CaptchaService
     protected override async Task<T?> CheckResult<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
-        var response = await _httpClient.GetJsonAsync<NopechaDataResponse>(
+        var response = await HttpClient.GetJsonAsync<NopechaDataResponse>(
             "",
             new StringPairCollection()
                 .Add("key", ApiKey)

@@ -32,8 +32,8 @@ public class CapMonsterService : CustomTwoCaptchaService
             base64 = "base64," + base64;
         }   
 
-        var response = await HttpClient.PostToStringAsync
-            ("in.php",
+        var response = await HttpClient.PostToStringAsync(
+                "in.php",
                 new StringPairCollection()
                     .Add("key", ApiKey)
                     .Add("method", "base64")

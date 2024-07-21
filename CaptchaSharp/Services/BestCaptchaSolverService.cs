@@ -21,11 +21,6 @@ public class BestCaptchaSolverService : CaptchaService
     /// </summary>
     public string ApiKey { get; set; }
 
-    /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
-
     private const string _affiliateId = "5e95fff9fe5f8247ff965ac3";
     
     /// <summary>
@@ -33,18 +28,17 @@ public class BestCaptchaSolverService : CaptchaService
     /// </summary>
     /// <param name="apiKey">The API key to use.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public BestCaptchaSolverService(string apiKey, HttpClient? httpClient = null)
+    public BestCaptchaSolverService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = new Uri("https://bcsapi.xyz/api/");
+        HttpClient.BaseAddress = new Uri("https://bcsapi.xyz/api/");
     }
     
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<BcsBalanceResponse>(
+        var response = await HttpClient.GetJsonAsync<BcsBalanceResponse>(
             "user/balance",
             new StringPairCollection()
                 .Add("access_token", ApiKey),
@@ -84,7 +78,7 @@ public class BestCaptchaSolverService : CaptchaService
             MaxLength = options?.MaxLength
         };
 
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/image",
                 payload,
                 cancellationToken: cancellationToken)
@@ -119,7 +113,7 @@ public class BestCaptchaSolverService : CaptchaService
         
         payload.SetProxy(proxy);
         
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/recaptcha",
                 payload,
                 cancellationToken: cancellationToken)
@@ -148,7 +142,7 @@ public class BestCaptchaSolverService : CaptchaService
         
         payload.SetProxy(proxy);
         
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/recaptcha",
                 payload,
                 cancellationToken: cancellationToken)
@@ -175,7 +169,7 @@ public class BestCaptchaSolverService : CaptchaService
         
         payload.SetProxy(proxy);
         
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/funcaptcha",
                 payload,
                 cancellationToken: cancellationToken)
@@ -201,7 +195,7 @@ public class BestCaptchaSolverService : CaptchaService
         
         payload.SetProxy(proxy);
         
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/hcaptcha",
                 payload,
                 cancellationToken: cancellationToken)
@@ -229,7 +223,7 @@ public class BestCaptchaSolverService : CaptchaService
         
         payload.SetProxy(proxy);
         
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/geetest",
                 payload,
                 cancellationToken: cancellationToken)
@@ -254,7 +248,7 @@ public class BestCaptchaSolverService : CaptchaService
         
         payload.SetProxy(proxy);
         
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/capy",
                 payload,
                 cancellationToken: cancellationToken)
@@ -282,7 +276,7 @@ public class BestCaptchaSolverService : CaptchaService
         
         payload.SetProxy(proxy);
         
-        var response = await _httpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/turnstile",
                 payload,
                 cancellationToken: cancellationToken)
@@ -315,7 +309,7 @@ public class BestCaptchaSolverService : CaptchaService
     protected override async Task<T?> CheckResult<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
-        var json = await _httpClient.GetStringAsync(
+        var json = await HttpClient.GetStringAsync(
             $"captcha/{task.Id}",
             new StringPairCollection()
                 .Add("access_token", ApiKey),
@@ -424,7 +418,7 @@ public class BestCaptchaSolverService : CaptchaService
                 "BestCaptchaSolver does not support reporting correct solutions.");
         }
         
-        var response = await _httpClient.PostJsonAsync<BcsResponse>(
+        var response = await HttpClient.PostJsonAsync<BcsResponse>(
                 $"captcha/bad/{id}",
                 new BcsRequest
                 {

@@ -22,31 +22,25 @@ public class NineKwService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
-
-    /// <summary>
     /// Initializes a <see cref="NineKwService"/>.
     /// </summary>
     /// <param name="apiKey">Your secret api key.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public NineKwService(string apiKey, HttpClient? httpClient = null)
+    public NineKwService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = new Uri("https://www.9kw.eu/");
+        HttpClient.BaseAddress = new Uri("https://www.9kw.eu/");
 
         // Since this service replies directly with the solution to the task creation request (for image captchas)
         // we need to set a high timeout here, or it will not finish in time
-        _httpClient.Timeout = Timeout;
+        HttpClient.Timeout = Timeout;
     }
 
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<NineKwBalanceResponse>(
+        var response = await HttpClient.GetJsonAsync<NineKwBalanceResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchaguthaben")
@@ -69,7 +63,7 @@ public class NineKwService : CaptchaService
         string text, TextCaptchaOptions? options = default, 
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostMultipartAsync<NineKwSubmitResponse>(
+        var response = await HttpClient.PostMultipartAsync<NineKwSubmitResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchaupload")
@@ -89,7 +83,7 @@ public class NineKwService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostMultipartAsync<NineKwSubmitResponse>(
+        var response = await HttpClient.PostMultipartAsync<NineKwSubmitResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchaupload")
@@ -115,7 +109,7 @@ public class NineKwService : CaptchaService
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<NineKwSubmitResponse>(
+        var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchaupload")
@@ -137,7 +131,7 @@ public class NineKwService : CaptchaService
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
         bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<NineKwSubmitResponse>(
+        var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchaupload")
@@ -159,7 +153,7 @@ public class NineKwService : CaptchaService
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<NineKwSubmitResponse>(
+        var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchaupload")
@@ -181,7 +175,7 @@ public class NineKwService : CaptchaService
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<NineKwSubmitResponse>(
+        var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchaupload")
@@ -219,7 +213,7 @@ public class NineKwService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var response = await _httpClient.GetJsonAsync<NineKwCheckResponse>(
+        var response = await HttpClient.GetJsonAsync<NineKwCheckResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchacorrectdata")
@@ -261,7 +255,7 @@ public class NineKwService : CaptchaService
     public override async Task ReportSolution(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetJsonAsync<NineKwResponse>(
+        var response = await HttpClient.GetJsonAsync<NineKwResponse>(
             "index.cgi",
             GetAuthPair()
                 .Add("action", "usercaptchacorrectback")

@@ -34,11 +34,6 @@ public class MetaBypassTechService : CaptchaService
     /// The password.
     /// </summary>
     public string Password { get; set; }
-
-    /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
     
     /// <summary>
     /// The current access token.
@@ -54,19 +49,18 @@ public class MetaBypassTechService : CaptchaService
     /// <param name="password">The password.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
     public MetaBypassTechService(string clientId, string clientSecret,
-        string username, string password, HttpClient? httpClient = null)
+        string username, string password, HttpClient? httpClient = null) : base(httpClient)
     {
         ClientId = clientId;
         ClientSecret = clientSecret;
         Username = username;
         Password = password;
         
-        _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = new Uri("https://app.metabypass.tech/CaptchaSolver/");
+        HttpClient.BaseAddress = new Uri("https://app.metabypass.tech/CaptchaSolver/");
 
         // Since some captchas are returned directly in the response body,
         // we need to set a high timeout to account for those requests
-        _httpClient.Timeout = Timeout;
+        HttpClient.Timeout = Timeout;
     }
     
     #region Getting the Balance
@@ -76,7 +70,7 @@ public class MetaBypassTechService : CaptchaService
     {
         await EnsureAccessTokenAsync().ConfigureAwait(false);
         
-        var response = await _httpClient.GetJsonAsync<MbtResponse>(
+        var response = await HttpClient.GetJsonAsync<MbtResponse>(
                 "api/v1/me",
                 new StringPairCollection(),
                 cancellationToken)
@@ -122,7 +116,7 @@ public class MetaBypassTechService : CaptchaService
             MaxLength = options?.MaxLength ?? 0
         };
         
-        var response = await _httpClient.PostJsonAsync<MbtResponse>(
+        var response = await HttpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/captchaSolver",
                 payload,
                 cancellationToken: cancellationToken)
@@ -163,7 +157,7 @@ public class MetaBypassTechService : CaptchaService
             Version = "2"
         };
         
-        var response = await _httpClient.PostJsonAsync<MbtResponse>(
+        var response = await HttpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/bypassReCaptcha",
                 payload,
                 cancellationToken: cancellationToken)
@@ -202,7 +196,7 @@ public class MetaBypassTechService : CaptchaService
             Version = "3"
         };
         
-        var response = await _httpClient.PostJsonAsync<MbtResponse>(
+        var response = await HttpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/bypassReCaptcha",
                 payload,
                 cancellationToken: cancellationToken)
@@ -234,7 +228,7 @@ public class MetaBypassTechService : CaptchaService
                 "The getCaptchaResult method is only supported for ReCaptchaV2 tasks");
         }
         
-        var response = await _httpClient.GetJsonAsync<MbtResponse>(
+        var response = await HttpClient.GetJsonAsync<MbtResponse>(
             "api/v1/services/getCaptchaResult",
             new StringPairCollection()
                 .Add("recaptcha_id", task.Id),
@@ -285,7 +279,7 @@ public class MetaBypassTechService : CaptchaService
             Password = Password
         };
         
-        using var response = await _httpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
                 "oauth/token",
                 payload,
                 cancellationToken: default)
@@ -302,7 +296,7 @@ public class MetaBypassTechService : CaptchaService
         }
         
         _accessToken = json.Deserialize<MbtAccessTokenResponse>();
-        _httpClient.DefaultRequestHeaders.Add("Authorization",
+        HttpClient.DefaultRequestHeaders.Add("Authorization",
             $"{_accessToken.TokenType} {_accessToken.AccessToken}");
     }
 
@@ -316,7 +310,7 @@ public class MetaBypassTechService : CaptchaService
             RefreshToken = tokenResponse.RefreshToken
         };
         
-        using var response = await _httpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
                 "oauth/token",
                 payload,
                 cancellationToken: default)
@@ -333,7 +327,7 @@ public class MetaBypassTechService : CaptchaService
         }
         
         _accessToken = json.Deserialize<MbtAccessTokenResponse>();
-        _httpClient.DefaultRequestHeaders.Add("Authorization",
+        HttpClient.DefaultRequestHeaders.Add("Authorization",
             $"{_accessToken.TokenType} {_accessToken.AccessToken}");
     }
     #endregion

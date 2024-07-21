@@ -24,11 +24,6 @@ public class ImageTyperzService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
-
-    /// <summary>
     /// The ID of the software developer.
     /// </summary>
     private const int _affiliateId = 109;
@@ -38,23 +33,21 @@ public class ImageTyperzService : CaptchaService
     /// </summary>
     /// <param name="apiKey">Your secret api key.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public ImageTyperzService(string apiKey, HttpClient? httpClient = null)
+    public ImageTyperzService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        this._httpClient = httpClient ?? new HttpClient();
-        
-        this._httpClient.BaseAddress = new Uri("http://captchatypers.com");
+        HttpClient.BaseAddress = new Uri("http://captchatypers.com");
 
         // Since this service replies directly with the solution to the task creation request (for image captchas)
         // we need to set a high timeout here, or it will not finish in time
-        this._httpClient.Timeout = Timeout;
+        HttpClient.Timeout = Timeout;
     }
 
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             "Forms/RequestBalanceToken.ashx",
             GetAuthPair()
                 .Add("action", "REQUESTBALANCE"),
@@ -75,7 +68,7 @@ public class ImageTyperzService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync(
         string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             "Forms/UploadFileAndGetTextNEWToken.ashx",
             GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
@@ -98,7 +91,7 @@ public class ImageTyperzService : CaptchaService
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
             GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
@@ -119,7 +112,7 @@ public class ImageTyperzService : CaptchaService
     (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
         bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             enterprise ? "captchaapi/UploadRecaptchaEnt.ashx" : "captchaapi/UploadRecaptchaToken.ashx",
             GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
@@ -142,7 +135,7 @@ public class ImageTyperzService : CaptchaService
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             "captchaapi/UploadFunCaptcha.ashx",
             GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
@@ -163,7 +156,7 @@ public class ImageTyperzService : CaptchaService
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             "captchaapi/UploadHCaptchaUser.ashx",
             GetAuthAffiliatePair()
                 .Add("captchatype", 11)
@@ -183,7 +176,7 @@ public class ImageTyperzService : CaptchaService
         string gt, string challenge, string siteUrl, string? apiServer = null,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync(
+        var response = await HttpClient.GetStringAsync(
             "captchaapi/UploadGeeTestToken.ashx",
             GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
@@ -204,7 +197,7 @@ public class ImageTyperzService : CaptchaService
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             "captchaapi/UploadCapyCaptchaUser.ashx",
             GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
@@ -224,7 +217,7 @@ public class ImageTyperzService : CaptchaService
         string siteKey, string siteUrl, string? action = null, string? data = null,
         string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             "captchaapi/Uploadturnstile.ashx",
             GetAuthAffiliatePair()
                 .Add("action", "UPLOADCAPTCHA")
@@ -269,7 +262,7 @@ public class ImageTyperzService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var responseJson = await _httpClient.GetStringAsync(
+        var responseJson = await HttpClient.GetStringAsync(
             "captchaapi/GetCaptchaResponseJson.ashx",
             GetAuthPair()
                 .Add("action", "GETTEXT")
@@ -318,8 +311,8 @@ public class ImageTyperzService : CaptchaService
         }
         
         // TODO: Handle Capy response
-        
-        else if (typeof(T) == typeof(CloudflareTurnstileResponse))
+
+        if (typeof(T) == typeof(CloudflareTurnstileResponse))
         {
             if (task.Type is not CaptchaType.CloudflareTurnstile)
             {
@@ -351,7 +344,7 @@ public class ImageTyperzService : CaptchaService
     public override async Task ReportSolution(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostToStringAsync(
+        var response = await HttpClient.PostToStringAsync(
             "Forms/SetBadImageToken.ashx",
             GetAuthPair()
                 .Add("imageid", id)

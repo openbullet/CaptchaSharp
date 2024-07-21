@@ -2,8 +2,8 @@
 
 internal class HCaptchaTask : CapSolverTask
 {
-    public string WebsiteKey { get; set; }
-    public string WebsiteURL { get; set; }
+    public string? WebsiteKey { get; set; }
+    public string? WebsiteURL { get; set; }
 
     public HCaptchaTask()
     {

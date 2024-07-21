@@ -15,12 +15,12 @@ internal class CapySolution
 
     public CapyResponse ToCapyResponse(string id)
     {
-        return new CapyResponse()
+        return new CapyResponse
         {
             Id = id,
-            CaptchaKey = CaptchaKey,
-            ChallengeKey = ChallengeKey,
-            Answer = Answer
+            CaptchaKey = CaptchaKey!,
+            ChallengeKey = ChallengeKey!,
+            Answer = Answer!
         };
     }
 }

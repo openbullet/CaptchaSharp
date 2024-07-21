@@ -26,11 +26,6 @@ public class CapSolverService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
-
-    /// <summary>
     /// The ID of the app.
     /// </summary>
     private const string _appId = "FE552FC0-8A06-4B44-BD30-5B9DDA2A4194";
@@ -40,18 +35,17 @@ public class CapSolverService : CaptchaService
     /// </summary>
     /// <param name="apiKey">Your secret api key.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public CapSolverService(string apiKey, HttpClient? httpClient = null)
+    public CapSolverService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        this._httpClient = httpClient ?? new HttpClient();
-        this._httpClient.BaseAddress = new Uri("https://api.capsolver.com");
+        HttpClient.BaseAddress = new Uri("https://api.capsolver.com");
     }
 
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostJsonAsync<GetBalanceResponse>(
+        var response = await HttpClient.PostJsonAsync<GetBalanceResponse>(
                 "getBalance",
                 new Request { ClientKey = ApiKey },
                 cancellationToken: cancellationToken)
@@ -72,7 +66,7 @@ public class CapSolverService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 new CaptchaTaskRequest
                 {
@@ -158,7 +152,7 @@ public class CapSolverService : CaptchaService
             }
         }
 
-        var response = await _httpClient.PostJsonAsync<TaskCreationResponse>(
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -198,7 +192,7 @@ public class CapSolverService : CaptchaService
             }.SetProxy(proxy);
         }
 
-        var response = await _httpClient.PostJsonAsync<TaskCreationResponse>(
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -239,7 +233,7 @@ public class CapSolverService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostJsonAsync<TaskCreationResponse>(
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -273,7 +267,7 @@ public class CapSolverService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostJsonAsync<TaskCreationResponse>(
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -312,7 +306,7 @@ public class CapSolverService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostJsonAsync<TaskCreationResponse>(
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -340,7 +334,7 @@ public class CapSolverService : CaptchaService
             CaptchaURL = captchaUrl
         }.SetProxy(proxy);
 
-        var response = await _httpClient.PostJsonAsync<TaskCreationResponse>(
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
@@ -368,7 +362,7 @@ public class CapSolverService : CaptchaService
             }
         };
         
-        var response = await _httpClient.PostJsonAsync<TaskCreationResponse>(
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
             "createTask",
             content,
             cancellationToken: cancellationToken)
@@ -401,7 +395,7 @@ public class CapSolverService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
             "getTaskResult",
             new GetTaskResultRequest { ClientKey = ApiKey, TaskId = task.Id },
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -448,7 +442,7 @@ public class CapSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task ReportSolution(string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostJsonAsync<CaptchaTaskFeedbackResponse>(
+        var response = await HttpClient.PostJsonAsync<CaptchaTaskFeedbackResponse>(
                 "feedbackTask",
                 new CaptchaTaskFeedbackRequest
                 {

@@ -24,11 +24,6 @@ public class TwoCaptchaService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    protected readonly HttpClient HttpClient;
-
-    /// <summary>
     /// Set it to false if the service does not support json responses.
     /// </summary>
     public bool UseJsonFlag { get; init; } = true;
@@ -46,12 +41,9 @@ public class TwoCaptchaService : CaptchaService
     /// Initializes a <see cref="TwoCaptchaService"/>.</summary>
     /// <param name="apiKey">The API key to use.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public TwoCaptchaService(string apiKey, HttpClient? httpClient = null)
+    public TwoCaptchaService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        HttpClient = httpClient ?? new HttpClient();
-        
-        // TODO: Use https instead of http if possible
         HttpClient.BaseAddress = new Uri("http://2captcha.com");
     }
 
@@ -485,7 +477,7 @@ public class TwoCaptchaService : CaptchaService
                 if (solution.Type == JTokenType.Object)
                 {
                     return response.Deserialize<TwoCaptchaGeeTestResponse>()
-                        .Request.ToGeeTestResponse(task.Id) as T;
+                        .Request?.ToGeeTestResponse(task.Id) as T;
                 }
             }
             else if (task.Type == CaptchaType.Capy)

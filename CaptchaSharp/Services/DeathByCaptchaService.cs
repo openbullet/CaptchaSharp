@@ -32,11 +32,6 @@ public class DeathByCaptchaService : CaptchaService
     /// </summary>
     public string Password { get; set; }
 
-    /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
-
     /*
      * Sometimes the DBC API randomly replies with query strings even when json is requested, so
      * we will avoid using the Accept: application/json header.
@@ -48,20 +43,18 @@ public class DeathByCaptchaService : CaptchaService
     /// <param name="username">Your DeathByCaptcha account name.</param>
     /// <param name="password">Your DeathByCaptcha account password.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> used for requests. If null, a default one will be created.</param>
-    public DeathByCaptchaService(string username, string password, HttpClient? httpClient = null)
+    public DeathByCaptchaService(string username, string password, HttpClient? httpClient = null) : base(httpClient)
     {
         Username = username;
         Password = password;
-        this._httpClient = httpClient ?? new HttpClient();
-        
-        this._httpClient.BaseAddress = new Uri("http://api.dbcapi.me/api/");
+        HttpClient.BaseAddress = new Uri("http://api.dbcapi.me/api/");
     }
 
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "user",
                 GetAuthPair(),
                 cancellationToken: cancellationToken)
@@ -91,7 +84,7 @@ public class DeathByCaptchaService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync(
         string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
             "captcha",
             GetAuthPair()
                 .Add("captchafile", $"base64:{base64}")
@@ -126,7 +119,7 @@ public class DeathByCaptchaService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 4)
@@ -167,7 +160,7 @@ public class DeathByCaptchaService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 5)
@@ -204,7 +197,7 @@ public class DeathByCaptchaService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 6)
@@ -241,7 +234,7 @@ public class DeathByCaptchaService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 7)
@@ -284,7 +277,7 @@ public class DeathByCaptchaService : CaptchaService
             };
         }
 
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 10)
@@ -323,7 +316,7 @@ public class DeathByCaptchaService : CaptchaService
             };
         }
         
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 8)
@@ -360,7 +353,7 @@ public class DeathByCaptchaService : CaptchaService
             };
         }
         
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 15)
@@ -394,7 +387,7 @@ public class DeathByCaptchaService : CaptchaService
             CaptchaUrl = captchaUrl
         }.SetProxy(proxy);
         
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 21)
@@ -425,7 +418,7 @@ public class DeathByCaptchaService : CaptchaService
             Action = action,
         }.SetProxy(proxy);
         
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 12)
@@ -466,7 +459,7 @@ public class DeathByCaptchaService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var response = await _httpClient.GetAsync($"captcha/{task.Id}", cancellationToken);
+        var response = await HttpClient.GetAsync($"captcha/{task.Id}", cancellationToken);
         var query = HttpUtility.ParseQueryString(await DecodeIsoResponse(response));
 
         var text = query["text"];
@@ -535,7 +528,7 @@ public class DeathByCaptchaService : CaptchaService
             throw new NotSupportedException("This service doesn't allow reporting of good solutions");
         }
 
-        var response = await _httpClient.PostAsync(
+        var response = await HttpClient.PostAsync(
                 $"captcha/{id}/report",
                 GetAuthPair(),
                 cancellationToken: cancellationToken)

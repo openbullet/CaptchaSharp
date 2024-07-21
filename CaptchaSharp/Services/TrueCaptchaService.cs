@@ -27,30 +27,24 @@ public class TrueCaptchaService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The default <see cref="HttpClient"/> used for requests.
-    /// </summary>
-    private readonly HttpClient _httpClient;
-
-    /// <summary>
     /// Initializes a <see cref="TrueCaptchaService"/>.
     /// </summary>
     /// <param name="userId">Your user id.</param>
     /// <param name="apiKey">Your secret api key.</param>
-    /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public TrueCaptchaService(string userId, string apiKey, HttpClient? httpClient = null)
+    /// <param name="httpClient">The <see cref="System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+    public TrueCaptchaService(string userId, string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         UserId = userId;
         ApiKey = apiKey;
 
-        this._httpClient = httpClient ?? new HttpClient();
-        this._httpClient.BaseAddress = new Uri("https://api.apitruecaptcha.org/");
-        this._httpClient.Timeout = Timeout;
+        this.HttpClient.BaseAddress = new Uri("https://api.apitruecaptcha.org/");
+        this.HttpClient.Timeout = Timeout;
     }
 
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetStringAsync(
+        var response = await HttpClient.GetStringAsync(
             "one/getbalance",
             new StringPairCollection()
                 .Add("username", UserId)
@@ -77,7 +71,7 @@ public class TrueCaptchaService : CaptchaService
             { "data", base64 }
         };
 
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
             "one/gettext",
             content,
             camelizeKeys: false,
@@ -108,7 +102,7 @@ public class TrueCaptchaService : CaptchaService
             { "request_id", id }
         };
 
-        var response = await _httpClient.PostJsonToStringAsync(
+        var response = await HttpClient.PostJsonToStringAsync(
                 "one/report_error",
                 content,
                 camelizeKeys: false,

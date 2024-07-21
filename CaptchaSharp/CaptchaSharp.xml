@@ -460,6 +460,41 @@
             The type of the task.
             </summary>
         </member>
+        <member name="T:CaptchaSharp.Models.AntiCaptcha.Responses.AntiCaptchaResponse">
+            <summary>
+            Represents the response from the AntiCaptcha API.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Responses.AntiCaptchaResponse.ErrorId">
+            <summary>
+            The ID of the error.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Responses.AntiCaptchaResponse.ErrorCode">
+            <summary>
+            The error code.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Responses.AntiCaptchaResponse.ErrorDescription">
+            <summary>
+            The error description.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Responses.AntiCaptchaResponse.IsError">
+            <summary>
+            Whether the response is an error.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.AntiCaptcha.Responses.TaskCreationAntiCaptchaResponse">
+            <summary>
+            Represents the response from the AntiCaptcha API when creating a task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AntiCaptcha.Responses.TaskCreationAntiCaptchaResponse.TaskId">
+            <summary>
+            The ID of the created task.
+            </summary>
+        </member>
         <member name="T:CaptchaSharp.Models.CaptchaResponse">
             <summary>A generic captcha response.</summary>
         </member>
@@ -680,11 +715,6 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.AntiCaptchaService.HttpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
-            </summary>
-        </member>
         <member name="F:CaptchaSharp.Services.AntiCaptchaService.SoftId">
             <summary>
             The ID of the software developer.
@@ -765,11 +795,6 @@
         <member name="P:CaptchaSharp.Services.BestCaptchaSolverService.ApiKey">
             <summary>
             Your secret api key.
-            </summary>
-        </member>
-        <member name="F:CaptchaSharp.Services.BestCaptchaSolverService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -854,11 +879,6 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.CapSolverService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
-            </summary>
-        </member>
         <member name="F:CaptchaSharp.Services.CapSolverService._appId">
             <summary>
             The ID of the app.
@@ -932,9 +952,6 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.CaptchaCoderService.HttpClient">
-            <summary>The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.</summary>
-        </member>
         <member name="M:CaptchaSharp.Services.CaptchaCoderService.#ctor(System.String,System.Net.Http.HttpClient)">
             <summary>
             Initializes a <see cref="T:CaptchaSharp.Services.CaptchaCoderService"/>.
@@ -968,6 +985,16 @@
         <member name="P:CaptchaSharp.Services.CaptchaService.Capabilities">
             <summary>Returns a list of flags that denote the capabilities of the service in terms of additional 
             parameters to provide when solving text or image based captchas.</summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.CaptchaService.HttpClient">
+            <summary>
+            The default <see cref="F:CaptchaSharp.Services.CaptchaService.HttpClient"/> used for requests.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.#ctor(System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.CaptchaService"/> with a custom <see cref="F:CaptchaSharp.Services.CaptchaService.HttpClient"/>.
+            </summary>
         </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <summary>Retrieves the remaining balance in USD as a <see cref="T:System.Double"/>.</summary>
@@ -1284,6 +1311,14 @@
         <member name="M:CaptchaSharp.Services.CaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <summary></summary>
         </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.Dispose(System.Boolean)">
+            <summary>
+            Disposes the <see cref="F:CaptchaSharp.Services.CaptchaService.HttpClient"/> if it was created by this instance.
+            </summary>
+        </member>
         <member name="T:CaptchaSharp.Services.CaptchasIoService">
             <summary>
             The service provided by <c>https://captchas.io/</c>
@@ -1342,11 +1377,6 @@
         <member name="P:CaptchaSharp.Services.DeathByCaptchaService.Password">
             <summary>
             Your DeathByCaptcha account password.
-            </summary>
-        </member>
-        <member name="F:CaptchaSharp.Services.DeathByCaptchaService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.#ctor(System.String,System.String,System.Net.Http.HttpClient)">
@@ -1414,11 +1444,6 @@
         <member name="P:CaptchaSharp.Services.ImageTyperzService.ApiKey">
             <summary>
             Your secret api key.
-            </summary>
-        </member>
-        <member name="F:CaptchaSharp.Services.ImageTyperzService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
             </summary>
         </member>
         <member name="F:CaptchaSharp.Services.ImageTyperzService._affiliateId">
@@ -1494,11 +1519,6 @@
             The password.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.MetaBypassTechService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
-            </summary>
-        </member>
         <member name="F:CaptchaSharp.Services.MetaBypassTechService._accessToken">
             <summary>
             The current access token.
@@ -1549,11 +1569,6 @@
         <member name="P:CaptchaSharp.Services.NineKwService.ApiKey">
             <summary>
             Your secret api key.
-            </summary>
-        </member>
-        <member name="F:CaptchaSharp.Services.NineKwService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.NineKwService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -1623,11 +1638,6 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.NopechaService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
-            </summary>
-        </member>
         <member name="M:CaptchaSharp.Services.NopechaService.#ctor(System.String,System.Net.Http.HttpClient)">
             <summary>
             Initializes a <see cref="T:CaptchaSharp.Services.NopechaService"/>.
@@ -1683,11 +1693,6 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.TrueCaptchaService._httpClient">
-            <summary>
-            The default <see cref="T:System.Net.Http.HttpClient"/> used for requests.
-            </summary>
-        </member>
         <member name="M:CaptchaSharp.Services.TrueCaptchaService.#ctor(System.String,System.String,System.Net.Http.HttpClient)">
             <summary>
             Initializes a <see cref="T:CaptchaSharp.Services.TrueCaptchaService"/>.
@@ -1715,11 +1720,6 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.TwoCaptchaService.HttpClient">
-            <summary>
-            The default <see cref="F:CaptchaSharp.Services.TwoCaptchaService.HttpClient"/> used for requests.
-            </summary>
-        </member>
         <member name="P:CaptchaSharp.Services.TwoCaptchaService.UseJsonFlag">
             <summary>
             Set it to false if the service does not support json responses.
@@ -1738,7 +1738,7 @@
             <summary>
             Initializes a <see cref="T:CaptchaSharp.Services.TwoCaptchaService"/>.</summary>
             <param name="apiKey">The API key to use.</param>
-            <param name="httpClient">The <see cref="F:CaptchaSharp.Services.TwoCaptchaService.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
