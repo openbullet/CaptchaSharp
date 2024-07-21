@@ -1,13 +1,12 @@
-﻿namespace CaptchaSharp.Models.CapSolver.Requests.Tasks.Proxied
-{
-    internal class DataDomeTask : CapSolverTask
-    {
-        public string WebsiteURL { get; set; }
-        public string CaptchaURL { get; set; }
+﻿namespace CaptchaSharp.Models.CapSolver.Requests.Tasks.Proxied;
 
-        public DataDomeTask()
-        {
-            Type = "DatadomeSliderTask";
-        }
+internal class DataDomeTask : CapSolverTask
+{
+    public string WebsiteURL { get; set; }
+    public string CaptchaURL { get; set; }
+
+    public DataDomeTask()
+    {
+        Type = "DatadomeSliderTask";
     }
 }
