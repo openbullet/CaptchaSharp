@@ -1561,6 +1561,53 @@
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="T:CaptchaSharp.Services.EndCaptchaService">
+            <summary>
+            The service provided by https://endcaptcha.com/
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.EndCaptchaService.Username">
+            <summary>
+            Your username.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.EndCaptchaService.Password">
+            <summary>
+            Your password.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.#ctor(System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.EndCaptchaService"/>.
+            </summary>
+            <param name="username">The username to use.</param>
+            <param name="password">The password to use.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveHCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
         <member name="T:CaptchaSharp.Services.EzCaptchaService">
             <summary>
             The service offered by https://www.ez-captcha.com/
