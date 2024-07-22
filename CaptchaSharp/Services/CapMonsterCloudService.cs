@@ -50,6 +50,12 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
                 nameof(proxy), "DataDome requires cookies");
         }
         
+        if (string.IsNullOrEmpty(proxy.UserAgent))
+        {
+            throw new ArgumentNullException(
+                nameof(proxy), "DataDome requires a user agent");
+        }
+        
         // The cookie must contain datadome=... and nothing else
         var datadomeCookie = Array.Find(proxy.Cookies, c => c.Name == "datadome").Value;
         
@@ -64,6 +70,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
         content.Task = new DataDomeTaskProxyless
         {
             WebsiteURL = siteUrl,
+            UserAgent = proxy.UserAgent,
             Metadata = new DataDomeMetadata
             {
                 CaptchaUrl = captchaUrl,

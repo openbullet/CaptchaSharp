@@ -10,6 +10,9 @@ internal class DataDomeTaskProxyless : CustomTaskProxyless
     
     [JsonProperty("metadata")]
     public required DataDomeMetadata Metadata { get; set; }
+    
+    [JsonProperty("userAgent")]
+    public string? UserAgent { get; set; }
 
     public DataDomeTaskProxyless()
     {
