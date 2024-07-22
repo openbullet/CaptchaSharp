@@ -63,4 +63,5 @@ public class Credentials
     public string BestCaptchaSolverApiKey { get; set; } = string.Empty;
     public string CaptchaAiApiKey { get; set; } = string.Empty;
     public string EzCaptchaApiKey { get; set; } = string.Empty;
+    public string SolveCaptchaApiKey { get; set; } = string.Empty;
 }

@@ -1,6 +1,6 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
+namespace CaptchaSharp.Models.SolveCaptcha.Responses.Solutions;
 
-internal class GeeTestAntiCaptchaTaskSolution : AntiCaptchaTaskSolution
+internal class GeeTestSolveCaptchaTaskSolution : SolveCaptchaTaskSolution
 {
     public string? Challenge { get; set; }
     public string? Validate { get; set; }
