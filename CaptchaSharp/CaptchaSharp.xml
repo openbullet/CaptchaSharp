@@ -256,6 +256,9 @@
         <member name="F:CaptchaSharp.Enums.CaptchaType.CloudflareTurnstile">
             <summary>Cloudflare's Turnstile captcha.</summary>
         </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.LeminCropped">
+            <summary>Lemin Cropped captcha.</summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
         </member>
@@ -700,6 +703,21 @@
         <member name="P:CaptchaSharp.Models.ImageTyperz.ImageTyperzTaskCreatedResponse.CaptchaId">
             <summary>
             The captcha id.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.LeminCroppedResponse">
+            <summary>
+            A captcha response for Lemin Cropped Captchas.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.LeminCroppedResponse.Answer">
+            <summary>
+            The answer to the challenge.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.LeminCroppedResponse.ChallengeId">
+            <summary>
+            The challenge ID.
             </summary>
         </member>
         <member name="P:CaptchaSharp.Models.Nopecha.NopechaCookie.ExpirationDate">
@@ -1422,6 +1440,32 @@
             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
             <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveLeminCroppedAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+             <summary>Solves a Lemin Cropped captcha.</summary>
+            
+             <param name="captchaId">The value of the captcha_id parameter on the page.</param> 
+             <param name="siteUrl">The URL where the captcha appears.</param>
+             <param name="apiServer">The domain part of script URL you found on page. If null, the default one will be used.</param>
+             <param name="divId">The id of captcha parent div element.</param>
+             
+             <param name="proxy">
+             A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+             going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+             fetch the captcha without using a proxy.
+             </param>
+             
+             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+             
+             <returns>
+             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             captcha solution as plaintext.
+             </returns>
+             
+             <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+             <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
@@ -1553,6 +1597,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveLeminCroppedAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
@@ -2065,6 +2112,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveLeminCroppedAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">

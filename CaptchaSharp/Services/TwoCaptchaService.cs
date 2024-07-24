@@ -413,6 +413,36 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.CloudflareTurnstile,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<LeminCroppedResponse> SolveLeminCroppedAsync(
+        string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
+        string? divId = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "lemin")
+                .Add("captcha_id", captchaId)
+                .Add("pageurl", siteUrl)
+                .Add("api_server", apiServer)
+                .Add("div_id", divId ?? string.Empty, !string.IsNullOrEmpty(divId))
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertProxy(proxy))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<LeminCroppedResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.LeminCropped,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<LeminCroppedResponse>(
+                response, CaptchaType.LeminCropped,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -462,69 +492,81 @@ public class TwoCaptchaService : CaptchaService
 
         task.Completed = true;
 
-        if (UseJsonFlag)
+        try
         {
-            if (task.Type == CaptchaType.GeeTest)
+            if (UseJsonFlag)
             {
-                var jObject = JObject.Parse(response);
-                var solution = jObject["request"];
-
-                if (solution is null)
+                if (task.Type == CaptchaType.GeeTest)
                 {
-                    throw new TaskSolutionException("No solution found");
+                    var jObject = JObject.Parse(response);
+                    var solution = jObject["request"];
+
+                    if (solution is null)
+                    {
+                        throw new TaskSolutionException("No solution found");
+                    }
+
+                    if (solution.Type == JTokenType.Object)
+                    {
+                        return response.Deserialize<TwoCaptchaGeeTestResponse>()
+                            .Request?.ToGeeTestResponse(task.Id) as T;
+                    }
+                }
+                else if (task.Type == CaptchaType.Capy)
+                {
+                    var jObject = JObject.Parse(response);
+                    var solution = jObject["request"];
+
+                    if (solution is null)
+                    {
+                        throw new TaskSolutionException("No solution found");
+                    }
+                    
+                    if (solution.Type == JTokenType.Object)
+                    {
+                        return response.Deserialize<TwoCaptchaCapyResponse>()
+                            .Request!.ToCapyResponse(task.Id) as T;
+                    }
+                }
+                else if (task.Type == CaptchaType.CloudflareTurnstile)
+                {
+                    return response.Deserialize<TwoCaptchaCloudflareTurnstileResponse>()
+                        .ToCloudflareTurnstileResponse(task.Id) as T;
+                }
+                else if (task.Type == CaptchaType.LeminCropped)
+                {
+                    return response.Deserialize<TwoCaptchaLeminCroppedResponse>()
+                        .Request!.ToLeminCroppedResponse(task.Id) as T;
                 }
 
-                if (solution.Type == JTokenType.Object)
+                var tcResponse = response.Deserialize<TwoCaptchaResponse>();
+
+                if (tcResponse.IsErrorCode)
                 {
-                    return response.Deserialize<TwoCaptchaGeeTestResponse>()
-                        .Request?.ToGeeTestResponse(task.Id) as T;
+                    throw new TaskSolutionException(tcResponse.ErrorText!);
                 }
+
+                return new StringResponse { Id = task.Id, Response = tcResponse.Request! } as T;
             }
-            else if (task.Type == CaptchaType.Capy)
+
+            if (IsErrorCode(response))
             {
-                var jObject = JObject.Parse(response);
-                var solution = jObject["request"];
-
-                if (solution is null)
-                {
-                    throw new TaskSolutionException("No solution found");
-                }
-                
-                if (solution.Type == JTokenType.Object)
-                {
-                    return response.Deserialize<TwoCaptchaCapyResponse>()
-                        .Request!.ToCapyResponse(task.Id) as T;
-                }
+                throw new TaskSolutionException(response);
             }
-            else if (task.Type == CaptchaType.CloudflareTurnstile)
+
+            response = TakeSecondSlice(response);
+
+            return task.Type switch
             {
-                return response.Deserialize<TwoCaptchaCloudflareTurnstileResponse>()
-                    .ToCloudflareTurnstileResponse(task.Id) as T;
-            }
-
-            var tcResponse = response.Deserialize<TwoCaptchaResponse>();
-
-            if (tcResponse.IsErrorCode)
-            {
-                throw new TaskSolutionException(tcResponse.ErrorText!);
-            }
-
-            return new StringResponse { Id = task.Id, Response = tcResponse.Request! } as T;
+                CaptchaType.GeeTest => response.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id) as T,
+                CaptchaType.Capy => response.Deserialize<CapySolution>().ToCapyResponse(task.Id) as T,
+                _ => new StringResponse { Id = task.Id, Response = response } as T
+            };   
         }
-
-        if (IsErrorCode(response))
+        catch (Exception ex)
         {
-            throw new TaskSolutionException(response);
+            throw new TaskSolutionException(response, ex);
         }
-
-        response = TakeSecondSlice(response);
-
-        return task.Type switch
-        {
-            CaptchaType.GeeTest => response.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id) as T,
-            CaptchaType.Capy => response.Deserialize<CapySolution>().ToCapyResponse(task.Id) as T,
-            _ => new StringResponse { Id = task.Id, Response = response } as T
-        };
     }
     #endregion
 

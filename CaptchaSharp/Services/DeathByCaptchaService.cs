@@ -430,6 +430,43 @@ public class DeathByCaptchaService : CaptchaService
             HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
             CaptchaType.CloudflareTurnstile, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public override async Task<LeminCroppedResponse> SolveLeminCroppedAsync(
+        string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
+        string? divId = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+        
+        if (proxy is not null)
+        {
+            task = new LeminCroppedDbcTask
+            {
+                CaptchaId = captchaId,
+                PageUrl = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new LeminCroppedDbcTaskProxyless
+            {
+                CaptchaId = captchaId,
+                PageUrl = siteUrl
+            };
+        }
+        
+        var response = await HttpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 14)
+                    .Add("lemin_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<LeminCroppedResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.LeminCropped, cancellationToken);
+    }
     #endregion
 
     #region Getting the result
@@ -497,6 +534,17 @@ public class DeathByCaptchaService : CaptchaService
                 CaptchaKey = capyResponse.CaptchaKey,
                 ChallengeKey = capyResponse.ChallengeKey,
                 Answer = capyResponse.Answer
+            } as T;
+        }
+        
+        if (typeof(T) == typeof(LeminCroppedResponse))
+        {
+            var leminCroppedResponse = text.Deserialize<LeminCroppedDbcResponse>();
+            return new LeminCroppedResponse
+            {
+                Id = task.Id,
+                Answer = leminCroppedResponse.Answer,
+                ChallengeId = leminCroppedResponse.ChallengeId
             } as T;
         }
         

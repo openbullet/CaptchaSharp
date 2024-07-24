@@ -8,13 +8,18 @@ All services derive from the same `CaptchaService` class and have the same code 
 This library supports the following captcha types
 - Text (with language options)
 - Image (with options like phrase, case sensitivity, calculations)
-- FunCaptcha
 - ReCaptcha V2 (incl. invisible, enterprise)
 - ReCaptcha V3 (incl. enterprise)
+- FunCaptcha
 - HCaptcha
 - KeyCaptcha
 - GeeTest
 - Capy
+- DataDome
+- Cloudflare Turnstile
+- Lemin Cropped
+
+Proxies are supported for services that support them.
 
 Not every captcha type is supported by each service. You can find a spreadsheet with a breakdown of the supported captcha types for each implemented service at the following link
 

@@ -43,4 +43,6 @@ public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper
     [Fact] public Task SolveDataDomeAsync_WithProxy_ValidSolution() => DataDomeTest_WithProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_NoProxy_ValidSolution() => CloudflareTurnstileTest_NoProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_WithProxy_ValidSolution() => CloudflareTurnstileTest_WithProxy();
+    [Fact] public Task SolveLeminCroppedAsync_NoProxy_ValidSolution() => LeminCroppedTest_NoProxy();
+    [Fact] public Task SolveLeminCroppedAsync_WithProxy_ValidSolution() => LeminCroppedTest_WithProxy();
 }

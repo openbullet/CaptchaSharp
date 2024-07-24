@@ -402,4 +402,23 @@ public class ServiceTests
     });
     
     protected Task CloudflareTurnstileTest_WithProxy() => CloudflareTurnstileTest(_fixture.Config.Proxy);
+
+    private async Task LeminCroppedTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveLeminCroppedAsync(
+            captchaId: "CROPPED_3dfdd5c_d1872b526b794d83ba3b365eb15a200b",
+            siteUrl: "https://2captcha.com/demo/lemin",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Answer);
+        Assert.NotEqual(string.Empty, solution.ChallengeId);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Answer: {solution.Answer}");
+        _output.WriteLine($"Challenge ID: {solution.ChallengeId}");
+    }
+    
+    protected Task LeminCroppedTest_NoProxy() => LeminCroppedTest(null);
+    
+    protected Task LeminCroppedTest_WithProxy() => LeminCroppedTest(_fixture.Config.Proxy);
 }

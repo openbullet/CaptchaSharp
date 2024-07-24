@@ -17,6 +17,7 @@ public class ImageTyperzServiceTests(ImageTyperzFixture fixture, ITestOutputHelp
     : ServiceTests(fixture, output), IClassFixture<ImageTyperzFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
+    [Fact] public Task ReportSolution_NoException() => ReportImageSolutionTest();
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
     [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
     [Fact] public Task SolveRecaptchaV2Async_WithProxy_ValidSolution() => RecaptchaV2Test_WithProxy();

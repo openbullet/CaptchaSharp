@@ -11,22 +11,22 @@ internal class TwoCaptchaGeeTestResponse : TwoCaptchaResponse
 internal class GeeTestSolution
 {
     [JsonProperty("geetest_challenge")]
-    public string? Challenge { get; set; }
+    public required string Challenge { get; set; }
 
     [JsonProperty("geetest_validate")]
-    public string? Validate { get; set; }
+    public required string Validate { get; set; }
 
     [JsonProperty("geetest_seccode")]
-    public string? SecCode { get; set; }
+    public required string SecCode { get; set; }
 
     public GeeTestResponse ToGeeTestResponse(string id)
     {
         return new GeeTestResponse
         {
             Id = id,
-            Challenge = Challenge!,
-            Validate = Validate!,
-            SecCode = SecCode!
+            Challenge = Challenge,
+            Validate = Validate,
+            SecCode = SecCode
         };
     }
 }

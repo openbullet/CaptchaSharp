@@ -38,4 +38,7 @@ public enum CaptchaType
     
     /// <summary>Cloudflare's Turnstile captcha.</summary>
     CloudflareTurnstile = 1 << 10,
+    
+    /// <summary>Lemin Cropped captcha.</summary>
+    LeminCropped = 1 << 11,
 }
