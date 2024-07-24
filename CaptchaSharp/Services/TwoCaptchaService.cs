@@ -443,6 +443,38 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.LeminCropped,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAmazonWafAsync(
+        string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
+        string? captchaScript = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "amazon_waf")
+                .Add("sitekey", siteKey)
+                .Add("iv", iv)
+                .Add("context", context)
+                .Add("pageurl", siteUrl)
+                .Add("challenge_script", challengeScript ?? string.Empty, !string.IsNullOrEmpty(challengeScript))
+                .Add("captcha_script", captchaScript ?? string.Empty, !string.IsNullOrEmpty(captchaScript))
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertProxy(proxy))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AmazonWaf,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.AmazonWaf,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -537,6 +569,11 @@ public class TwoCaptchaService : CaptchaService
                 {
                     return response.Deserialize<TwoCaptchaLeminCroppedResponse>()
                         .Request!.ToLeminCroppedResponse(task.Id) as T;
+                }
+                else if (task.Type == CaptchaType.AmazonWaf)
+                {
+                    return response.Deserialize<TwoCaptchaAmazonWafResponse>()
+                        .Request!.ToStringResponse(task.Id) as T;
                 }
 
                 var tcResponse = response.Deserialize<TwoCaptchaResponse>();

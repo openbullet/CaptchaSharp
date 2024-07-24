@@ -312,7 +312,7 @@ public abstract class CaptchaService : IDisposable
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
     /// 
     /// <returns>
-    /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+    /// A <see cref="CapyResponse"/> containing the captcha id to be used with 
     /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
@@ -374,7 +374,7 @@ public abstract class CaptchaService : IDisposable
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
     /// 
     /// <returns>
-    /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+    /// A <see cref="CloudflareTurnstileResponse"/> containing the captcha id to be used with 
     /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
@@ -405,7 +405,7 @@ public abstract class CaptchaService : IDisposable
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
     /// 
     /// <returns>
-    /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+    /// A <see cref="LeminCroppedResponse"/> containing the captcha id to be used with 
     /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
@@ -416,6 +416,40 @@ public abstract class CaptchaService : IDisposable
     public virtual Task<LeminCroppedResponse> SolveLeminCroppedAsync(
         string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
         string? divId = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <summary>Solves an Amazon WAF captcha.</summary>
+    ///
+    /// <param name="siteKey">The value of the <c>key</c> parameter on the page.</param>
+    /// <param name="iv">The value of the <c>iv</c> parameter on the page.</param>
+    /// <param name="context">The value of the <c>context</c> parameter on the page.</param>
+    /// <param name="siteUrl">The URL where the captcha appears.</param>
+    /// <param name="challengeScript">The source URL of the <c>challenge.js</c> on the page.</param>
+    /// <param name="captchaScript">The source URL of the <c>captcha.js</c> on the page.</param>
+    /// 
+    /// <param name="proxy">
+    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+    /// fetch the captcha without using a proxy.
+    /// </param>
+    /// 
+    /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+    /// 
+    /// <returns>
+    /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// captcha solution as plaintext.
+    /// </returns>
+    /// 
+    /// <exception cref="TaskCreationException"></exception>
+    /// <exception cref="TaskSolutionException"></exception>
+    /// <exception cref="TimeoutException"></exception>
+    public virtual Task<StringResponse> SolveAmazonWafAsync(
+        string siteKey, string iv, string context, string siteUrl,
+        string? challengeScript = null, string? captchaScript = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }

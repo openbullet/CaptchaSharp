@@ -36,4 +36,6 @@ public class CapSolverServiceTests(CapSolverFixture fixture, ITestOutputHelper o
     [Fact] public Task SolveGeeTestAsync_NoProxy_ValidSolution() => GeeTestTest_NoProxy();
     [Fact] public Task SolveDataDomeTestAsync_WithProxy_ValidSolution() => DataDomeTest_WithProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_NoProxy_ValidSolution() => CloudflareTurnstileTest_NoProxy();
+    [Fact] public Task SolveAmazonWafAsync_NoProxy_ValidSolution() => AmazonWafTest_NoProxy();
+    [Fact] public Task SolveAmazonWafAsync_WithProxy_ValidSolution() => AmazonWafTest_WithProxy();
 }

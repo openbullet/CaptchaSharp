@@ -1,5 +1,4 @@
-﻿using CaptchaSharp.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.TwoCaptcha;
 

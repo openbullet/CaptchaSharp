@@ -46,4 +46,6 @@ public class DeathByCaptchaServiceTests(DeathByCaptchaFixture fixture, ITestOutp
     [Fact] public Task SolveCloudflareTurnstileAsync_WithProxy_ValidSolution() => CloudflareTurnstileTest_WithProxy();
     [Fact] public Task SolveLeminCroppedAsync_NoProxy_ValidSolution() => LeminCroppedTest_NoProxy();
     [Fact] public Task SolveLeminCroppedAsync_WithProxy_ValidSolution() => LeminCroppedTest_WithProxy();
+    [Fact] public Task SolveAmazonWafAsync_NoProxy_ValidSolution() => AmazonWafTest_NoProxy();
+    [Fact] public Task SolveAmazonWafAsync_WithProxy_ValidSolution() => AmazonWafTest_WithProxy();
 }

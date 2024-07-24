@@ -421,4 +421,38 @@ public class ServiceTests
     protected Task LeminCroppedTest_NoProxy() => LeminCroppedTest(null);
     
     protected Task LeminCroppedTest_WithProxy() => LeminCroppedTest(_fixture.Config.Proxy);
+    
+    private async Task AmazonWafTest(Proxy? proxy)
+    {
+        using var httpClient = new HttpClient();
+        using var response = await httpClient.GetAsync("https://nopecha.com/captcha/awscaptcha");
+        var pageSource = await response.Content.ReadAsStringAsync();
+        
+        var captchaPage = Regex.Match(pageSource, "<iframe src=\"([^\"]+)").Groups[1].Value;
+        using var captchaResponse = await httpClient.GetAsync(captchaPage);
+        var captchaSource = await captchaResponse.Content.ReadAsStringAsync();
+        var siteKey = Regex.Match(captchaSource, "\"key\":\"([^\"]+)").Groups[1].Value;
+        var iv = Regex.Match(captchaSource, "\"iv\":\"([^\"]+)").Groups[1].Value;
+        var context = Regex.Match(captchaSource, "\"context\":\"([^\"]+)").Groups[1].Value;
+        var challengeScript = Regex.Match(captchaSource, "src=\"([^\"]+challenge\\.js)").Groups[1].Value;
+        var captchaScript = Regex.Match(captchaSource, "src=\"([^\"]+captcha\\.js)").Groups[1].Value;
+        
+        var solution = await Service.SolveAmazonWafAsync(
+            siteKey: siteKey,
+            siteUrl: "https://nopecha.com/captcha/awscaptcha",
+            iv: iv,
+            context: context,
+            challengeScript: challengeScript,
+            captchaScript: captchaScript,
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task AmazonWafTest_NoProxy() => AmazonWafTest(null);
+    
+    protected Task AmazonWafTest_WithProxy() => AmazonWafTest(_fixture.Config.Proxy);
 }

@@ -372,6 +372,46 @@ public class CapSolverService : CaptchaService
             response, CaptchaType.CloudflareTurnstile,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAmazonWafAsync(string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
+        string? captchaScript = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+        
+        if (proxy is not null)
+        {
+            content.Task = new AntiAwsWafTask
+            {
+                WebsiteURL = siteUrl,
+                AwsKey = siteKey,
+                AwsIv = iv,
+                AwsContext = context,
+                AwsChallengeJs = challengeScript
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            content.Task = new AntiAwsWafTaskProxyless
+            {
+                WebsiteURL = siteUrl,
+                AwsKey = siteKey,
+                AwsIv = iv,
+                AwsContext = context,
+                AwsChallengeJs = challengeScript
+            };
+        }
+        
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
+            "createTask",
+            content,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(
+            response, CaptchaType.AmazonWaf,
+            cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -431,6 +471,7 @@ public class CapSolverService : CaptchaService
             CaptchaType.GeeTest => solution.ToObject<GeeTestSolution>(),
             CaptchaType.DataDome => solution.ToObject<DataDomeSolution>(),
             CaptchaType.CloudflareTurnstile => solution.ToObject<CloudflareTurnstileSolution>(),
+            CaptchaType.AmazonWaf => solution.ToObject<AmazonWafSolution>(),
             _ => throw new NotSupportedException($"The captcha type {task.Type} is not supported")
         } ?? throw new TaskSolutionException("The solution is null");
 

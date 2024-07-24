@@ -41,4 +41,7 @@ public enum CaptchaType
     
     /// <summary>Lemin Cropped captcha.</summary>
     LeminCropped = 1 << 11,
+    
+    /// <summary>Amazon WAF captcha.</summary>
+    AmazonWaf = 1 << 12,
 }

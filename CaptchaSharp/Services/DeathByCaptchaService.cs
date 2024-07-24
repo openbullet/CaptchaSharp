@@ -467,6 +467,51 @@ public class DeathByCaptchaService : CaptchaService
             HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
             CaptchaType.LeminCropped, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAmazonWafAsync(
+        string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
+        string? captchaScript = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+        
+        if (proxy is not null)
+        {
+            task = new AmazonWafDbcTask
+            {
+                SiteKey = siteKey,
+                Iv = iv,
+                Context = context,
+                PageUrl = siteUrl,
+                ChallengeJs = challengeScript,
+                CaptchaJs = captchaScript
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new AmazonWafDbcTaskProxyless
+            {
+                SiteKey = siteKey,
+                Iv = iv,
+                Context = context,
+                PageUrl = siteUrl,
+                ChallengeJs = challengeScript,
+                CaptchaJs = captchaScript
+            };
+        }
+        
+        var response = await HttpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 16)
+                    .Add("waf_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.AmazonWaf, cancellationToken);
+    }
     #endregion
 
     #region Getting the result

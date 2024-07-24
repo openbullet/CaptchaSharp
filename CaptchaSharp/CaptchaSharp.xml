@@ -259,6 +259,9 @@
         <member name="F:CaptchaSharp.Enums.CaptchaType.LeminCropped">
             <summary>Lemin Cropped captcha.</summary>
         </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.AmazonWaf">
+            <summary>Amazon WAF captcha.</summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
         </member>
@@ -1071,6 +1074,9 @@
         <member name="M:CaptchaSharp.Services.CapSolverService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.CapSolverService.SolveAmazonWafAsync(System.String,System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="M:CaptchaSharp.Services.CapSolverService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
@@ -1379,7 +1385,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CapyResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1431,7 +1437,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CloudflareTurnstileResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1447,6 +1453,34 @@
              <param name="siteUrl">The URL where the captcha appears.</param>
              <param name="apiServer">The domain part of script URL you found on page. If null, the default one will be used.</param>
              <param name="divId">The id of captcha parent div element.</param>
+             
+             <param name="proxy">
+             A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+             going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+             fetch the captcha without using a proxy.
+             </param>
+             
+             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+             
+             <returns>
+             A <see cref="T:CaptchaSharp.Models.LeminCroppedResponse"/> containing the captcha id to be used with 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             captcha solution as plaintext.
+             </returns>
+             
+             <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+             <exception cref="T:System.TimeoutException"></exception>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveAmazonWafAsync(System.String,System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+             <summary>Solves an Amazon WAF captcha.</summary>
+            
+             <param name="siteKey">The value of the <c>key</c> parameter on the page.</param>
+             <param name="iv">The value of the <c>iv</c> parameter on the page.</param>
+             <param name="context">The value of the <c>context</c> parameter on the page.</param>
+             <param name="siteUrl">The URL where the captcha appears.</param>
+             <param name="challengeScript">The source URL of the <c>challenge.js</c> on the page.</param>
+             <param name="captchaScript">The source URL of the <c>captcha.js</c> on the page.</param>
              
              <param name="proxy">
              A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
@@ -1600,6 +1634,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveLeminCroppedAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveAmazonWafAsync(System.String,System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
@@ -2115,6 +2152,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveLeminCroppedAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveAmazonWafAsync(System.String,System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">

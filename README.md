@@ -18,6 +18,7 @@ This library supports the following captcha types
 - DataDome
 - Cloudflare Turnstile
 - Lemin Cropped
+- Amazon WAF
 
 Proxies are supported for services that support them.
 
