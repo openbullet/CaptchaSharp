@@ -277,6 +277,9 @@
         <member name="F:CaptchaSharp.Enums.CaptchaType.AtbCaptcha">
             <summary>atbCaptcha.</summary>
         </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.TencentCaptcha">
+            <summary>Tencent Captcha.</summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
         </member>
@@ -861,6 +864,21 @@
         </member>
         <member name="P:CaptchaSharp.Models.StringResponse.Response">
             <summary>The plaintext response string.</summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.TencentCaptchaResponse">
+            <summary>The solution of a Tencent captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.AppId">
+            <summary>The ID of the app that requested the captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.Ticket">
+            <summary>The ticket that needs to be sent to the server to verify the captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.ReturnCode">
+            <summary>The return code of the captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.RandomString">
+            <summary>A random string that needs to be sent to the server to verify the captcha.</summary>
         </member>
         <member name="T:CaptchaSharp.Models.TextCaptchaOptions">
             <summary>Provides additional options for a text based captcha task.</summary>
@@ -1641,6 +1659,30 @@
              <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
              <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveTencentCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+             <summary>Solves a Tencent Captcha.</summary>
+            
+             <param name="appId">The value of <c>appId</c> parameter in the website source code.</param>
+             <param name="siteUrl">The URL where the captcha appears.</param>
+             
+             <param name="proxy">
+             A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+             going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+             fetch the captcha without using a proxy.
+             </param>
+             
+             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+             
+             <returns>
+             A <see cref="T:CaptchaSharp.Models.TencentCaptchaResponse"/> containing the captcha id to be used with 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             captcha solution.
+             </returns>
+             
+             <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+             <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
@@ -2323,6 +2365,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveAtbCaptchaAsync(System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveTencentCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">

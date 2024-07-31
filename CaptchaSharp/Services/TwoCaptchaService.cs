@@ -622,6 +622,34 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.AtbCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<TencentCaptchaResponse> SolveTencentCaptchaAsync(
+        string appId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "tencent")
+                .Add("app_id", appId)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertProxy(proxy))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<TencentCaptchaResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TencentCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<TencentCaptchaResponse>(
+                response, CaptchaType.TencentCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -721,6 +749,11 @@ public class TwoCaptchaService : CaptchaService
                 {
                     return response.Deserialize<TwoCaptchaAmazonWafResponse>()
                         .Request!.ToStringResponse(task.Id) as T;
+                }
+                else if (task.Type == CaptchaType.TencentCaptcha) 
+                {
+                    return response.Deserialize<TwoCaptchaTencentCaptchaResponse>()
+                        .Request!.ToTencentCaptchaResponse(task.Id) as T;
                 }
 
                 var tcResponse = response.Deserialize<TwoCaptchaResponse>();

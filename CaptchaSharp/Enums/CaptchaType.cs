@@ -59,4 +59,7 @@ public enum CaptchaType
     
     /// <summary>atbCaptcha.</summary>
     AtbCaptcha = 1 << 17,
+    
+    /// <summary>Tencent Captcha.</summary>
+    TencentCaptcha = 1 << 18,
 }

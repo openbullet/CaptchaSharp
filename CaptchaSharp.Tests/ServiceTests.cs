@@ -546,4 +546,25 @@ public class ServiceTests
     protected Task AtbCaptchaTest_NoProxy() => AtbCaptchaTest(null);
     
     protected Task AtbCaptchaTest_WithProxy() => AtbCaptchaTest(_fixture.Config.Proxy);
+
+    private async Task TencentCaptchaTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveTencentCaptchaAsync(
+            appId: "2009899766",
+            siteUrl: "https://www.tencentcloud.com/account/register",
+            proxy: proxy);
+
+        Assert.NotEqual(string.Empty, solution.Ticket);
+        Assert.NotEqual(string.Empty, solution.RandomString);
+
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"AppId: {solution.AppId}");
+        _output.WriteLine($"Ticket: {solution.Ticket}");
+        _output.WriteLine($"ReturnCode: {solution.ReturnCode}");
+        _output.WriteLine($"RandomString: {solution.RandomString}");
+    }
+    
+    protected Task TencentCaptchaTest_NoProxy() => TencentCaptchaTest(null);
+    
+    protected Task TencentCaptchaTest_WithProxy() => TencentCaptchaTest(_fixture.Config.Proxy);
 }
