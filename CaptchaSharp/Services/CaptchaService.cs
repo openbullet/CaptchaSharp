@@ -631,6 +631,29 @@ public abstract class CaptchaService : IDisposable
         throw new NotSupportedException();
     }
     
+    /// <summary>Solves an audio captcha.</summary>
+    ///
+    /// <param name="base64">The captcha audio encoded as a base64 string.</param>
+    /// <param name="options">The options for the audio captcha.</param>
+    /// 
+    /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+    /// 
+    /// <returns>
+    /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// captcha solution as plaintext.
+    /// </returns>
+    /// 
+    /// <exception cref="TaskCreationException"></exception>
+    /// <exception cref="TaskSolutionException"></exception>
+    /// <exception cref="TimeoutException"></exception>
+    public virtual Task<StringResponse> SolveAudioCaptchaAsync(
+        string base64, AudioCaptchaOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+    
     /// <summary>
     /// Reports a captcha solution as good or bad to the service.
     /// Mostly used for reporting bad solutions for image captchas and get the funds back.

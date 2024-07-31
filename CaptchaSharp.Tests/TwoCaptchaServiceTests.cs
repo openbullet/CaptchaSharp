@@ -59,4 +59,5 @@ public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper
     [Fact] public Task SolveAtbCaptchaAsync_WithProxy_ValidSolution() => AtbCaptchaTest_WithProxy();
     [Fact] public Task SolveTencentCaptchaAsync_NoProxy_ValidSolution() => TencentCaptchaTest_NoProxy();
     [Fact] public Task SolveTencentCaptchaAsync_WithProxy_ValidSolution() => TencentCaptchaTest_WithProxy();
+    [Fact] public Task SolveAudioCaptchaAsync_ValidCaptcha_ValidSolution() => AudioCaptchaTest();
 }

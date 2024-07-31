@@ -56,4 +56,5 @@ public class DeathByCaptchaServiceTests(DeathByCaptchaFixture fixture, ITestOutp
     [Fact] public Task SolveCutCaptchaAsync_WithProxy_ValidSolution() => CutCaptchaTest_WithProxy();
     [Fact] public Task SolveFriendlyCaptchaAsync_NoProxy_ValidSolution() => FriendlyCaptchaTest_NoProxy();
     [Fact] public Task SolveFriendlyCaptchaAsync_WithProxy_ValidSolution() => FriendlyCaptchaTest_WithProxy();
+    [Fact] public Task SolveAudioCaptchaAsync_ValidCaptcha_ValidSolution() => AudioCaptchaTest();
 }

@@ -4,6 +4,8 @@ using CaptchaSharp.Models;
 using CaptchaSharp.Models.DeathByCaptcha.Tasks;
 using CaptchaSharp.Models.DeathByCaptcha.Tasks.Proxied;
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
@@ -37,6 +39,16 @@ public class DeathByCaptchaService : CaptchaService
      * we will avoid using the Accept: application/json header.
      */
 
+    private readonly ImmutableList<CaptchaLanguage> _supportedAudioLanguages = new List<CaptchaLanguage>()
+    {
+        CaptchaLanguage.English,
+        CaptchaLanguage.French,
+        CaptchaLanguage.German,
+        CaptchaLanguage.Greek,
+        CaptchaLanguage.Portuguese,
+        CaptchaLanguage.Russian
+    }.ToImmutableList();
+    
     /// <summary>
     /// Initializes a <see cref="DeathByCaptchaService"/>.
     /// </summary>
@@ -669,6 +681,34 @@ public class DeathByCaptchaService : CaptchaService
             HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
             CaptchaType.FriendlyCaptcha, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAudioCaptchaAsync(
+        string base64, AudioCaptchaOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        var language = options?.CaptchaLanguage ?? CaptchaLanguage.English;
+        
+        if (!_supportedAudioLanguages.Contains(language))
+        {
+            throw new ArgumentException("The language is not supported by the service.");
+        }
+        
+        var response = await HttpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 13)
+                    .Add("audio", base64)
+                    .Add("language", language.ToIso6391Code())
+                    .ToMultipartFormDataContent(),
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.AudioCaptcha, cancellationToken);
+    }
+
     #endregion
 
     #region Getting the result

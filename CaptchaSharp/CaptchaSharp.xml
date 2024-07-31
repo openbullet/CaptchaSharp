@@ -280,6 +280,9 @@
         <member name="F:CaptchaSharp.Enums.CaptchaType.TencentCaptcha">
             <summary>Tencent Captcha.</summary>
         </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.AudioCaptcha">
+            <summary>A captcha that is an audio file with some text to recognize.</summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
         </member>
@@ -517,6 +520,16 @@
         <member name="P:CaptchaSharp.Models.AntiCaptcha.Responses.TaskCreationAntiCaptchaResponse.TaskId">
             <summary>
             The ID of the created task.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.AudioCaptchaOptions">
+            <summary>
+            Provides additional options for an audio based captcha task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.AudioCaptchaOptions.CaptchaLanguage">
+            <summary>
+            The language of the audio.
             </summary>
         </member>
         <member name="T:CaptchaSharp.Models.CaptchaResponse">
@@ -881,13 +894,19 @@
             <summary>A random string that needs to be sent to the server to verify the captcha.</summary>
         </member>
         <member name="T:CaptchaSharp.Models.TextCaptchaOptions">
-            <summary>Provides additional options for a text based captcha task.</summary>
+            <summary>
+            Provides additional options for a text based captcha task.
+            </summary>
         </member>
         <member name="P:CaptchaSharp.Models.TextCaptchaOptions.CaptchaLanguageGroup">
-            <summary>The language group of the text.</summary>
+            <summary>
+            The language group of the text.
+            </summary>
         </member>
         <member name="P:CaptchaSharp.Models.TextCaptchaOptions.CaptchaLanguage">
-            <summary>The language of the text.</summary>
+            <summary>
+            The language of the text.
+            </summary>
         </member>
         <member name="P:CaptchaSharp.Models.TwoCaptcha.TwoCaptchaCloudflareTurnstileResponse.UserAgent">
             <summary>
@@ -1683,6 +1702,24 @@
              <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
              <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
+             <summary>Solves an audio captcha.</summary>
+            
+             <param name="base64">The captcha audio encoded as a base64 string.</param>
+             <param name="options">The options for the audio captcha.</param>
+             
+             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+             
+             <returns>
+             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             captcha solution as plaintext.
+             </returns>
+             
+             <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+             <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
@@ -1832,6 +1869,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveFriendlyCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
@@ -2370,6 +2410,9 @@
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveTencentCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <summary></summary>
         </member>
@@ -2394,6 +2437,9 @@
             <summary></summary>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.ImageCaptchaOptions)">
+            <summary></summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.AudioCaptchaOptions)">
             <summary></summary>
         </member>
     </members>

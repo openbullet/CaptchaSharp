@@ -62,4 +62,7 @@ public enum CaptchaType
     
     /// <summary>Tencent Captcha.</summary>
     TencentCaptcha = 1 << 18,
+    
+    /// <summary>A captcha that is an audio file with some text to recognize.</summary>
+    AudioCaptcha = 1 << 19,
 }

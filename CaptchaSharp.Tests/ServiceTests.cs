@@ -567,4 +567,24 @@ public class ServiceTests
     protected Task TencentCaptchaTest_NoProxy() => TencentCaptchaTest(null);
     
     protected Task TencentCaptchaTest_WithProxy() => TencentCaptchaTest(_fixture.Config.Proxy);
+
+    protected async Task AudioCaptchaTest()
+    {
+        using var httpClient = new HttpClient();
+        using var response = await httpClient.GetAsync(
+            "https://audio-samples.github.io/samples/mp3/ted_speakers/BillGates/sample-1.mp3");
+        var audioBytes = await response.Content.ReadAsByteArrayAsync();
+
+        var solution = await Service.SolveAudioCaptchaAsync(
+            base64: Convert.ToBase64String(audioBytes),
+            options: new AudioCaptchaOptions
+            {
+                CaptchaLanguage = CaptchaLanguage.English,
+            });
+        
+        Assert.Contains("phrase", solution.Response.ToLower());
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
 }

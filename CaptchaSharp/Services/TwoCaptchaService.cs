@@ -8,6 +8,7 @@ using CaptchaSharp.Models;
 using CaptchaSharp.Models.TwoCaptcha;
 using System.Collections.Generic;
 using System;
+using System.Collections.Immutable;
 using CaptchaSharp.Extensions;
 using Newtonsoft.Json.Linq;
 
@@ -36,6 +37,16 @@ public class TwoCaptchaService : CaptchaService
 
     /// <summary>The ID of the software developer.</summary>
     private const int _softId = 2658;
+    
+    private readonly ImmutableList<CaptchaLanguage> _supportedAudioLanguages = new List<CaptchaLanguage>()
+    {
+        CaptchaLanguage.English,
+        CaptchaLanguage.French,
+        CaptchaLanguage.German,
+        CaptchaLanguage.Greek,
+        CaptchaLanguage.Portuguese,
+        CaptchaLanguage.Russian
+    }.ToImmutableList();
 
     /// <summary>
     /// Initializes a <see cref="TwoCaptchaService"/>.</summary>
@@ -650,6 +661,33 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.TencentCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAudioCaptchaAsync(
+        string base64, AudioCaptchaOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "audio")
+                .Add("body", base64)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertCapabilities(options))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AudioCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.AudioCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -966,6 +1004,19 @@ public class TwoCaptchaService : CaptchaService
         }
 
         return capabilities;
+    }
+    
+    /// <summary></summary>
+    protected List<(string, string)> ConvertCapabilities(AudioCaptchaOptions? options)
+    {
+        var language = options?.CaptchaLanguage ?? CaptchaLanguage.English;
+        
+        if (!_supportedAudioLanguages.Contains(language))
+        {
+            throw new ArgumentException("The language is not supported by the service.");
+        }
+        
+        return [("lang", language.ToIso6391Code())];
     }
     #endregion
 }
