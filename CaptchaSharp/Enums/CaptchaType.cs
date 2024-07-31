@@ -50,4 +50,7 @@ public enum CaptchaType
     
     /// <summary>MT Captcha.</summary>
     MtCaptcha = 1 << 14,
+    
+    /// <summary>Cut Captcha.</summary>
+    CutCaptcha = 1 << 15,
 }

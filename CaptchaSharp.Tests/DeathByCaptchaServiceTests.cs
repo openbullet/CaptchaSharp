@@ -52,4 +52,6 @@ public class DeathByCaptchaServiceTests(DeathByCaptchaFixture fixture, ITestOutp
     [Fact] public Task SolveCyberSiAraAsync_WithProxy_ValidSolution() => CyberSiAraTest_WithProxy();
     [Fact] public Task SolveMtCaptchaAsync_NoProxy_ValidSolution() => MtCaptchaTest_NoProxy();
     [Fact] public Task SolveMtCaptchaAsync_WithProxy_ValidSolution() => MtCaptchaTest_WithProxy();
+    [Fact] public Task SolveCutCaptchaAsync_NoProxy_ValidSolution() => CutCaptchaTest_NoProxy();
+    [Fact] public Task SolveCutCaptchaAsync_WithProxy_ValidSolution() => CutCaptchaTest_WithProxy();
 }

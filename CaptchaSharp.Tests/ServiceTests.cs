@@ -493,4 +493,22 @@ public class ServiceTests
     protected Task MtCaptchaTest_NoProxy() => MtCaptchaTest(null);
     
     protected Task MtCaptchaTest_WithProxy() => MtCaptchaTest(_fixture.Config.Proxy);
+
+    private async Task CutCaptchaTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveCutCaptchaAsync(
+            siteUrl: "https://filecrypt.co/Container/BB072CC14C.html",
+            miseryKey: "a46cd428f9cd7b965f6dcb84741e733769725550",
+            apiKey: "SAs61IAI",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task CutCaptchaTest_NoProxy() => CutCaptchaTest(null);
+    
+    protected Task CutCaptchaTest_WithProxy() => CutCaptchaTest(_fixture.Config.Proxy);
 }

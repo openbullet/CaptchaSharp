@@ -536,6 +536,35 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.MtCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveCutCaptchaAsync(
+        string miseryKey, string apiKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "cutcaptcha")
+                .Add("misery_key", miseryKey)
+                .Add("api_key", apiKey)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertProxy(proxy))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CutCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.CutCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
