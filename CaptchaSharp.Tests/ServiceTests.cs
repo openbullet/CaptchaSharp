@@ -511,4 +511,21 @@ public class ServiceTests
     protected Task CutCaptchaTest_NoProxy() => CutCaptchaTest(null);
     
     protected Task CutCaptchaTest_WithProxy() => CutCaptchaTest(_fixture.Config.Proxy);
+    
+    private async Task FriendlyCaptchaTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveFriendlyCaptchaAsync(
+            siteKey: "FCMGEMUD2K3JJ36P",
+            siteUrl: "https://friendlycaptcha.com/signup/account/starter/",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task FriendlyCaptchaTest_NoProxy() => FriendlyCaptchaTest(null);
+    
+    protected Task FriendlyCaptchaTest_WithProxy() => FriendlyCaptchaTest(_fixture.Config.Proxy);
 }

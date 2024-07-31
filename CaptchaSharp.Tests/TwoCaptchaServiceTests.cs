@@ -53,4 +53,6 @@ public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper
     [Fact] public Task SolveMtCaptchaAsync_WithProxy_ValidSolution() => MtCaptchaTest_WithProxy();
     [Fact] public Task SolveCutCaptchaAsync_NoProxy_ValidSolution() => CutCaptchaTest_NoProxy();
     [Fact] public Task SolveCutCaptchaAsync_WithProxy_ValidSolution() => CutCaptchaTest_WithProxy();
+    [Fact] public Task SolveFriendlyCaptchaAsync_NoProxy_ValidSolution() => FriendlyCaptchaTest_NoProxy();
+    [Fact] public Task SolveFriendlyCaptchaAsync_WithProxy_ValidSolution() => FriendlyCaptchaTest_WithProxy();
 }

@@ -632,6 +632,43 @@ public class DeathByCaptchaService : CaptchaService
             HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
             CaptchaType.CutCaptcha, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveFriendlyCaptchaAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+        
+        if (proxy is not null)
+        {
+            task = new FriendlyCaptchaDbcTask
+            {
+                SiteKey = siteKey,
+                PageUrl = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new FriendlyCaptchaDbcTaskProxyless
+            {
+                SiteKey = siteKey,
+                PageUrl = siteUrl
+            };
+        }
+        
+        var response = await HttpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 20)
+                    .Add("friendly_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.FriendlyCaptcha, cancellationToken);
+    }
     #endregion
 
     #region Getting the result

@@ -53,4 +53,7 @@ public enum CaptchaType
     
     /// <summary>Cut Captcha.</summary>
     CutCaptcha = 1 << 15,
+    
+    /// <summary>Friendly Captcha.</summary>
+    FriendlyCaptcha = 1 << 16,
 }
