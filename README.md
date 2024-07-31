@@ -4,7 +4,7 @@ The library is fully documented, asynchronous and very easy to use.
 
 All services derive from the same `CaptchaService` class and have the same code API, so it's very easy to switch between services!
 
-## Supported Captchas
+## Supported Captcha Types
 This library supports the following captcha types
 - Text (with language options)
 - Image (with options like phrase, case sensitivity, calculations)
@@ -19,6 +19,13 @@ This library supports the following captcha types
 - Cloudflare Turnstile
 - Lemin Cropped
 - Amazon WAF
+- Cyber SiARA
+- MT Captcha
+- CutCaptcha
+- Friendly Captcha
+- atb Captcha
+- Tencent Captcha
+- Audio Captcha (with language options)
 
 Proxies are supported for services that support them.
 
