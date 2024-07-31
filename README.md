@@ -54,9 +54,11 @@ This library supports the following captcha types
 
 Proxies are supported for services that support them.
 
-**Not every captcha type is supported by each service! You can find a spreadsheet with a breakdown of the supported captcha types for each implemented service at the link below**
+## Availability Table
 
 ![Availability Table Logo](availability_table_logo.png?raw=true)
+
+**Not every captcha type is supported by each service! You can find a spreadsheet with a breakdown of the supported captcha types for each implemented service at the link below**
 
 [CaptchaSharp Services Availability](https://1drv.ms/x/s!Al8HxSfx2JL3ePfRK23aUt34eCk?e=WNCPh9)
 
