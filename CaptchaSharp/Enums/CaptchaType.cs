@@ -47,4 +47,7 @@ public enum CaptchaType
     
     /// <summary>Cyber SiARA captcha.</summary>
     CyberSiAra = 1 << 13,
+    
+    /// <summary>MT Captcha.</summary>
+    MtCaptcha = 1 << 14,
 }

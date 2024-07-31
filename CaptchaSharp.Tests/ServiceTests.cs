@@ -476,4 +476,21 @@ public class ServiceTests
     });
     
     protected Task CyberSiAraTest_WithProxy() => CyberSiAraTest(_fixture.Config.Proxy);
+    
+    private async Task MtCaptchaTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveMtCaptchaAsync(
+            siteKey: "MTPublic-KzqLY1cKH",
+            siteUrl: "https://2captcha.com/demo/mtcaptcha",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task MtCaptchaTest_NoProxy() => MtCaptchaTest(null);
+    
+    protected Task MtCaptchaTest_WithProxy() => MtCaptchaTest(_fixture.Config.Proxy);
 }

@@ -49,4 +49,6 @@ public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper
     [Fact] public Task SolveAmazonWafAsync_WithProxy_ValidSolution() => AmazonWafTest_WithProxy();
     [Fact] public Task SolveCyberSiAraAsync_NoProxy_ValidSolution() => CyberSiAraTest_NoProxy();
     [Fact] public Task SolveCyberSiAraAsync_WithProxy_ValidSolution() => CyberSiAraTest_WithProxy();
+    [Fact] public Task SolveMtCaptchaAsync_NoProxy_ValidSolution() => MtCaptchaTest_NoProxy();
+    [Fact] public Task SolveMtCaptchaAsync_WithProxy_ValidSolution() => MtCaptchaTest_WithProxy();
 }

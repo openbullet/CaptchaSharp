@@ -412,6 +412,40 @@ public class CapSolverService : CaptchaService
             response, CaptchaType.AmazonWaf,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveMtCaptchaAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+
+        if (proxy is not null)
+        {
+            content.Task = new MtCaptchaTask
+            {
+                WebsiteKey = siteKey,
+                WebsiteURL = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            content.Task = new MtCaptchaTaskProxyless
+            {
+                WebsiteKey = siteKey,
+                WebsiteURL = siteUrl
+            };
+        }
+
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(response, CaptchaType.MtCaptcha,
+            cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -472,6 +506,7 @@ public class CapSolverService : CaptchaService
             CaptchaType.DataDome => solution.ToObject<DataDomeSolution>(),
             CaptchaType.CloudflareTurnstile => solution.ToObject<CloudflareTurnstileSolution>(),
             CaptchaType.AmazonWaf => solution.ToObject<AmazonWafSolution>(),
+            CaptchaType.MtCaptcha => solution.ToObject<MtCaptchaSolution>(),
             _ => throw new NotSupportedException($"The captcha type {task.Type} is not supported")
         } ?? throw new TaskSolutionException("The solution is null");
 

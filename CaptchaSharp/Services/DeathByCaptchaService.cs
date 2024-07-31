@@ -556,6 +556,43 @@ public class DeathByCaptchaService : CaptchaService
             HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
             CaptchaType.CyberSiAra, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveMtCaptchaAsync(
+        string siteKey, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+        
+        if (proxy is not null)
+        {
+            task = new MtCaptchaDbcTask
+            {
+                SiteKey = siteKey,
+                PageUrl = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new MtCaptchaDbcTaskProxyless
+            {
+                SiteKey = siteKey,
+                PageUrl = siteUrl
+            };
+        }
+        
+        var response = await HttpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 18)
+                    .Add("mtcaptcha_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.MtCaptcha, cancellationToken);
+    }
     #endregion
 
     #region Getting the result
