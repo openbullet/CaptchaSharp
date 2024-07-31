@@ -4,13 +4,38 @@ The library is fully documented, asynchronous and very easy to use.
 
 All services derive from the same `CaptchaService` class and have the same code API, so it's very easy to switch between services!
 
+## Supported Services
+This library supports the following captcha solving services
+- [2captcha.com](https://2captcha.com/)
+- [anti-captcha.com](https://anti-captcha.com/)
+- [deathbycaptcha.com](https://deathbycaptcha.com/)
+- [imagetyperz.com](https://www.imagetyperz.com/)
+- [capmonster.cloud](https://capmonster.cloud/)
+- [capsolver.com](https://capsolver.com/)
+- [captchacoder.com](https://captchacoder.com/)
+- [humancoder.com](https://humancoder.com/)
+- [azcaptcha.com](https://azcaptcha.com/)
+- [captchas.io](https://captchas.io/)
+- [9kw.eu](https://www.9kw.eu/)
+- [truecaptcha.com](https://truecaptcha.com/)
+- [rucaptcha.com](https://rucaptcha.com/)
+- [nopecha.com](https://nopecha.com/)
+- [nocaptchaai.com](https://nocaptchaai.com/)
+- [metabypass.tech](https://metabypass.tech/)
+- [captchaai.com](https://captchaai.com/)
+- [nextcaptcha.com](https://nextcaptcha.com/)
+- [ez-captcha.com](https://ez-captcha.com/)
+- [endcaptcha.com](https://endcaptcha.com/)
+- [bestcaptchasolver.com](https://bestcaptchasolver.com/)
+- [solvecaptcha.net](https://solvecaptcha.net/)
+
 ## Supported Captcha Types
 This library supports the following captcha types
 - Text (with language options)
 - Image (with options like phrase, case sensitivity, calculations)
 - ReCaptcha V2 (incl. invisible, enterprise)
 - ReCaptcha V3 (incl. enterprise)
-- FunCaptcha
+- ArkoseLabs FunCaptcha
 - HCaptcha
 - KeyCaptcha
 - GeeTest
@@ -29,7 +54,9 @@ This library supports the following captcha types
 
 Proxies are supported for services that support them.
 
-Not every captcha type is supported by each service. You can find a spreadsheet with a breakdown of the supported captcha types for each implemented service at the following link
+**Not every captcha type is supported by each service! You can find a spreadsheet with a breakdown of the supported captcha types for each implemented service at the link below**
+
+![Availability Table Logo](availability_table_logo.png?raw=true)
 
 [CaptchaSharp Services Availability](https://1drv.ms/x/s!Al8HxSfx2JL3ePfRK23aUt34eCk?e=WNCPh9)
 
