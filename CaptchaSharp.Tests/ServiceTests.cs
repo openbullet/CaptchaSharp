@@ -455,4 +455,25 @@ public class ServiceTests
     protected Task AmazonWafTest_NoProxy() => AmazonWafTest(null);
     
     protected Task AmazonWafTest_WithProxy() => AmazonWafTest(_fixture.Config.Proxy);
+
+    private async Task CyberSiAraTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveCyberSiAraAsync(
+            masterUrlId: "ABEBCAFBAAEDADFCBCCBEBAFCDDBBFEF",
+            siteUrl: "https://mycybersiara.com/login",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task CyberSiAraTest_NoProxy() => CyberSiAraTest(new Proxy
+    {
+        // User-Agent required
+        UserAgent = _fixture.Config.Proxy.UserAgent
+    });
+    
+    protected Task CyberSiAraTest_WithProxy() => CyberSiAraTest(_fixture.Config.Proxy);
 }

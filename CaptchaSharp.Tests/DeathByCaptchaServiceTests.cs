@@ -48,4 +48,6 @@ public class DeathByCaptchaServiceTests(DeathByCaptchaFixture fixture, ITestOutp
     [Fact] public Task SolveLeminCroppedAsync_WithProxy_ValidSolution() => LeminCroppedTest_WithProxy();
     [Fact] public Task SolveAmazonWafAsync_NoProxy_ValidSolution() => AmazonWafTest_NoProxy();
     [Fact] public Task SolveAmazonWafAsync_WithProxy_ValidSolution() => AmazonWafTest_WithProxy();
+    [Fact] public Task SolveCyberSiAraAsync_NoProxy_ValidSolution() => CyberSiAraTest_NoProxy();
+    [Fact] public Task SolveCyberSiAraAsync_WithProxy_ValidSolution() => CyberSiAraTest_WithProxy();
 }

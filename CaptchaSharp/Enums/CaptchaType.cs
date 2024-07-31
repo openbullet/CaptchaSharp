@@ -44,4 +44,7 @@ public enum CaptchaType
     
     /// <summary>Amazon WAF captcha.</summary>
     AmazonWaf = 1 << 12,
+    
+    /// <summary>Cyber SiARA captcha.</summary>
+    CyberSiAra = 1 << 13,
 }

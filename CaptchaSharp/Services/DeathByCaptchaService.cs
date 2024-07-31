@@ -512,6 +512,50 @@ public class DeathByCaptchaService : CaptchaService
             HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
             CaptchaType.AmazonWaf, cancellationToken);
     }
+    
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveCyberSiAraAsync(
+        string masterUrlId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (proxy?.UserAgent is null)
+        {
+            throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
+        }
+        
+        DbcTaskProxyless task;
+        
+        if (proxy.Host is not null)
+        {
+            task = new CyberSiAraDbcTask
+            {
+                SlideUrlId = masterUrlId,
+                PageUrl = siteUrl,
+                UserAgent = proxy.UserAgent
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new CyberSiAraDbcTaskProxyless
+            {
+                SlideUrlId = masterUrlId,
+                PageUrl = siteUrl,
+                UserAgent = proxy.UserAgent
+            };
+        }
+        
+        var response = await HttpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 17)
+                    .Add("siara_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<StringResponse>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.CyberSiAra, cancellationToken);
+    }
     #endregion
 
     #region Getting the result

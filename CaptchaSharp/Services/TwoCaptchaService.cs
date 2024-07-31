@@ -475,6 +475,39 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.AmazonWaf,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveCyberSiAraAsync(
+        string masterUrlId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (proxy?.UserAgent is null)
+        {
+            throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
+        }
+        
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "cybersiara")
+                .Add("master_url_id", masterUrlId)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertProxy(proxy))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CyberSiAra,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.CyberSiAra,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
