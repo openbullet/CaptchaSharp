@@ -593,6 +593,35 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.FriendlyCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAtbCaptchaAsync(
+        string appId, string apiServer, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "atb_captcha")
+                .Add("app_id", appId)
+                .Add("api_server", apiServer)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertProxy(proxy))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AtbCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.AtbCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result

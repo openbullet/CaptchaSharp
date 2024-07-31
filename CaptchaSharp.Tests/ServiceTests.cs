@@ -528,4 +528,22 @@ public class ServiceTests
     protected Task FriendlyCaptchaTest_NoProxy() => FriendlyCaptchaTest(null);
     
     protected Task FriendlyCaptchaTest_WithProxy() => FriendlyCaptchaTest(_fixture.Config.Proxy);
+
+    private async Task AtbCaptchaTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveAtbCaptchaAsync(
+            appId: "af25e409b33d722a95e56a230ff8771c",
+            apiServer: "https://cap.aisecurius.com",
+            siteUrl: "https://renslider.com",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task AtbCaptchaTest_NoProxy() => AtbCaptchaTest(null);
+    
+    protected Task AtbCaptchaTest_WithProxy() => AtbCaptchaTest(_fixture.Config.Proxy);
 }
