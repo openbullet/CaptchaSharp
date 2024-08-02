@@ -65,4 +65,7 @@ public enum CaptchaType
     
     /// <summary>A captcha that is an audio file with some text to recognize.</summary>
     AudioCaptcha = 1 << 19,
+    
+    /// <summary>Google ReCaptcha Mobile.</summary>
+    ReCaptchaMobile = 1 << 20,
 }

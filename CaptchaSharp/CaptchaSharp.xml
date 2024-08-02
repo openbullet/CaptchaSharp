@@ -283,6 +283,9 @@
         <member name="F:CaptchaSharp.Enums.CaptchaType.AudioCaptcha">
             <summary>A captcha that is an audio file with some text to recognize.</summary>
         </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.ReCaptchaMobile">
+            <summary>Google ReCaptcha Mobile.</summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
         </member>
@@ -1720,6 +1723,31 @@
              <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
              <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveRecaptchaMobileAsync(System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+             <summary>Solves a Google ReCaptcha for mobile apps.</summary>
+            
+             <param name="appPackageName">The package name of the app.</param>
+             <param name="appKey">The app key, can be found in the app source or by sniffing requests.</param>
+             <param name="appAction">The action to execute. Can be found in the app source or in a js file.</param>
+            
+             <param name="proxy">
+             A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+             going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+             fetch the captcha without using a proxy.
+             </param>
+             
+             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+             
+             <returns>
+             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             captcha solution as plaintext.
+             </returns>
+             
+             <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+             <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
@@ -2117,6 +2145,9 @@
             </summary>
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.NextCaptchaService.SolveRecaptchaMobileAsync(System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.NineKwService">
             <summary>

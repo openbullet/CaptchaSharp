@@ -1,6 +1,13 @@
 using System;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using CaptchaSharp.Enums;
+using CaptchaSharp.Extensions;
+using CaptchaSharp.Models;
+using CaptchaSharp.Models.AntiCaptcha.Responses;
+using CaptchaSharp.Models.NextCaptcha.Requests.Tasks;
+using CaptchaSharp.Models.NextCaptcha.Requests.Tasks.Proxied;
 
 namespace CaptchaSharp.Services;
 
@@ -25,4 +32,42 @@ public class NextCaptchaService : CustomAntiCaptchaService
 
         SoftId = null;
     }
+
+    #region Solve Methods
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaMobileAsync(
+        string appPackageName, string appKey, string appAction, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+
+        if (proxy is not null)
+        {
+            content.Task = new RecaptchaMobileTask
+            {
+                AppPackageName = appPackageName,
+                AppKey = appKey,
+                AppAction = appAction,
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            content.Task = new RecaptchaMobileTaskProxyless
+            {
+                AppPackageName = appPackageName,
+                AppKey = appKey,
+                AppAction = appAction,
+            };
+        }
+        
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaMobile,
+            cancellationToken).ConfigureAwait(false);
+    }
+    #endregion
 }

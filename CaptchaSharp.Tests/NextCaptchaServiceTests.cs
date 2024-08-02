@@ -29,4 +29,6 @@ public class NextCaptchaServiceTests(NextCaptchaFixture fixture, ITestOutputHelp
     [Fact] public Task SolveFuncaptchaAsync_WithProxy_ValidSolution() => FunCaptchaTest_WithProxy();
     [Fact] public Task SolveHCaptchaAsync_NoProxy_ValidSolution() => HCaptchaTest_NoProxy();
     [Fact] public Task SolveHCaptchaAsync_WithProxy_ValidSolution() => HCaptchaTest_WithProxy();
+    [Fact] public Task SolveRecaptchaMobileAsync_NoProxy_ValidSolution() => RecaptchaMobileTest_NoProxy();
+    [Fact] public Task SolveRecaptchaMobileAsync_WithProxy_ValidSolution() => RecaptchaMobileTest_WithProxy();
 }

@@ -51,8 +51,9 @@ This library supports the following captcha types
 - atb Captcha
 - Tencent Captcha
 - Audio Captcha (with language options)
+- ReCaptcha Mobile
 
-Proxies are supported for services that support them.
+Proxies are supported for services that accept them.
 
 ## Availability Table
 

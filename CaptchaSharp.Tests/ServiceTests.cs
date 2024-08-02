@@ -587,4 +587,22 @@ public class ServiceTests
         _output.WriteLine($"Captcha ID: {solution.Id}");
         _output.WriteLine($"Response: {solution.Response}");
     }
+
+    private async Task RecaptchaMobileTest(Proxy? proxy)
+    {
+        var solution = await Service.SolveRecaptchaMobileAsync(
+            appPackageName: "",
+            appKey: "",
+            appAction: "login",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task RecaptchaMobileTest_NoProxy() => RecaptchaMobileTest(null);
+    
+    protected Task RecaptchaMobileTest_WithProxy() => RecaptchaMobileTest(_fixture.Config.Proxy);
 }
