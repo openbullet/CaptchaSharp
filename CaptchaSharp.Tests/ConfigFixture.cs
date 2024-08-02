@@ -66,4 +66,5 @@ public class Credentials
     public string SolveCaptchaApiKey { get; set; } = string.Empty;
     public string EndCaptchaUsername { get; set; } = string.Empty;
     public string EndCaptchaPassword { get; set; } = string.Empty;
+    public string CapGuruApiKey { get; set; } = string.Empty;
 }

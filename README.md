@@ -28,6 +28,7 @@ This library supports the following captcha solving services
 - [endcaptcha.com](https://endcaptcha.com/)
 - [bestcaptchasolver.com](https://bestcaptchasolver.com/)
 - [solvecaptcha.net](https://solvecaptcha.net/)
+- [cap.guru](https://cap.guru/)
 
 ## Supported Captcha Types
 This library supports the following captcha types
