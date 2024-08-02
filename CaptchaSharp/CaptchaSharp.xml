@@ -1764,6 +1764,9 @@
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
+        <member name="M:CaptchaSharp.Services.CaptchasIoService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:CaptchaSharp.Services.CustomAntiCaptchaService">
             <summary>
             The service provided by a service that implements the anti-captcha API.

@@ -38,4 +38,5 @@ public class CaptchasIoServiceTests(CaptchasIoFixture fixture, ITestOutputHelper
     [Fact] public Task SolveGeeTestAsync_WithProxy_ValidSolution() => GeeTestTest_WithProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_NoProxy_ValidSolution() => CloudflareTurnstileTest_NoProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_WithProxy_ValidSolution() => CloudflareTurnstileTest_WithProxy();
+    [Fact] public Task SolveAudioCaptchaAsync_ValidCaptcha_ValidSolution() => AudioCaptchaTest();
 }
