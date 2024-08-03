@@ -172,8 +172,8 @@ public class NineKwService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",

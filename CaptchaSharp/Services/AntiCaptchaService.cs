@@ -227,8 +227,8 @@ public class AntiCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null, 
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
             
@@ -237,7 +237,10 @@ public class AntiCaptchaService : CaptchaService
             content.Task = new HCaptchaTask
             {
                 WebsiteKey = siteKey,
-                WebsiteURL = siteUrl,
+                WebsiteUrl = siteUrl,
+                IsInvisible = invisible,
+                IsEnterprise = !string.IsNullOrEmpty(enterprisePayload),
+                EnterprisePayload = enterprisePayload is null ? null : JObject.Parse(enterprisePayload)
             }.SetProxy(proxy);
         }
         else
@@ -245,7 +248,10 @@ public class AntiCaptchaService : CaptchaService
             content.Task = new HCaptchaTaskProxyless
             {
                 WebsiteKey = siteKey,
-                WebsiteURL = siteUrl,
+                WebsiteUrl = siteUrl,
+                IsInvisible = invisible,
+                IsEnterprise = !string.IsNullOrEmpty(enterprisePayload),
+                EnterprisePayload = enterprisePayload is null ? null : JObject.Parse(enterprisePayload)
             };
         }
             

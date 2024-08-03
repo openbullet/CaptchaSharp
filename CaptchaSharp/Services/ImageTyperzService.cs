@@ -154,8 +154,8 @@ public class ImageTyperzService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostToStringAsync(
             "captchaapi/UploadHCaptchaUser.ashx",
@@ -164,6 +164,8 @@ public class ImageTyperzService : CaptchaService
                 .Add("action", "UPLOADCAPTCHA")
                 .Add("pageurl", siteUrl)
                 .Add("sitekey", siteKey)
+                .Add("invisible", 1, invisible)
+                .Add("HcaptchaEnterprise", enterprisePayload!, !string.IsNullOrEmpty(enterprisePayload))
                 .Add(GetProxyParams(proxy)),
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);

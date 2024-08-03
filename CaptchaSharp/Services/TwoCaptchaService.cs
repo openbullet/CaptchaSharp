@@ -250,8 +250,8 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -259,6 +259,8 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "hcaptcha")
                 .Add("sitekey", siteKey)
                 .Add("pageurl", siteUrl)
+                .Add("invisible", Convert.ToInt32(invisible).ToString())
+                .Add("data", enterprisePayload!, !string.IsNullOrEmpty(enterprisePayload))
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)

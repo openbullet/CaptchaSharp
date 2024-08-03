@@ -196,8 +196,8 @@ public class SolveCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         
@@ -206,7 +206,9 @@ public class SolveCaptchaService : CaptchaService
             content.Task = new HCaptchaTask
             {
                 SiteKey = siteKey,
-                PageUrl = siteUrl
+                PageUrl = siteUrl,
+                IsInvisible = invisible,
+                DataS = enterprisePayload
             };
         }
         else
@@ -214,7 +216,9 @@ public class SolveCaptchaService : CaptchaService
             content.Task = new HCaptchaTaskProxyless
             {
                 SiteKey = siteKey,
-                PageUrl = siteUrl
+                PageUrl = siteUrl,
+                IsInvisible = invisible,
+                DataS = enterprisePayload
             };
         }
         

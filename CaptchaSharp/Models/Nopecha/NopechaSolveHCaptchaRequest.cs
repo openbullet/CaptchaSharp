@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CaptchaSharp.Models.Nopecha;
 
@@ -9,6 +10,9 @@ internal class NopechaSolveHCaptchaRequest : NopechaSolveTokenRequest
     
     [JsonProperty("url")]
     public required string Url { get; set; }
+    
+    [JsonProperty("data")]
+    public JObject? Data { get; set; }
     
     public NopechaSolveHCaptchaRequest()
     {

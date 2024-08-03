@@ -194,14 +194,18 @@ public class EzCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         content.Task = new HcaptchaTaskProxyless
         {
             WebsiteKey = siteKey,
-            WebsiteURL = siteUrl
+            WebsiteUrl = siteUrl,
+            IsInvisible = invisible,
+            EnterprisePayload = string.IsNullOrEmpty(enterprisePayload) 
+                ? null
+                : JObject.Parse(enterprisePayload)
         };
         
         var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(

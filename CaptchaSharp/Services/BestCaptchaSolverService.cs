@@ -183,15 +183,17 @@ public class BestCaptchaSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveHCaptchaRequest
         {
             AccessToken = ApiKey,
             AffiliateId = _affiliateId,
             SiteKey = siteKey,
-            PageUrl = siteUrl
+            PageUrl = siteUrl,
+            Invisible = invisible,
+            Payload = enterprisePayload
         };
         
         payload.SetProxy(proxy);

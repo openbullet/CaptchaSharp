@@ -214,6 +214,8 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
+    /// <param name="invisible">Whether the captcha is not in a clickable format on the page.</param>
+    /// <param name="enterprisePayload">The enterprise payload as a JSON string, if this is an enterprise HCaptcha.</param>
     /// 
     /// <param name="proxy">
     /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
@@ -233,8 +235,8 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }

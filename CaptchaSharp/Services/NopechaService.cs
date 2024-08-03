@@ -138,14 +138,17 @@ public class NopechaService : CaptchaService
 
     /// <inheritdoc />
     public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var payload = new NopechaSolveHCaptchaRequest
         {
             ApiKey = ApiKey,
             SiteKey = siteKey,
-            Url = siteUrl
+            Url = siteUrl,
+            Data = string.IsNullOrEmpty(enterprisePayload)
+                ? null 
+                : JObject.Parse(enterprisePayload),
         };
         
         payload.SetProxy(proxy, siteUrl);

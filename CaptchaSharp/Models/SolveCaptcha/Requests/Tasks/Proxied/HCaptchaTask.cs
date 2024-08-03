@@ -10,6 +10,12 @@ internal class HCaptchaTask : SolveCaptchaTask
     [JsonProperty("site_key")]
     public required string SiteKey { get; set; }
     
+    [JsonProperty("isInvisible")]
+    public bool IsInvisible { get; set; }
+    
+    [JsonProperty("data_s", NullValueHandling = NullValueHandling.Ignore)]
+    public string? DataS { get; set; }
+    
     public HCaptchaTask()
     {
         Method = "HCaptchaTask";

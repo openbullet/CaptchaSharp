@@ -238,6 +238,8 @@ public class ServiceTests
         var solution = await Service.SolveHCaptchaAsync(
             siteKey: "f7de0da3-3303-44e8-ab48-fa32ff8ccc7b",
             siteUrl: "https://2captcha.com/demo/hcaptcha",
+            invisible: false,
+            enterprisePayload: null,
             proxy);
 
         Assert.NotEqual(string.Empty, solution.Response);
