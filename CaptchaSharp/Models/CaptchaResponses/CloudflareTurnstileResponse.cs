@@ -1,4 +1,4 @@
-namespace CaptchaSharp.Models;
+namespace CaptchaSharp.Models.CaptchaResponses;
 
 /// <summary>
 /// A captcha response for Cloudflare's Turnstile.

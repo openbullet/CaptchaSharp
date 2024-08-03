@@ -1,4 +1,6 @@
-﻿namespace CaptchaSharp.Models.CapSolver.Responses.Solutions;
+﻿using CaptchaSharp.Models.CaptchaResponses;
+
+namespace CaptchaSharp.Models.CapSolver.Responses.Solutions;
 
 internal class GeeTestSolution : Solution
 {

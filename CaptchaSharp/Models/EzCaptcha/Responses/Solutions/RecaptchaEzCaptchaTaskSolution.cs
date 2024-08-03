@@ -1,3 +1,5 @@
+using CaptchaSharp.Models.CaptchaResponses;
+
 namespace CaptchaSharp.Models.EzCaptcha.Responses.Solutions;
 
 internal class RecaptchaEzCaptchaTaskSolution : EzCaptchaTaskSolution

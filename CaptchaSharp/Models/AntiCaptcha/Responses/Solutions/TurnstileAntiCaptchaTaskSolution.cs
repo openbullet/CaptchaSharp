@@ -1,4 +1,4 @@
-using CaptchaSharp.Models;
+using CaptchaSharp.Models.CaptchaResponses;
 
 namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
 

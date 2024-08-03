@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 using CaptchaSharp.Models.TwoCaptcha;
 
 namespace CaptchaSharp.Services;

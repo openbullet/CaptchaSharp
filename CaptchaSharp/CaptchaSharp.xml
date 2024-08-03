@@ -548,24 +548,163 @@
             The ID of the created task.
             </summary>
         </member>
-        <member name="T:CaptchaSharp.Models.AudioCaptchaOptions">
+        <member name="T:CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions">
             <summary>
             Provides additional options for an audio based captcha task.
             </summary>
         </member>
-        <member name="P:CaptchaSharp.Models.AudioCaptchaOptions.CaptchaLanguage">
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions.CaptchaLanguage">
             <summary>
             The language of the audio.
             </summary>
         </member>
-        <member name="T:CaptchaSharp.Models.CaptchaResponse">
+        <member name="T:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions">
+            <summary>Provides additional options for an image based captcha task.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.IsPhrase">
+            <summary>Whether the captcha is made of multiple words.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.CaseSensitive">
+            <summary>Whether the captcha should be solved as case-sensitive.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.CharacterSet">
+            <summary>The set of allowed characters.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.RequiresCalculation">
+            <summary>Whether the captcha includes mathematical calculations.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.MinLength">
+            <summary>The minimum possible length of the text.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.MaxLength">
+            <summary>The maximum possible length of the text.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.CaptchaLanguageGroup">
+            <summary>The language group of the text.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.CaptchaLanguage">
+            <summary>The language of the text.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions.TextInstructions">
+            <summary>Any additional text instruction (e.g. type the characters in red).</summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaOptions.TextCaptchaOptions">
+            <summary>
+            Provides additional options for a text based captcha task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.TextCaptchaOptions.CaptchaLanguageGroup">
+            <summary>
+            The language group of the text.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaOptions.TextCaptchaOptions.CaptchaLanguage">
+            <summary>
+            The language of the text.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.CaptchaResponse">
             <summary>A generic captcha response.</summary>
         </member>
-        <member name="P:CaptchaSharp.Models.CaptchaResponse.Id">
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.CaptchaResponse.Id">
             <summary>The captcha id which is needed to report the solution as bad.</summary>
         </member>
-        <member name="P:CaptchaSharp.Models.CaptchaResponse.CompletedAt">
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.CaptchaResponse.CompletedAt">
             <summary>The time when the solution was received.</summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.CapyResponse">
+            <summary>The solution of a Capy captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.CapyResponse.CaptchaKey">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.CapyResponse.ChallengeKey">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.CapyResponse.Answer">
+            <summary></summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.CloudflareTurnstileResponse">
+            <summary>
+            A captcha response for Cloudflare's Turnstile.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.CloudflareTurnstileResponse.Response">
+            <summary>
+            The response token.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.CloudflareTurnstileResponse.UserAgent">
+            <summary>
+            The user agent used to solve the challenge. It must be also used
+            when submitting the response to the target website.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.GeeTestResponse">
+            <summary>The solution of a GeeTest captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestResponse.Challenge">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestResponse.Validate">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestResponse.SecCode">
+            <summary></summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.GeeTestV4Response">
+            <summary>The solution of a GeeTest v4 captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestV4Response.CaptchaId">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestV4Response.LotNumber">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestV4Response.PassToken">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestV4Response.GenTime">
+            <summary></summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.GeeTestV4Response.CaptchaOutput">
+            <summary></summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.LeminCroppedResponse">
+            <summary>
+            A captcha response for Lemin Cropped Captchas.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.LeminCroppedResponse.Answer">
+            <summary>
+            The answer to the challenge.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.LeminCroppedResponse.ChallengeId">
+            <summary>
+            The challenge ID.
+            </summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.StringResponse">
+            <summary>A captcha response with a string solution.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.StringResponse.Response">
+            <summary>The plaintext response string.</summary>
+        </member>
+        <member name="T:CaptchaSharp.Models.CaptchaResponses.TencentCaptchaResponse">
+            <summary>The solution of a Tencent captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.TencentCaptchaResponse.AppId">
+            <summary>The ID of the app that requested the captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.TencentCaptchaResponse.Ticket">
+            <summary>The ticket that needs to be sent to the server to verify the captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.TencentCaptchaResponse.ReturnCode">
+            <summary>The return code of the captcha.</summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.CaptchaResponses.TencentCaptchaResponse.RandomString">
+            <summary>A random string that needs to be sent to the server to verify the captcha.</summary>
         </member>
         <member name="T:CaptchaSharp.Models.CaptchaTask">
             <summary>Information about a captcha task</summary>
@@ -584,34 +723,6 @@
         </member>
         <member name="M:CaptchaSharp.Models.CaptchaTask.#ctor(System.String,CaptchaSharp.Enums.CaptchaType)">
             <summary>Creates a <see cref="T:CaptchaSharp.Models.CaptchaTask"/> from a string id</summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.CapyResponse">
-            <summary>The solution of a Capy captcha.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.CapyResponse.CaptchaKey">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.CapyResponse.ChallengeKey">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.CapyResponse.Answer">
-            <summary></summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.CloudflareTurnstileResponse">
-            <summary>
-            A captcha response for Cloudflare's Turnstile.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.CloudflareTurnstileResponse.Response">
-            <summary>
-            The response token.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.CloudflareTurnstileResponse.UserAgent">
-            <summary>
-            The user agent used to solve the challenge. It must be also used
-            when submitting the response to the target website.
-            </summary>
         </member>
         <member name="T:CaptchaSharp.Models.EzCaptcha.Requests.CaptchaTaskEzCaptchaRequest">
             <summary>
@@ -688,66 +799,6 @@
             The ID of the created task.
             </summary>
         </member>
-        <member name="T:CaptchaSharp.Models.GeeTestResponse">
-            <summary>The solution of a GeeTest captcha.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestResponse.Challenge">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestResponse.Validate">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestResponse.SecCode">
-            <summary></summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.GeeTestV4Response">
-            <summary>The solution of a GeeTest v4 captcha.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestV4Response.CaptchaId">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestV4Response.LotNumber">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestV4Response.PassToken">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestV4Response.GenTime">
-            <summary></summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.GeeTestV4Response.CaptchaOutput">
-            <summary></summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.ImageCaptchaOptions">
-            <summary>Provides additional options for an image based captcha task.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.IsPhrase">
-            <summary>Whether the captcha is made of multiple words.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.CaseSensitive">
-            <summary>Whether the captcha should be solved as case-sensitive.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.CharacterSet">
-            <summary>The set of allowed characters.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.RequiresCalculation">
-            <summary>Whether the captcha includes mathematical calculations.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.MinLength">
-            <summary>The minimum possible length of the text.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.MaxLength">
-            <summary>The maximum possible length of the text.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.CaptchaLanguageGroup">
-            <summary>The language group of the text.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.CaptchaLanguage">
-            <summary>The language of the text.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.ImageCaptchaOptions.TextInstructions">
-            <summary>Any additional text instruction (e.g. type the characters in red).</summary>
-        </member>
         <member name="T:CaptchaSharp.Models.ImageTyperz.ImageTyperzResponse">
             <summary>
             The response for a captcha task.
@@ -781,21 +832,6 @@
         <member name="P:CaptchaSharp.Models.ImageTyperz.ImageTyperzTaskCreatedResponse.CaptchaId">
             <summary>
             The captcha id.
-            </summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.LeminCroppedResponse">
-            <summary>
-            A captcha response for Lemin Cropped Captchas.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.LeminCroppedResponse.Answer">
-            <summary>
-            The answer to the challenge.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.LeminCroppedResponse.ChallengeId">
-            <summary>
-            The challenge ID.
             </summary>
         </member>
         <member name="P:CaptchaSharp.Models.Nopecha.NopechaCookie.ExpirationDate">
@@ -933,42 +969,6 @@
             of the collection becomes a <see cref="T:System.Net.Http.StringContent"/>.
             </summary>
         </member>
-        <member name="T:CaptchaSharp.Models.StringResponse">
-            <summary>A captcha response with a string solution.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.StringResponse.Response">
-            <summary>The plaintext response string.</summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.TencentCaptchaResponse">
-            <summary>The solution of a Tencent captcha.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.AppId">
-            <summary>The ID of the app that requested the captcha.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.Ticket">
-            <summary>The ticket that needs to be sent to the server to verify the captcha.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.ReturnCode">
-            <summary>The return code of the captcha.</summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.TencentCaptchaResponse.RandomString">
-            <summary>A random string that needs to be sent to the server to verify the captcha.</summary>
-        </member>
-        <member name="T:CaptchaSharp.Models.TextCaptchaOptions">
-            <summary>
-            Provides additional options for a text based captcha task.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.TextCaptchaOptions.CaptchaLanguageGroup">
-            <summary>
-            The language group of the text.
-            </summary>
-        </member>
-        <member name="P:CaptchaSharp.Models.TextCaptchaOptions.CaptchaLanguage">
-            <summary>
-            The language of the text.
-            </summary>
-        </member>
         <member name="P:CaptchaSharp.Models.TwoCaptcha.TwoCaptchaCloudflareTurnstileResponse.UserAgent">
             <summary>
             The User-Agent used to solve the challenge.
@@ -999,7 +999,7 @@
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -1079,7 +1079,7 @@
         <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -1153,7 +1153,7 @@
             <param name="baseUri">The base URI of the service.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
-        <member name="M:CaptchaSharp.Services.CapMonsterService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CapMonsterService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.CapSolverService">
@@ -1181,7 +1181,7 @@
         <member name="M:CaptchaSharp.Services.CapSolverService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.CapSolverService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CapSolverService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.CapSolverService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -1256,7 +1256,7 @@
         <member name="M:CaptchaSharp.Services.CaptchaCoderService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaCoderService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.CaptchaCoderService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -1296,7 +1296,7 @@
             <summary>Retrieves the remaining balance in USD as a <see cref="T:System.Double"/>.</summary>
             <exception cref="T:CaptchaSharp.Exceptions.BadAuthenticationException">Thrown when the provided credentials are invalid.</exception>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.TextCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.TextCaptchaOptions,System.Threading.CancellationToken)">
             <summary>Solves a text based captcha.</summary>
             
             <param name="text">The captcha question.</param>
@@ -1309,7 +1309,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1318,7 +1318,7 @@
             <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
             <exception cref="T:System.TimeoutException"></exception>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <summary>Solves an image based captcha.</summary>
             
             <param name="base64">The captcha image encoded as a base64 string.</param>
@@ -1331,7 +1331,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             /// <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1358,7 +1358,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1384,7 +1384,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1425,7 +1425,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1451,7 +1451,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1478,7 +1478,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1504,7 +1504,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.GeeTestResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.GeeTestResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and three solution parameters 
             (Challenge, Validate and SecCode) that you will need to provide when you submit the form.
             </returns>
@@ -1528,7 +1528,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.CapyResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.CapyResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1553,7 +1553,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext (a.k.a. a valid datadome session cookie).
             </returns>
@@ -1580,7 +1580,7 @@
             <param name="cancellationToken">A token that can be used to cancel the async task.</param>
             
             <returns>
-            A <see cref="T:CaptchaSharp.Models.CloudflareTurnstileResponse"/> containing the captcha id to be used with 
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.CloudflareTurnstileResponse"/> containing the captcha id to be used with 
             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
@@ -1606,7 +1606,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.LeminCroppedResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.LeminCroppedResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1634,7 +1634,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1658,7 +1658,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1682,7 +1682,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1708,7 +1708,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1732,7 +1732,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1757,7 +1757,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1781,7 +1781,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.TencentCaptchaResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.TencentCaptchaResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution.
              </returns>
@@ -1790,7 +1790,7 @@
              <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
              <exception cref="T:System.TimeoutException"></exception>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions,System.Threading.CancellationToken)">
              <summary>Solves an audio captcha.</summary>
             
              <param name="base64">The captcha audio encoded as a base64 string.</param>
@@ -1799,7 +1799,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1824,7 +1824,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
@@ -1848,7 +1848,7 @@
              <param name="cancellationToken">A token that can be used to cancel the async task.</param>
              
              <returns>
-             A <see cref="T:CaptchaSharp.Models.GeeTestV4Response"/> containing the captcha id to be used with 
+             A <see cref="T:CaptchaSharp.Models.CaptchaResponses.GeeTestV4Response"/> containing the captcha id to be used with 
              <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution.
              </returns>
@@ -1864,7 +1864,7 @@
             Make sure to not abuse this system or the service might ban your account!
             </summary>
             
-            <param name="id">The string ID of the captcha that you got inside your <see cref="T:CaptchaSharp.Models.CaptchaResponse"/>.</param>
+            <param name="id">The string ID of the captcha that you got inside your <see cref="T:CaptchaSharp.Models.CaptchaResponses.CaptchaResponse"/>.</param>
             <param name="type">The type of captcha you want to report.</param>
             
             <param name="correct">
@@ -1901,7 +1901,7 @@
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchasIoService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchasIoService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.CustomAntiCaptchaService">
@@ -1963,7 +1963,7 @@
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2011,7 +2011,7 @@
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveFriendlyCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2049,7 +2049,7 @@
         <member name="M:CaptchaSharp.Services.EndCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2158,7 +2158,7 @@
         <member name="M:CaptchaSharp.Services.ImageTyperzService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2237,7 +2237,7 @@
         <member name="M:CaptchaSharp.Services.MetaBypassTechService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:CaptchaSharp.Services.MetaBypassTechService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="M:CaptchaSharp.Services.MetaBypassTechService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2284,10 +2284,10 @@
         <member name="M:CaptchaSharp.Services.NineKwService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.NineKwService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.TextCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.NineKwService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.TextCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.NineKwService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.NineKwService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.NineKwService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2316,7 +2316,7 @@
             The capabilities of the service.
             </summary>
         </member>
-        <member name="M:CaptchaSharp.Services.NineKwService.ConvertCapabilities(CaptchaSharp.Models.ImageCaptchaOptions)">
+        <member name="M:CaptchaSharp.Services.NineKwService.ConvertCapabilities(CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions)">
             <summary></summary>
         </member>
         <member name="T:CaptchaSharp.Services.NoCaptchaAiService">
@@ -2351,7 +2351,7 @@
         <member name="M:CaptchaSharp.Services.NopechaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:CaptchaSharp.Services.NopechaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.NopechaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="M:CaptchaSharp.Services.NopechaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2463,7 +2463,7 @@
         <member name="M:CaptchaSharp.Services.TrueCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TrueCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TrueCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TrueCaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
@@ -2502,10 +2502,10 @@
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.GetBalanceAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.TextCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveTextCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.TextCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2559,7 +2559,7 @@
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveTencentCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.AudioCaptchaOptions,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveAudioCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
@@ -2585,13 +2585,13 @@
             The capabilities of the service.
             </summary>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.TextCaptchaOptions)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.CaptchaOptions.TextCaptchaOptions)">
             <summary></summary>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.ImageCaptchaOptions)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions)">
             <summary></summary>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.AudioCaptchaOptions)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertCapabilities(CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions)">
             <summary></summary>
         </member>
     </members>

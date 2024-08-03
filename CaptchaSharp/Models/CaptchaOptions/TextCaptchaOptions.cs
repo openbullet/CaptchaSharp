@@ -1,6 +1,6 @@
 ﻿using CaptchaSharp.Enums;
 
-namespace CaptchaSharp.Models;
+namespace CaptchaSharp.Models.CaptchaOptions;
 
 /// <summary>
 /// Provides additional options for a text based captcha task.

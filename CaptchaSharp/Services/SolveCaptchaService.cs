@@ -7,6 +7,7 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
+using CaptchaSharp.Models.CaptchaResponses;
 using CaptchaSharp.Models.SolveCaptcha.Requests;
 using CaptchaSharp.Models.SolveCaptcha.Requests.Tasks;
 using CaptchaSharp.Models.SolveCaptcha.Requests.Tasks.Proxied;

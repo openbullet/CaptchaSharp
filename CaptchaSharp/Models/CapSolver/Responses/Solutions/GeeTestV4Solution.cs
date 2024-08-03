@@ -1,3 +1,4 @@
+using CaptchaSharp.Models.CaptchaResponses;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.CapSolver.Responses.Solutions;

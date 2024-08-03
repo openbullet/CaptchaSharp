@@ -6,6 +6,7 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
+using CaptchaSharp.Models.CaptchaResponses;
 using CaptchaSharp.Models.EzCaptcha.Responses;
 using CaptchaSharp.Models.EzCaptcha.Responses.Solutions;
 using CaptchaSharp.Models.EzCaptcha.Requests;

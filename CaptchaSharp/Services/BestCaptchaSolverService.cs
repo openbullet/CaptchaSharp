@@ -8,6 +8,8 @@ using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.BestCaptchaSolver.Requests;
 using CaptchaSharp.Models.BestCaptchaSolver.Responses;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 
 namespace CaptchaSharp.Services;
 

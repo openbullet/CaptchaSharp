@@ -1,4 +1,6 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
+﻿using CaptchaSharp.Models.CaptchaResponses;
+
+namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
 
 internal class ImageCaptchaAntiCaptchaTaskSolution : AntiCaptchaTaskSolution
 {

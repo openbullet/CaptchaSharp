@@ -7,6 +7,8 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 using CaptchaSharp.Models.Nopecha;
 using Newtonsoft.Json.Linq;
 

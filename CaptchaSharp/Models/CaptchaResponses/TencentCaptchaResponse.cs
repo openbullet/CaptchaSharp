@@ -1,4 +1,4 @@
-namespace CaptchaSharp.Models;
+namespace CaptchaSharp.Models.CaptchaResponses;
 
 /// <summary>The solution of a Tencent captcha.</summary>
 public class TencentCaptchaResponse : CaptchaResponse

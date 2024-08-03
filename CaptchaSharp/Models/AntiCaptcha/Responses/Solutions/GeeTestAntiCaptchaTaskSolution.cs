@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CaptchaSharp.Models.CaptchaResponses;
+using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
 

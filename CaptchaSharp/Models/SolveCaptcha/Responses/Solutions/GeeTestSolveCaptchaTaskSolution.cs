@@ -1,3 +1,5 @@
+using CaptchaSharp.Models.CaptchaResponses;
+
 namespace CaptchaSharp.Models.SolveCaptcha.Responses.Solutions;
 
 internal class GeeTestSolveCaptchaTaskSolution : SolveCaptchaTaskSolution

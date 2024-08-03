@@ -6,6 +6,7 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.AntiCaptcha.Responses;
+using CaptchaSharp.Models.CaptchaResponses;
 using CaptchaSharp.Models.NextCaptcha.Requests.Tasks;
 using CaptchaSharp.Models.NextCaptcha.Requests.Tasks.Proxied;
 

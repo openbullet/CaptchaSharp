@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CaptchaSharp.Models;
+namespace CaptchaSharp.Models.CaptchaResponses;
 
 /// <summary>A generic captcha response.</summary>
 public class CaptchaResponse

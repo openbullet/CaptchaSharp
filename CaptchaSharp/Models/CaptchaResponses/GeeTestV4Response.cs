@@ -1,4 +1,4 @@
-namespace CaptchaSharp.Models;
+namespace CaptchaSharp.Models.CaptchaResponses;
 
 /// <summary>The solution of a GeeTest v4 captcha.</summary>
 public class GeeTestV4Response : CaptchaResponse

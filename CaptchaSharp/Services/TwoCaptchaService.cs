@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System;
 using System.Collections.Immutable;
 using CaptchaSharp.Extensions;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 using Newtonsoft.Json.Linq;
 
 namespace CaptchaSharp.Services;

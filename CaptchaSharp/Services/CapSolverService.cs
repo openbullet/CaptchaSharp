@@ -12,6 +12,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Extensions;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 
 namespace CaptchaSharp.Services;
 

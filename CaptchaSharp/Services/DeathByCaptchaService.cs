@@ -15,6 +15,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using CaptchaSharp.Extensions;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 using CaptchaSharp.Models.DeathByCaptcha.Responses;
 
 namespace CaptchaSharp.Services;

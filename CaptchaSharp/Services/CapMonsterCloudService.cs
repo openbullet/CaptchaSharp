@@ -7,6 +7,7 @@ using CaptchaSharp.Extensions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.AntiCaptcha.Responses;
 using CaptchaSharp.Models.CapMonsterCloud.Requests.Tasks;
+using CaptchaSharp.Models.CaptchaResponses;
 using Newtonsoft.Json.Linq;
 
 namespace CaptchaSharp.Services;

@@ -1,5 +1,5 @@
-﻿using CaptchaSharp.Models;
-using System;
+﻿using System;
+using CaptchaSharp.Models.CaptchaResponses;
 
 namespace CaptchaSharp.Models.CapSolver.Responses.Solutions;
 
