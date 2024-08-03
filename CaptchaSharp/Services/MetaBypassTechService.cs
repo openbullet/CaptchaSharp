@@ -140,13 +140,8 @@ public class MetaBypassTechService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false,
-        bool invisible = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
-    {
-        if (proxy?.Host is not null)
-        {
-            throw new NotSupportedException("Proxies are not supported by metabypass.tech");
-        }
-        
+        bool invisible = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {   
         await EnsureAccessTokenAsync().ConfigureAwait(false);
         
         // When using version "invisible", we get "Service Failed" as a response
@@ -182,13 +177,8 @@ public class MetaBypassTechService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
-        if (proxy?.Host is not null)
-        {
-            throw new NotSupportedException("Proxies are not supported by metabypass.tech");
-        }
-        
         await EnsureAccessTokenAsync().ConfigureAwait(false);
         
         var payload = new MbtSolveRecaptchaRequest

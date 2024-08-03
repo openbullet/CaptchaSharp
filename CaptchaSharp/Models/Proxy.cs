@@ -1,5 +1,4 @@
 ﻿using CaptchaSharp.Enums;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models;
@@ -7,16 +6,14 @@ namespace CaptchaSharp.Models;
 /// <summary>A generic proxy class.</summary>
 public class Proxy
 {
-    // TODO: Remove UserAgent and Cookies properties from this class
-    
     /// <summary></summary>
-    public string? Host { get; set; }
+    public required string Host { get; set; }
 
     /// <summary></summary>
-    public int Port { get; set; }
+    public required int Port { get; set; }
 
     /// <summary></summary>
-    public ProxyType Type { get; set; }
+    public ProxyType Type { get; set; } = ProxyType.HTTP;
 
     /// <summary></summary>
     public string? Username { get; set; }
@@ -24,21 +21,19 @@ public class Proxy
     /// <summary></summary>
     public string? Password { get; set; }
 
-    /// <summary>The User-Agent header to be used in requests.</summary>
-    public string? UserAgent { get; set; }
-
-    /// <summary>The cookies needed to get to the page where the captcha is shown.</summary>
-    public (string Name, string Value)[]? Cookies { get; set; }
-
     /// <summary>Whether the proxy requires authentication.</summary>
     [JsonIgnore]
     public bool RequiresAuthentication => !string.IsNullOrEmpty(Username);
 
     /// <summary></summary>
-    public Proxy() { }
+    public Proxy()
+    {
+        // This parameterless constructor is required for JSON deserialization.
+    }
 
     /// <summary></summary>
-    public Proxy(string host, int port, ProxyType type = ProxyType.HTTP, string username = "", string password = "")
+    public Proxy(string host, int port, ProxyType type = ProxyType.HTTP,
+        string? username = null, string? password = null)
     {
         Host = host;
         Port = port;
@@ -46,7 +41,4 @@ public class Proxy
         Username = username;
         Password = password;
     }
-
-    internal string GetCookieString()
-        => Cookies != null ? string.Join("; ", Cookies.Select(c => $"{c.Name}={c.Value}")) : string.Empty;
 }

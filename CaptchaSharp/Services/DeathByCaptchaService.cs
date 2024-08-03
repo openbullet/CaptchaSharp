@@ -115,13 +115,13 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new RecaptchaV2DbcTask
         {
             GoogleKey = siteKey,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -139,7 +139,7 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new RecaptchaV3DbcTask
         {
@@ -147,7 +147,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl,
             Action = action,
             MinScore = minScore
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -165,13 +165,13 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new FunCaptchaDbcTask
         {
             PublicKey = publicKey,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -189,13 +189,13 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new HCaptchaDbcTask
         {
             SiteKey = siteKey,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -213,7 +213,7 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveKeyCaptchaAsync(
         string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new KeyCaptchaDbcTask
         {
@@ -222,7 +222,7 @@ public class DeathByCaptchaService : CaptchaService
             WebServerSign = webServerSign1,
             WebServerSign2 = webServerSign2,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -240,14 +240,14 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
         string gt, string challenge, string siteUrl, string? apiServer = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new GeeTestDbcTask
         {
             Gt = gt,
             Challenge = challenge,
             PageUrl = siteUrl,
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -264,14 +264,14 @@ public class DeathByCaptchaService : CaptchaService
     
     /// <inheritdoc/>
     public override async Task<CapyResponse> SolveCapyAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var task = new CapyDbcTask
         {
             CaptchaKey = siteKey,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -288,13 +288,13 @@ public class DeathByCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveDataDomeAsync(
-        string siteUrl, string captchaUrl, Proxy? proxy = null,
+        string siteUrl, string captchaUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
-        if (proxy?.Host is null)
+        if (sessionParams?.Proxy is null)
         {
             throw new ArgumentNullException(
-                nameof(proxy), "DataDome captchas require a proxy");
+                nameof(sessionParams), "DataDome captchas require a proxy");
         }
 
         // The DBC API will use the User-Agent defined on this page
@@ -305,7 +305,7 @@ public class DeathByCaptchaService : CaptchaService
         {
             PageUrl = siteUrl,
             CaptchaUrl = captchaUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -323,12 +323,12 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
-        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
-        if (proxy?.Host is null)
+        if (sessionParams?.Proxy is null)
         {
             throw new ArgumentNullException(
-                nameof(proxy), "Cloudflare Turnstile captchas require a proxy");
+                nameof(sessionParams), "Cloudflare Turnstile captchas require a proxy");
         }
         
         var task = new CloudflareTurnstileDbcTask
@@ -336,7 +336,7 @@ public class DeathByCaptchaService : CaptchaService
             SiteKey = siteKey,
             PageUrl = siteUrl,
             Action = action,
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -354,13 +354,13 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<LeminCroppedResponse> SolveLeminCroppedAsync(
         string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
-        string? divId = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? divId = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new LeminCroppedDbcTask
         {
             CaptchaId = captchaId,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -378,7 +378,7 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveAmazonWafAsync(
         string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
-        string? captchaScript = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? captchaScript = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var task = new AmazonWafDbcTask
         {
@@ -388,7 +388,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl,
             ChallengeJs = challengeScript,
             CaptchaJs = captchaScript
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -405,10 +405,10 @@ public class DeathByCaptchaService : CaptchaService
     
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveCyberSiAraAsync(
-        string masterUrlId, string siteUrl, Proxy? proxy = null,
+        string masterUrlId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
-        if (proxy?.UserAgent is null)
+        if (sessionParams?.UserAgent is null)
         {
             throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
         }
@@ -417,8 +417,8 @@ public class DeathByCaptchaService : CaptchaService
         {
             SlideUrlId = masterUrlId,
             PageUrl = siteUrl,
-            UserAgent = proxy.UserAgent
-        }.SetProxy(proxy);
+            UserAgent = sessionParams.UserAgent
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -435,14 +435,14 @@ public class DeathByCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveMtCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var task = new MtCaptchaDbcTask
         {
             SiteKey = siteKey,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -459,7 +459,7 @@ public class DeathByCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveCutCaptchaAsync(
-        string miseryKey, string apiKey, string siteUrl, Proxy? proxy = null,
+        string miseryKey, string apiKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var task = new CutCaptchaDbcTask
@@ -467,7 +467,7 @@ public class DeathByCaptchaService : CaptchaService
             MiseryKey = miseryKey,
             ApiKey = apiKey,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -484,14 +484,14 @@ public class DeathByCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFriendlyCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var task = new FriendlyCaptchaDbcTask
         {
             SiteKey = siteKey,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -535,14 +535,14 @@ public class DeathByCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
-        string captchaId, string siteUrl, Proxy? proxy = null,
+        string captchaId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var task = new GeeTestV4DbcTask
         {
             CaptchaId = captchaId,
             PageUrl = siteUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostAsync(
                 "captcha",

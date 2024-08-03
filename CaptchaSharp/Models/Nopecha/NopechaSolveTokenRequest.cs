@@ -16,16 +16,21 @@ internal class NopechaSolveTokenRequest : NopechaSolveRequest
     [JsonProperty("useragent", NullValueHandling = NullValueHandling.Ignore)]
     public string? UserAgent { get; set; }
 
-    public void SetProxy(Proxy? proxy, string url)
+    public NopechaSolveTokenRequest WithSessionParams(
+        SessionParams? sessionParams, string url)
     {
-        if (proxy is null)
+        if (sessionParams is null)
         {
-            return;
+            return this;
         }
 
-        if (!string.IsNullOrEmpty(proxy.UserAgent))
+        UserAgent = sessionParams.UserAgent;
+        
+        var proxy = sessionParams.Proxy;
+        
+        if (proxy is null)
         {
-            UserAgent = proxy.UserAgent;
+            return this;
         }
 
         if (!string.IsNullOrEmpty(proxy.Host))
@@ -40,24 +45,28 @@ internal class NopechaSolveTokenRequest : NopechaSolveRequest
             };
         }
 
-        if (proxy.Cookies is not null)
+        if (sessionParams.Cookies is null)
         {
-            var uri = new Uri(url);
-            
-            Cookies = proxy.Cookies.Select(c => new NopechaCookie
-            {
-                Name = c.Name,
-                Value = c.Value,
-                Domain = uri.Host,
-                Path = uri.AbsolutePath,
-                Secure = uri.Scheme == "https",
-                
-                // Hardcoded since we don't have access to these values
-                HostOnly = true,
-                HttpOnly = true,
-                Session = false,
-                ExpirationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600
-            }).ToArray();
+            return this;
         }
+        
+        var uri = new Uri(url);
+            
+        Cookies = sessionParams.Cookies.Select(c => new NopechaCookie
+        {
+            Name = c.Key,
+            Value = c.Value,
+            Domain = uri.Host,
+            Path = uri.AbsolutePath,
+            Secure = uri.Scheme == "https",
+                
+            // Hardcoded since we don't have access to these values
+            HostOnly = true,
+            HttpOnly = true,
+            Session = false,
+            ExpirationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600
+        }).ToArray();
+
+        return this;
     }
 }

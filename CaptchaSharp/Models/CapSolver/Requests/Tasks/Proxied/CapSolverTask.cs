@@ -1,5 +1,4 @@
-﻿using CaptchaSharp.Models;
-using System.Linq;
+﻿using System.Linq;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.CapSolver.Requests.Tasks.Proxied;
@@ -22,23 +21,31 @@ internal class CapSolverTask : CapSolverTaskProxyless
     [JsonProperty("cookies", NullValueHandling = NullValueHandling.Ignore)]
     public CapSolverCookie[]? Cookies { get; set; }
 
-    public CapSolverTask SetProxy(Proxy proxy)
+    public CapSolverTask WithSessionParams(SessionParams sessionParams)
     {
+        UserAgent = sessionParams.UserAgent;
+
+        if (sessionParams.Cookies is not null)
+        {
+            Cookies = sessionParams.Cookies.Select(c => new CapSolverCookie
+            {
+                Name = c.Key,
+                Value = c.Value
+            }).ToArray();
+        }
+        
+        var proxy = sessionParams.Proxy;
+        
+        if (proxy is null)
+        {
+            return this;
+        }
+        
         ProxyAddress = proxy.Host;
         ProxyPort = proxy.Port;
         ProxyType = proxy.Type.ToString().ToLower();
         ProxyLogin = proxy.Username;
         ProxyPassword = proxy.Password;
-        UserAgent = proxy.UserAgent;
-
-        if (proxy.Cookies is not null)
-        {
-            Cookies = proxy.Cookies.Select(c => new CapSolverCookie
-            {
-                Name = c.Name,
-                Value = c.Value
-            }).ToArray();
-        }
 
         return this;
     }

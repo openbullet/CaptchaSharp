@@ -82,7 +82,7 @@ public class NopechaService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false,
-        bool invisible = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool invisible = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new NopechaSolveRecaptchaV2Request
         {
@@ -93,9 +93,7 @@ public class NopechaService : CaptchaService
                 ? null 
                 : dataS.Deserialize<Dictionary<string, object>>(),
             Enterprise = enterprise
-        };
-        
-        payload.SetProxy(proxy, siteUrl);
+        }.WithSessionParams(sessionParams, siteUrl);
         
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
             "token",
@@ -111,7 +109,7 @@ public class NopechaService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new NopechaSolveRecaptchaV3Request
         {
@@ -123,9 +121,7 @@ public class NopechaService : CaptchaService
                 ["action"] = action,
             },
             Enterprise = enterprise
-        };
-        
-        payload.SetProxy(proxy, siteUrl);
+        }.WithSessionParams(sessionParams, siteUrl);
         
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
@@ -141,7 +137,7 @@ public class NopechaService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new NopechaSolveHCaptchaRequest
         {
@@ -151,9 +147,7 @@ public class NopechaService : CaptchaService
             Data = string.IsNullOrEmpty(enterprisePayload)
                 ? null 
                 : JObject.Parse(enterprisePayload),
-        };
-        
-        payload.SetProxy(proxy, siteUrl);
+        }.WithSessionParams(sessionParams, siteUrl);
         
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
@@ -169,7 +163,7 @@ public class NopechaService : CaptchaService
     /// <inheritdoc />
     public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
-        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var dataDict = new Dictionary<string, object> {};
         
@@ -189,9 +183,7 @@ public class NopechaService : CaptchaService
             SiteKey = siteKey,
             Url = siteUrl,
             Data = dataDict,
-        };
-        
-        payload.SetProxy(proxy, siteUrl);
+        }.WithSessionParams(sessionParams, siteUrl);
         
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",

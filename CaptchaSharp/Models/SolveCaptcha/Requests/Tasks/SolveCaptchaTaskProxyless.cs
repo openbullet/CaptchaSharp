@@ -29,20 +29,20 @@ public class SolveCaptchaTaskProxyless
     /// <summary>
     /// Set some parameters from a proxy.
     /// </summary>
-    public virtual void SetParamsFromProxy(Proxy? proxy)
+    public virtual void SetSessionParams(SessionParams? sessionParams)
     {
-        if (proxy is null)
+        if (sessionParams is null)
         {
             return;
         }
         
-        UserAgent = proxy.UserAgent;
+        UserAgent = sessionParams.UserAgent;
         
-        if (proxy.Cookies == null)
+        if (sessionParams.Cookies == null)
         {
             return;
         }
 
-        Cookies = string.Join("; ", proxy.Cookies.Select(c => $"{c.Name}={c.Value}"));
+        Cookies = string.Join("; ", sessionParams.Cookies.Select(c => $"{c.Key}={c.Value}"));
     }
 }

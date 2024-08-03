@@ -20,14 +20,16 @@ internal class SolveCaptchaTask : SolveCaptchaTaskProxyless
     [JsonProperty("proxy_password", NullValueHandling = NullValueHandling.Ignore)]
     public string? ProxyPassword { get; set; }
 
-    public override void SetParamsFromProxy(Proxy? proxy)
+    public override void SetSessionParams(SessionParams? sessionParams)
     {
-        base.SetParamsFromProxy(proxy);
+        base.SetSessionParams(sessionParams);
         
-        if (proxy is null || string.IsNullOrEmpty(proxy.Host))
+        if (sessionParams?.Proxy is null)
         {
             return;
         }
+        
+        var proxy = sessionParams.Proxy;
         
         if (!System.Net.IPAddress.TryParse(proxy.Host, out _))
         {

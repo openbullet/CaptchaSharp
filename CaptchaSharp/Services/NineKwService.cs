@@ -109,7 +109,7 @@ public class NineKwService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
@@ -120,7 +120,7 @@ public class NineKwService : CaptchaService
                 .Add("file-upload-01", siteKey)
                 .Add("pageurl", siteUrl)
                 .Add("json", 1)
-                .Add(ConvertProxy(proxy)),
+                .Add(ConvertSessionParams(sessionParams)),
             cancellationToken)
             .ConfigureAwait(false);
 
@@ -131,7 +131,7 @@ public class NineKwService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
@@ -142,7 +142,7 @@ public class NineKwService : CaptchaService
                 .Add("file-upload-01", siteKey)
                 .Add("pageurl", siteUrl)
                 .Add("json", 1)
-                .Add(ConvertProxy(proxy)),
+                .Add(ConvertSessionParams(sessionParams)),
             cancellationToken)
             .ConfigureAwait(false);
         
@@ -153,7 +153,7 @@ public class NineKwService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
@@ -164,7 +164,7 @@ public class NineKwService : CaptchaService
                 .Add("file-upload-01", publicKey)
                 .Add("pageurl", siteUrl)
                 .Add("json", 1)
-                .Add(ConvertProxy(proxy)),
+                .Add(ConvertSessionParams(sessionParams)),
             cancellationToken)
             .ConfigureAwait(false);
 
@@ -175,7 +175,7 @@ public class NineKwService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.GetJsonAsync<NineKwSubmitResponse>(
             "index.cgi",
@@ -186,7 +186,7 @@ public class NineKwService : CaptchaService
                 .Add("file-upload-01", siteKey)
                 .Add("pageurl", siteUrl)
                 .Add("json", 1)
-                .Add(ConvertProxy(proxy)),
+                .Add(ConvertSessionParams(sessionParams)),
             cancellationToken)
             .ConfigureAwait(false);
 
@@ -286,23 +286,30 @@ public class NineKwService : CaptchaService
 
     #region Proxies
     /// <summary></summary>
-    private static List<(string, string)> ConvertProxy(Proxy? proxy)
+    private static List<(string, string)> ConvertSessionParams(SessionParams? sessionParams)
     {
-        if (proxy is null)
+        if (sessionParams is null)
         {
             return [];
         }
 
-        var proxyParams = new List<(string, string)>();
+        var pairs = new List<(string, string)>();
         
-        if (proxy.UserAgent is not null)
+        if (sessionParams.UserAgent is not null)
         {
-            proxyParams.Add(("useragent", proxy.UserAgent));
+            pairs.Add(("useragent", sessionParams.UserAgent));
         }
         
-        if (proxy.Cookies is not null)
+        if (sessionParams.Cookies is not null)
         {
-            proxyParams.Add(("cookies", proxy.GetCookieString()));
+            pairs.Add(("cookies", sessionParams.GetCookieString()));
+        }
+        
+        var proxy = sessionParams.Proxy;
+        
+        if (proxy is null)
+        {
+            return pairs;
         }
 
         if (!string.IsNullOrEmpty(proxy.Username))
@@ -321,13 +328,13 @@ public class NineKwService : CaptchaService
         
         if (!string.IsNullOrEmpty(proxy.Host))
         {
-            proxyParams.AddRange([
+            pairs.AddRange([
                 ("proxy", $"{proxy.Host}:{proxy.Port}"),
                 ("proxytype", proxy.Type.ToString().ToLower())
             ]);
         }
 
-        return proxyParams;
+        return pairs;
     }
     #endregion
 

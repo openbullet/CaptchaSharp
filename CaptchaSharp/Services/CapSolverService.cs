@@ -102,7 +102,7 @@ public class CapSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         
@@ -113,14 +113,14 @@ public class CapSolverService : CaptchaService
         
         if (enterprise)
         {
-            if (proxy is not null)
+            if (sessionParams?.Proxy is not null)
             {
                 content.Task = new RecaptchaV2EnterpriseTask
                 {
                     WebsiteKey = siteKey,
                     WebsiteURL = siteUrl,
                     EnterprisePayload = enterprisePayload
-                }.SetProxy(proxy);
+                }.WithSessionParams(sessionParams);
             }
             else
             {
@@ -134,14 +134,14 @@ public class CapSolverService : CaptchaService
         }
         else
         {
-            if (proxy is not null)
+            if (sessionParams?.Proxy is not null)
             {
                 content.Task = new RecaptchaV2Task
                 {
                     WebsiteKey = siteKey,
                     WebsiteURL = siteUrl,
                     IsInvisible = invisible,
-                }.SetProxy(proxy);
+                }.WithSessionParams(sessionParams);
             }
             else
             {
@@ -167,11 +167,11 @@ public class CapSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (proxy is null)
+        if (sessionParams?.Proxy is null)
         {
             content.Task = new RecaptchaV3TaskProxyless
             {
@@ -191,7 +191,7 @@ public class CapSolverService : CaptchaService
                 PageAction = action,
                 MinScore = minScore,
                 IsEnterprise = enterprise
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
 
         var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
@@ -207,7 +207,7 @@ public class CapSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         if (noJs)
         {
@@ -216,14 +216,14 @@ public class CapSolverService : CaptchaService
 
         var content = CreateTaskRequest();
 
-        if (proxy is not null)
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new FunCaptchaTask
             {
                 WebsitePublicKey = publicKey,
                 WebsiteUrl = siteUrl,
                 Data = data,
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
         else
         {
@@ -248,11 +248,11 @@ public class CapSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (proxy is not null)
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new HCaptchaTask
             {
@@ -262,7 +262,7 @@ public class CapSolverService : CaptchaService
                 EnterprisePayload = string.IsNullOrEmpty(enterprisePayload)
                     ? null
                     : JObject.Parse(enterprisePayload)
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
         else
         {
@@ -290,11 +290,11 @@ public class CapSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
         string gt, string challenge, string siteUrl, string? apiServer = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (proxy is not null)
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new GeeTestTask
             {
@@ -302,7 +302,7 @@ public class CapSolverService : CaptchaService
                 Gt = gt,
                 Challenge = challenge,
                 GeetestApiServerSubdomain = apiServer
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
         else
         {
@@ -327,12 +327,12 @@ public class CapSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveDataDomeAsync(
-        string siteUrl, string captchaUrl, Proxy? proxy = null,
+        string siteUrl, string captchaUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (proxy is null)
+        if (sessionParams?.Proxy is null)
         {
             throw new NotSupportedException("A proxy is required to solve a DataDome captcha");
         }
@@ -341,7 +341,7 @@ public class CapSolverService : CaptchaService
         {
             WebsiteURL = siteUrl,
             CaptchaURL = captchaUrl
-        }.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
 
         var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
                 "createTask",
@@ -356,7 +356,7 @@ public class CapSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
-        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
@@ -384,11 +384,11 @@ public class CapSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveAmazonWafAsync(string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
-        string? captchaScript = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? captchaScript = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         
-        if (proxy is not null)
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new AntiAwsWafTask
             {
@@ -397,7 +397,7 @@ public class CapSolverService : CaptchaService
                 AwsIv = iv,
                 AwsContext = context,
                 AwsChallengeJs = challengeScript
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
         else
         {
@@ -424,18 +424,18 @@ public class CapSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveMtCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (proxy is not null)
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new MtCaptchaTask
             {
                 WebsiteKey = siteKey,
                 WebsiteURL = siteUrl
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
         else
         {
@@ -458,18 +458,18 @@ public class CapSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
-        string captchaId, string siteUrl, Proxy? proxy = null,
+        string captchaId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (proxy is not null)
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new GeeTestTask
             {
                 WebsiteURL = siteUrl,
                 CaptchaId = captchaId
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
         else
         {

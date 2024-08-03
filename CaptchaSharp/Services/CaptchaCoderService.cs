@@ -85,13 +85,8 @@ public class CaptchaCoderService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
-    {
-        if (proxy is not null)
-        {
-            throw new NotSupportedException("Proxies are not supported by this service.");
-        }
-        
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {   
         var captchaId = Guid.NewGuid().ToString();
 
         var response = await HttpClient.PostMultipartToStringAsync(
@@ -118,13 +113,8 @@ public class CaptchaCoderService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
-    {
-        if (proxy is not null)
-        {
-            throw new NotSupportedException("Proxies are not supported by this service.");
-        }
-        
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {   
         var captchaId = Guid.NewGuid().ToString();
         
         var response = await HttpClient.PostMultipartToStringAsync(

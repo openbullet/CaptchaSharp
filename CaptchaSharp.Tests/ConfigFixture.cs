@@ -27,7 +27,7 @@ public class ConfigFixture
 public class Config
 {
     public Credentials Credentials { get; set; } = new();
-    public Proxy Proxy { get; set; } = new();
+    public SessionParams SessionParams { get; set; } = new();
 }
 
 public class Credentials

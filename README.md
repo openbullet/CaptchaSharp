@@ -119,6 +119,36 @@ The returned solution will contain two fields:
 
 If a method or some of its parameters are not supported, a `NotSupportedException` or `ArgumentException` will be thrown.
 
+## Proxy, User-Agent, and Cookies
+Some services and captcha types can accept additional parameters, like a proxy, user-agent, or cookies.
+
+```csharp
+var sessionParams = new SessionParams
+{
+    Proxy = new Proxy(
+        host: "proxy.example.com",
+        port: 8080,
+        type: ProxyType.HTTP,
+        username: "proxy_username", // optional
+        password: "proxy_password" // optional
+    ),
+    UserAgent = "Mozilla/5.0 ...", // make sure to use an up-to-date user-agent
+    Cookies = new Dictionary<string, string>
+    {
+        { "cookie_name_1", "cookie_value_1" },
+        { "cookie_name_2", "cookie_value_2" }
+    }
+};
+
+// Solve a captcha with session parameters
+StringResponse solution = await service.SolveRecaptchaV2Async(
+    "site key", "site url", sessionParams: sessionParams);
+
+Console.WriteLine($"The solution is {solution.Response}");
+```
+
+All session parameters are optional, and you can provide only the ones you need.
+
 ## The service I want to use is not implemented
 If the service you want to use is not implemented, you can easily implement it yourself by deriving from the `CaptchaService` class and implementing the abstract methods, or you can open an issue, and we will try to implement it as soon as possible.
 

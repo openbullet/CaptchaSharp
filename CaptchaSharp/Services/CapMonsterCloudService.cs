@@ -39,31 +39,31 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
 
     /// <inheritdoc />
     public override async Task<StringResponse> SolveDataDomeAsync(
-        string siteUrl, string captchaUrl, Proxy? proxy = null,
+        string siteUrl, string captchaUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         // CapMonsterCloud will always use the current Windows OS User-Agent
         // to solve captchas.
         
-        if (proxy?.Cookies is null)
+        if (sessionParams?.Cookies is null)
         {
             throw new ArgumentNullException(
-                nameof(proxy), "DataDome requires cookies");
+                nameof(sessionParams), "DataDome requires cookies");
         }
         
-        if (string.IsNullOrEmpty(proxy.UserAgent))
+        if (string.IsNullOrEmpty(sessionParams.UserAgent))
         {
             throw new ArgumentNullException(
-                nameof(proxy), "DataDome requires a user agent");
+                nameof(sessionParams), "DataDome requires a user agent");
         }
         
         // The cookie must contain datadome=... and nothing else
-        var datadomeCookie = Array.Find(proxy.Cookies, c => c.Name == "datadome").Value;
+        sessionParams.Cookies.TryGetValue("datadome", out var datadomeCookie);
         
-        if (string.IsNullOrEmpty(datadomeCookie) || proxy.Cookies.Length > 1)
+        if (string.IsNullOrEmpty(datadomeCookie) || sessionParams.Cookies.Count > 1)
         {
             throw new ArgumentException(
-                "The cookie must contain a single datadome cookie", nameof(proxy));
+                "The cookie must contain a single datadome cookie", nameof(sessionParams));
         }
 
         var content = CreateTaskRequest();
@@ -71,7 +71,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
         content.Task = new DataDomeTaskProxyless
         {
             WebsiteURL = siteUrl,
-            UserAgent = proxy.UserAgent,
+            UserAgent = sessionParams.UserAgent,
             Metadata = new DataDomeMetadata
             {
                 CaptchaUrl = captchaUrl,

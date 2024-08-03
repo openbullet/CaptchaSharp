@@ -148,7 +148,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -162,7 +162,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
                 cancellationToken)
             .ConfigureAwait(false);
@@ -179,7 +179,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -194,7 +194,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -211,7 +211,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var pairs = new StringPairCollection()
             .Add("key", ApiKey)
@@ -223,7 +223,7 @@ public class TwoCaptchaService : CaptchaService
             .Add("soft_id", _softId)
             .Add("json", "1", UseJsonFlag)
             .Add("header_acao", "1", AddAcaoHeader)
-            .Add(ConvertProxy(proxy));
+            .Add(ConvertSessionParams(sessionParams));
         
         // If data is not null and is a JSON object, set
         // data[key] = value in the request for each key-value pair
@@ -253,7 +253,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -266,7 +266,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -283,7 +283,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveKeyCaptchaAsync(
         string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -297,7 +297,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -314,7 +314,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
         string gt, string challenge, string siteUrl, string? apiServer = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -327,7 +327,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -343,7 +343,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<CapyResponse> SolveCapyAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -355,7 +355,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -371,11 +371,11 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveDataDomeAsync(
-        string siteUrl, string captchaUrl, Proxy? proxy = null,
+        string siteUrl, string captchaUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         // Make sure there is a proxy with a User-Agent
-        if (proxy == null || string.IsNullOrEmpty(proxy.Host) || string.IsNullOrEmpty(proxy.UserAgent))
+        if (string.IsNullOrEmpty(sessionParams?.UserAgent) || sessionParams.Proxy is null)
         {
             throw new ArgumentException("A proxy with a User-Agent is required for DataDome captchas.");
         }
@@ -389,7 +389,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -406,11 +406,11 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
-        string? pageData = null, Proxy? proxy = null,
+        string? pageData = null, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         // Make sure there is a proxy with a User-Agent
-        if (proxy == null || string.IsNullOrEmpty(proxy.UserAgent))
+        if (string.IsNullOrEmpty(sessionParams?.UserAgent))
         {
             throw new ArgumentException("A User-Agent is required for Cloudflare Turnstile captchas.");
         }
@@ -427,7 +427,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -444,7 +444,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<LeminCroppedResponse> SolveLeminCroppedAsync(
         string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
-        string? divId = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? divId = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -457,7 +457,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -474,7 +474,7 @@ public class TwoCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveAmazonWafAsync(
         string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
-        string? captchaScript = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? captchaScript = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
@@ -489,7 +489,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -505,10 +505,10 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveCyberSiAraAsync(
-        string masterUrlId, string siteUrl, Proxy? proxy = null,
+        string masterUrlId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
-        if (proxy?.UserAgent is null)
+        if (sessionParams?.UserAgent is null)
         {
             throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
         }
@@ -522,7 +522,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -538,7 +538,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveMtCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -550,7 +550,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -566,7 +566,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveCutCaptchaAsync(
-        string miseryKey, string apiKey, string siteUrl, Proxy? proxy = null,
+        string miseryKey, string apiKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -579,7 +579,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -595,7 +595,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFriendlyCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -607,7 +607,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -623,7 +623,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveAtbCaptchaAsync(
-        string appId, string apiServer, string siteUrl, Proxy? proxy = null,
+        string appId, string apiServer, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -636,7 +636,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -652,7 +652,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<TencentCaptchaResponse> SolveTencentCaptchaAsync(
-        string appId, string siteUrl, Proxy? proxy = null,
+        string appId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -664,7 +664,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -707,7 +707,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
-        string captchaId, string siteUrl, Proxy? proxy = null,
+        string captchaId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
@@ -719,7 +719,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("soft_id", _softId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
+                .Add(ConvertSessionParams(sessionParams))
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
@@ -910,26 +910,29 @@ public class TwoCaptchaService : CaptchaService
 
     #region Proxies
     /// <summary></summary>
-    protected static IEnumerable<(string, string)> ConvertProxy(Proxy? proxy)
+    protected static IEnumerable<(string, string)> ConvertSessionParams(
+        SessionParams? sessionParams)
     {
-        if (proxy is null)
+        if (sessionParams is null)
         {
             return [];
         }
             
-        var proxyParams = new List<(string, string)>();
+        var pairs = new List<(string, string)>();
             
-        if (proxy.UserAgent is not null)
+        if (sessionParams.UserAgent is not null)
         {
-            proxyParams.Add(("userAgent", proxy.UserAgent));
+            pairs.Add(("userAgent", sessionParams.UserAgent));
+        }
+        
+        var proxy = sessionParams.Proxy;
+
+        if (proxy is null)
+        {
+            return pairs;
         }
 
-        if (string.IsNullOrEmpty(proxy.Host))
-        {
-            return proxyParams;
-        }
-
-        proxyParams.AddRange(
+        pairs.AddRange(
         [
             ("proxy", proxy.RequiresAuthentication
                 ? $"{proxy.Username}:{proxy.Password}@{proxy.Host}:{proxy.Port}"
@@ -937,7 +940,7 @@ public class TwoCaptchaService : CaptchaService
             ("proxytype", proxy.Type.ToString())
         ]);
 
-        return proxyParams;
+        return pairs;
     }
     #endregion
 

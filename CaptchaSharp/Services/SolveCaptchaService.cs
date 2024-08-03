@@ -66,13 +66,13 @@ public class SolveCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
         if (enterprise)
         {   
-            if (!string.IsNullOrEmpty(proxy?.Host))
+            if (sessionParams?.Proxy is not null)
             {
                 content.Task = new RecaptchaV2EnterpriseTask
                 {
@@ -97,7 +97,7 @@ public class SolveCaptchaService : CaptchaService
         }
         else
         {
-            if (!string.IsNullOrEmpty(proxy?.Host))
+            if (sessionParams?.Proxy is not null)
             {
                 content.Task = new RecaptchaV2Task
                 {
@@ -117,7 +117,7 @@ public class SolveCaptchaService : CaptchaService
             }
         }
             
-        content.Task.SetParamsFromProxy(proxy);
+        content.Task.SetSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
@@ -132,7 +132,7 @@ public class SolveCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         content.Task = new RecaptchaV3TaskProxyless
@@ -143,7 +143,7 @@ public class SolveCaptchaService : CaptchaService
             MinScore = minScore
         };
         
-        content.Task.SetParamsFromProxy(proxy);
+        content.Task.SetSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
@@ -158,11 +158,11 @@ public class SolveCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (!string.IsNullOrEmpty(proxy?.Host))
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new FunCaptchaTask
             {
@@ -183,7 +183,7 @@ public class SolveCaptchaService : CaptchaService
             };
         }
         
-        content.Task.SetParamsFromProxy(proxy);
+        content.Task.SetSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
@@ -198,11 +198,11 @@ public class SolveCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         
-        if (!string.IsNullOrEmpty(proxy?.Host))
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new HCaptchaTask
             {
@@ -223,7 +223,7 @@ public class SolveCaptchaService : CaptchaService
             };
         }
         
-        content.Task.SetParamsFromProxy(proxy);
+        content.Task.SetSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
@@ -237,12 +237,12 @@ public class SolveCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
-        string gt, string challenge, string siteUrl, string? apiServer = null, Proxy? proxy = null,
+        string gt, string challenge, string siteUrl, string? apiServer = null, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         
-        if (!string.IsNullOrEmpty(proxy?.Host))
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new GeeTestTask
             {
@@ -263,7 +263,7 @@ public class SolveCaptchaService : CaptchaService
             };
         }
         
-        content.Task.SetParamsFromProxy(proxy);
+        content.Task.SetSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
@@ -278,11 +278,11 @@ public class SolveCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
-        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         
-        if (!string.IsNullOrEmpty(proxy?.Host))
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new TurnstileTask
             {
@@ -299,7 +299,7 @@ public class SolveCaptchaService : CaptchaService
             };
         }
         
-        content.Task.SetParamsFromProxy(proxy);
+        content.Task.SetSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",

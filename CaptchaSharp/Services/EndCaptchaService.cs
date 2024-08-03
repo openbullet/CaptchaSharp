@@ -93,15 +93,13 @@ public class EndCaptchaService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false,
-        bool invisible = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool invisible = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var tokenParams = new RecaptchaV2TokenParams
         {
             GoogleKey = siteKey,
             PageUrl = siteUrl,
-        };
-        
-        tokenParams.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
@@ -122,7 +120,7 @@ public class EndCaptchaService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var tokenParams = new RecaptchaV3TokenParams
         {
@@ -130,9 +128,7 @@ public class EndCaptchaService : CaptchaService
             PageUrl = siteUrl,
             Action = action,
             MinScore = minScore
-        };
-        
-        tokenParams.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
@@ -153,15 +149,13 @@ public class EndCaptchaService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var tokenParams = new FuncaptchaTokenParams
         {
             PublicKey = publicKey,
             PageUrl = siteUrl
-        };
-        
-        tokenParams.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
@@ -182,15 +176,13 @@ public class EndCaptchaService : CaptchaService
     /// <inheritdoc />
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var tokenParams = new HCaptchaTokenParams
         {
             SiteKey = siteKey,
             PageUrl = siteUrl
-        };
-        
-        tokenParams.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",

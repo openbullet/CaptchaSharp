@@ -110,10 +110,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="enterprise">Whether this is an Enterprise ReCaptcha V2.</param>
     /// <param name="invisible">Whether the captcha is not in a clickable format on the page.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -129,7 +128,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -141,10 +140,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="action">The action to execute. Can be found in the webpage source or in a js file.</param>
     /// <param name="minScore">The minimum human-to-robot score necessary to solve the challenge.</param>
     /// <param name="enterprise">Whether this is an Enterprise ReCaptcha V3.</param>
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -160,7 +158,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -187,10 +185,9 @@ public abstract class CaptchaService : IDisposable
     /// Additional data in JSON format, for example { "blob": "blob_value" }
     /// </param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -206,7 +203,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl,
-        bool noJs = false, string? data = null, Proxy? proxy = null,
+        bool noJs = false, string? data = null, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -219,10 +216,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="invisible">Whether the captcha is not in a clickable format on the page.</param>
     /// <param name="enterprisePayload">The enterprise payload as a JSON string, if this is an enterprise HCaptcha.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -238,7 +234,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -251,10 +247,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="webServerSign2">s_s_c_web_server_sign2 parameter in the webpage source code.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -270,7 +265,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveKeyCaptchaAsync(
         string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -282,10 +277,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="apiServer">The api_server parameter found in the webpage source code.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -301,7 +295,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<GeeTestResponse> SolveGeeTestAsync(
         string gt, string challenge, string siteUrl, string? apiServer = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -311,10 +305,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -329,7 +322,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<CapyResponse> SolveCapyAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -341,10 +334,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="captchaUrl">The URL of the captcha. It is obtained from the 'dd' object in a script
     /// inside the HTML and the 'datadome' cookie</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -359,7 +351,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveDataDomeAsync(
-        string siteUrl, string captchaUrl, Proxy? proxy = null,
+        string siteUrl, string captchaUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -373,10 +365,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="data">The value of cData passed to turnstile.render call. Also can be defined in data-cdata attribute.</param>
     /// <param name="pageData">The value of chlPageData passed to turnstile.render call.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -392,7 +383,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
-        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -404,10 +395,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="apiServer">The domain part of script URL you found on page. If null, the default one will be used.</param>
     /// <param name="divId">The id of captcha parent div element.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -423,7 +413,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<LeminCroppedResponse> SolveLeminCroppedAsync(
         string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
-        string? divId = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? divId = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -437,10 +427,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="challengeScript">The source URL of the <c>challenge.js</c> on the page.</param>
     /// <param name="captchaScript">The source URL of the <c>captcha.js</c> on the page.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -457,7 +446,7 @@ public abstract class CaptchaService : IDisposable
     public virtual Task<StringResponse> SolveAmazonWafAsync(
         string siteKey, string iv, string context, string siteUrl,
         string? challengeScript = null, string? captchaScript = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
@@ -467,10 +456,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="masterUrlId">The value of <c>MasterUrlId</c> parameter obtained from script.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -485,7 +473,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveCyberSiAraAsync(
-        string masterUrlId, string siteUrl, Proxy? proxy = null,
+        string masterUrlId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -496,10 +484,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -514,7 +501,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveMtCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -527,10 +514,9 @@ public abstract class CaptchaService : IDisposable
     /// also the name of javascript file included on the page.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -545,7 +531,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveCutCaptchaAsync(
-        string miseryKey, string apiKey, string siteUrl, Proxy? proxy = null,
+        string miseryKey, string apiKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -556,10 +542,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -574,7 +559,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveFriendlyCaptchaAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null,
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -586,10 +571,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="apiServer">The value of <c>apiServer</c> parameter in the website source code.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -604,7 +588,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveAtbCaptchaAsync(
-        string appId, string apiServer, string siteUrl, Proxy? proxy = null,
+        string appId, string apiServer, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -615,10 +599,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="appId">The value of <c>appId</c> parameter in the website source code.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     /// 
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -633,7 +616,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<TencentCaptchaResponse> SolveTencentCaptchaAsync(
-        string appId, string siteUrl, Proxy? proxy = null, 
+        string appId, string siteUrl, SessionParams? sessionParams = null, 
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -668,10 +651,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="appKey">The app key, can be found in the app source or by sniffing requests.</param>
     /// <param name="appAction">The action to execute. Can be found in the app source or in a js file.</param>
     ///
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -686,7 +668,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveRecaptchaMobileAsync(
-        string appPackageName, string appKey, string appAction, Proxy? proxy = null,
+        string appPackageName, string appKey, string appAction, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
@@ -697,10 +679,9 @@ public abstract class CaptchaService : IDisposable
     /// <param name="captchaId">The value of the captcha_id parameter on the page.</param>
     /// <param name="siteUrl">The URL where the captcha appears.</param>
     ///
-    /// <param name="proxy">
-    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
-    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
-    /// fetch the captcha without using a proxy.
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
     /// </param>
     /// 
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
@@ -716,7 +697,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<GeeTestV4Response> SolveGeeTestV4Async(
         string captchaId, string siteUrl,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }

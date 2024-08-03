@@ -94,7 +94,7 @@ public class BestCaptchaSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false,
-        bool invisible = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool invisible = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var type = invisible ? 2 : 1;
         
@@ -111,9 +111,7 @@ public class BestCaptchaSolverService : CaptchaService
             PageUrl = siteUrl,
             Type = type,
             DataS = dataS
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/recaptcha",
@@ -129,7 +127,7 @@ public class BestCaptchaSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveRecaptchaV3Request
         {
@@ -140,9 +138,7 @@ public class BestCaptchaSolverService : CaptchaService
             Type = enterprise ? 5 : 3,
             Action = action,
             MinScore = minScore
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/recaptcha",
@@ -158,7 +154,7 @@ public class BestCaptchaSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveFuncaptchaRequest
         {
@@ -168,9 +164,7 @@ public class BestCaptchaSolverService : CaptchaService
             PageUrl = siteUrl,
             SUrl = serviceUrl,
             Data = data,
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/funcaptcha",
@@ -186,7 +180,7 @@ public class BestCaptchaSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveHCaptchaAsync(
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveHCaptchaRequest
         {
@@ -196,9 +190,7 @@ public class BestCaptchaSolverService : CaptchaService
             PageUrl = siteUrl,
             Invisible = invisible,
             Payload = enterprisePayload
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/hcaptcha",
@@ -213,7 +205,7 @@ public class BestCaptchaSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestResponse> SolveGeeTestAsync(
-        string gt, string challenge, string siteUrl, string? apiServer = null, Proxy? proxy = null,
+        string gt, string challenge, string siteUrl, string? apiServer = null, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveGeeTestRequest
@@ -224,9 +216,7 @@ public class BestCaptchaSolverService : CaptchaService
             Challenge = challenge,
             Domain = siteUrl,
             ApiServer = string.IsNullOrEmpty(apiServer) ? null : apiServer
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/geetest",
@@ -241,7 +231,7 @@ public class BestCaptchaSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<CapyResponse> SolveCapyAsync(
-        string siteKey, string siteUrl, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string siteKey, string siteUrl, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveCapyRequest
         {
@@ -249,9 +239,7 @@ public class BestCaptchaSolverService : CaptchaService
             AffiliateId = _affiliateId,
             SiteKey = siteKey,
             PageUrl = siteUrl
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/capy",
@@ -267,7 +255,7 @@ public class BestCaptchaSolverService : CaptchaService
     /// <inheritdoc/>
     public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
-        string? pageData = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveCloudflareTurnstileRequest
         {
@@ -277,9 +265,7 @@ public class BestCaptchaSolverService : CaptchaService
             PageUrl = siteUrl,
             Action = action,
             CData = data
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/turnstile",
@@ -294,7 +280,7 @@ public class BestCaptchaSolverService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
-        string captchaId, string siteUrl, Proxy? proxy = null,
+        string captchaId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var payload = new BcsSolveGeeTestV4Request
@@ -303,9 +289,7 @@ public class BestCaptchaSolverService : CaptchaService
             AffiliateId = _affiliateId,
             CaptchaId = captchaId,
             Domain = siteUrl
-        };
-        
-        payload.SetProxy(proxy);
+        }.WithSessionParams(sessionParams);
         
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/geetestv4",

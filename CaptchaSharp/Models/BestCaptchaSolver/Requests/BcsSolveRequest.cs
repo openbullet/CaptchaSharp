@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using CaptchaSharp.Models;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.BestCaptchaSolver.Requests;
@@ -19,22 +18,26 @@ internal class BcsSolveRequest : BcsRequest
     [JsonProperty("proxy_type", NullValueHandling = NullValueHandling.Ignore)]
     public string? ProxyType { get; set; }
 
-    public void SetProxy(Proxy? proxy)
+    public BcsSolveRequest WithSessionParams(SessionParams? sessionParams)
     {
-        if (proxy == null)
+        if (sessionParams is null)
         {
-            return;
+            return this;
         }
 
-        if (!string.IsNullOrEmpty(proxy.UserAgent))
-        {
-            UserAgent = proxy.UserAgent;
-        }
+        UserAgent = sessionParams.UserAgent;
 
-        if (proxy.Cookies is not null)
+        if (sessionParams.Cookies is not null)
         {
-            CookieInput = string.Join("; ", proxy.Cookies
-                .Select(c => $"{c.Name}={c.Value}"));
+            CookieInput = string.Join("; ", sessionParams.Cookies
+                .Select(c => $"{c.Key}={c.Value}"));
+        }
+        
+        var proxy = sessionParams.Proxy;
+        
+        if (proxy is null)
+        {
+            return this;
         }
         
         // Only http(s) proxies are supported
@@ -42,16 +45,13 @@ internal class BcsSolveRequest : BcsRequest
         {
             throw new NotSupportedException("Only HTTP and HTTPS proxies are supported");
         }
-
-        if (string.IsNullOrEmpty(proxy.Host))
-        {
-            return;
-        }
         
         Proxy = proxy.RequiresAuthentication
             ? $"{proxy.Username}:{proxy.Password}@{proxy.Host}:{proxy.Port}"
             : $"{proxy.Host}:{proxy.Port}";
 
         ProxyType = "HTTP";
+        
+        return this;
     }
 }

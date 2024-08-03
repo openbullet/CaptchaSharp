@@ -11,9 +11,11 @@ internal class DbcTask
     [JsonProperty("proxytype", NullValueHandling = NullValueHandling.Ignore)]
     public string? ProxyType { get; set; }
 
-    public DbcTask SetProxy(Proxy? proxy)
+    public DbcTask WithSessionParams(SessionParams? sessionParams)
     {
-        if (proxy?.Host is null)
+        var proxy = sessionParams?.Proxy;
+        
+        if (proxy is null)
         {
             return this;
         }

@@ -10,14 +10,18 @@ internal class EndCaptchaTokenParams
     [JsonProperty("proxytype", NullValueHandling = NullValueHandling.Ignore)]
     public string? ProxyType { get; set; }
 
-    public void SetProxy(Proxy? proxy)
+    public EndCaptchaTokenParams WithSessionParams(SessionParams? sessionParams)
     {
-        if (proxy?.Host is null)
+        if (sessionParams?.Proxy is null)
         {
-            return;
+            return this;
         }
+        
+        var proxy = sessionParams.Proxy;
         
         Proxy = $"{proxy.Type.ToString().ToLower()}://{proxy.Host}:{proxy.Port}";
         ProxyType = proxy.Type.ToString().ToUpper();
+        
+        return this;
     }
 }

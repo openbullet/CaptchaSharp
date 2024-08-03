@@ -2,6 +2,7 @@ using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -116,7 +117,7 @@ public class ServiceTests
         Assert.Equal("w68hp", solution.Response.Replace(" ", "").ToLower());
     }
 
-    private async Task RecaptchaV2Test(Proxy? proxy)
+    private async Task RecaptchaV2Test(SessionParams? sessionParams)
     {
         var solution = await Service.SolveRecaptchaV2Async(
             siteKey: "6LfD3PIbAAAAAJs_eEHvoOl75_83eXSqpPSRFJ_u",
@@ -124,7 +125,7 @@ public class ServiceTests
             dataS: "",
             enterprise: false,
             invisible: false,
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -134,9 +135,9 @@ public class ServiceTests
 
     protected Task RecaptchaV2Test_NoProxy() => RecaptchaV2Test(null);
 
-    protected Task RecaptchaV2Test_WithProxy() => RecaptchaV2Test(_fixture.Config.Proxy);
+    protected Task RecaptchaV2Test_WithProxy() => RecaptchaV2Test(_fixture.Config.SessionParams);
 
-    private async Task RecaptchaV2InvisibleTest(Proxy? proxy)
+    private async Task RecaptchaV2InvisibleTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveRecaptchaV2Async(
             siteKey: "6LdO5_IbAAAAAAeVBL9TClS19NUTt5wswEb3Q7C5",
@@ -144,7 +145,7 @@ public class ServiceTests
             dataS: "",
             enterprise: false,
             invisible: true,
-            proxy);
+            sessionParams);
             
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -154,9 +155,9 @@ public class ServiceTests
         
     protected Task RecaptchaV2InvisibleTest_NoProxy() => RecaptchaV2InvisibleTest(null);
         
-    protected Task RecaptchaV2InvisibleTest_WithProxy() => RecaptchaV2InvisibleTest(_fixture.Config.Proxy);
+    protected Task RecaptchaV2InvisibleTest_WithProxy() => RecaptchaV2InvisibleTest(_fixture.Config.SessionParams);
         
-    private async Task RecaptchaV2EnterpriseTest(Proxy? proxy)
+    private async Task RecaptchaV2EnterpriseTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveRecaptchaV2Async(
             siteKey: "6Lf26sUnAAAAAIKLuWNYgRsFUfmI-3Lex3xT5N-s",
@@ -164,7 +165,7 @@ public class ServiceTests
             dataS: "",
             enterprise: true,
             invisible: true,
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -174,9 +175,9 @@ public class ServiceTests
         
     protected Task RecaptchaV2EnterpriseTest_NoProxy() => RecaptchaV2EnterpriseTest(null);
         
-    protected Task RecaptchaV2EnterpriseTest_WithProxy() => RecaptchaV2EnterpriseTest(_fixture.Config.Proxy);
+    protected Task RecaptchaV2EnterpriseTest_WithProxy() => RecaptchaV2EnterpriseTest(_fixture.Config.SessionParams);
         
-    private async Task RecaptchaV3Test(Proxy? proxy)
+    private async Task RecaptchaV3Test(SessionParams? sessionParams)
     {
         var solution = await Service.SolveRecaptchaV3Async(
             siteKey: "6LfB5_IbAAAAAMCtsjEHEHKqcB9iQocwwxTiihJu",
@@ -184,7 +185,7 @@ public class ServiceTests
             action: "demo_action",
             minScore: 0.9f,
             enterprise: false,
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -193,9 +194,9 @@ public class ServiceTests
     }
 
     protected Task RecaptchaV3Test_NoProxy() => RecaptchaV3Test(null);
-    protected Task RecaptchaV3Test_WithProxy() => RecaptchaV3Test(_fixture.Config.Proxy);
+    protected Task RecaptchaV3Test_WithProxy() => RecaptchaV3Test(_fixture.Config.SessionParams);
 
-    private async Task RecaptchaV3EnterpriseTest(Proxy? proxy)
+    private async Task RecaptchaV3EnterpriseTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveRecaptchaV3Async(
             siteKey: "6Lel38UnAAAAAMRwKj9qLH2Ws4Tf2uTDQCyfgR6b",
@@ -203,7 +204,7 @@ public class ServiceTests
             action: "demo_action",
             minScore: 0.9f,
             enterprise: true,
-            proxy);
+            sessionParams);
             
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -213,9 +214,9 @@ public class ServiceTests
         
     protected Task RecaptchaV3EnterpriseTest_NoProxy() => RecaptchaV3EnterpriseTest(null);
         
-    protected Task RecaptchaV3EnterpriseTest_WithProxy() => RecaptchaV3EnterpriseTest(_fixture.Config.Proxy);
+    protected Task RecaptchaV3EnterpriseTest_WithProxy() => RecaptchaV3EnterpriseTest(_fixture.Config.SessionParams);
         
-    private async Task FunCaptchaTest(Proxy? proxy)
+    private async Task FunCaptchaTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveFuncaptchaAsync(
             publicKey: "3EE79F8D-13A6-474B-9278-448EA19F79B3",
@@ -223,7 +224,7 @@ public class ServiceTests
             siteUrl: "https://www.arkoselabs.com/arkose-matchkey/",
             noJs: false,
             data: null,
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -232,16 +233,16 @@ public class ServiceTests
     }
 
     protected Task FunCaptchaTest_NoProxy() => FunCaptchaTest(null);
-    protected Task FunCaptchaTest_WithProxy() => FunCaptchaTest(_fixture.Config.Proxy);
+    protected Task FunCaptchaTest_WithProxy() => FunCaptchaTest(_fixture.Config.SessionParams);
 
-    private async Task HCaptchaTest(Proxy? proxy)
+    private async Task HCaptchaTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveHCaptchaAsync(
             siteKey: "f7de0da3-3303-44e8-ab48-fa32ff8ccc7b",
             siteUrl: "https://2captcha.com/demo/hcaptcha",
             invisible: false,
             enterprisePayload: null,
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -250,9 +251,9 @@ public class ServiceTests
     }
 
     protected Task HCaptchaTest_NoProxy() => HCaptchaTest(null);
-    protected Task HCaptchaTest_WithProxy() => HCaptchaTest(_fixture.Config.Proxy);
+    protected Task HCaptchaTest_WithProxy() => HCaptchaTest(_fixture.Config.SessionParams);
 
-    private async Task KeyCaptchaTest(Proxy? proxy)
+    private async Task KeyCaptchaTest(SessionParams? sessionParams)
     {
         // Get the required parameters from the page since they are not static
         const string siteUrl = "https://www.keycaptcha.com/contact-us/";
@@ -271,7 +272,7 @@ public class ServiceTests
             webServerSign1,
             webServerSign2,
             siteUrl,
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -280,9 +281,9 @@ public class ServiceTests
     }
 
     protected Task KeyCaptchaTest_NoProxy() => KeyCaptchaTest(null);
-    protected Task KeyCaptchaTest_WithProxy() => KeyCaptchaTest(_fixture.Config.Proxy);
+    protected Task KeyCaptchaTest_WithProxy() => KeyCaptchaTest(_fixture.Config.SessionParams);
 
-    private async Task GeeTestTest(Proxy? proxy)
+    private async Task GeeTestTest(SessionParams? sessionParams)
     {
         // Get the required parameters from the page since they are not static
         var unixTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -300,7 +301,7 @@ public class ServiceTests
             challenge,
             siteUrl,
             apiServer: "api.geetest.com",
-            proxy);
+            sessionParams);
 
         Assert.NotEqual("", solution.Challenge);
         Assert.NotEqual("", solution.SecCode);
@@ -313,14 +314,14 @@ public class ServiceTests
     }
 
     protected Task GeeTestTest_NoProxy() => GeeTestTest(null);
-    protected Task GeeTestTest_WithProxy() => GeeTestTest(_fixture.Config.Proxy);
+    protected Task GeeTestTest_WithProxy() => GeeTestTest(_fixture.Config.SessionParams);
 
-    private async Task CapyTest(Proxy? proxy)
+    private async Task CapyTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveCapyAsync(
             siteKey: "PUZZLE_Cme4hZLjuZRMYC3uh14C52D3uNms5w",
             siteUrl: $"{"https"}://www.capy.me/account/signin",
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.ChallengeKey);
         Assert.NotEqual(string.Empty, solution.CaptchaKey);
@@ -333,10 +334,10 @@ public class ServiceTests
     }
 
     protected Task CapyTest_NoProxy() => CapyTest(null);
-    protected Task CapyTest_WithProxy() => CapyTest(_fixture.Config.Proxy);
+    protected Task CapyTest_WithProxy() => CapyTest(_fixture.Config.SessionParams);
 
     // Proxy and User-Agent required
-    private async Task DataDomeTest(Proxy proxy)
+    private async Task DataDomeTest(SessionParams sessionParams)
     {
         const string site = "https://antoinevastel.com/bots/datadome";
         
@@ -348,13 +349,13 @@ public class ServiceTests
         httpClientHandler.CookieContainer = cookieContainer;
         using var httpClient = new HttpClient(httpClientHandler);
 
-        if (string.IsNullOrEmpty(proxy.UserAgent))
+        if (string.IsNullOrEmpty(sessionParams.UserAgent))
         {
             throw new ArgumentException("User-Agent is required");
         }
         
         // The User-Agent must be the same as the one used to get the page
-        httpClient.DefaultRequestHeaders.Add("User-Agent", proxy.UserAgent);
+        httpClient.DefaultRequestHeaders.Add("User-Agent", sessionParams.UserAgent);
         
         using var response = await httpClient.GetAsync(site);
         var pageSource = await response.Content.ReadAsStringAsync();
@@ -368,7 +369,10 @@ public class ServiceTests
         
         // Get cid from "datadome" cookie
         var cid = cookieContainer.GetCookies(new Uri(site))["datadome"]?.Value;
-        proxy.Cookies = [("datadome", cid!)];
+        sessionParams.Cookies = new Dictionary<string, string>
+        {
+            ["datadome"] = cid!
+        };
 
         var captchaUrl =
             $"https://{host}/captcha/?initialCid={WebUtility.UrlEncode(initialCid)}&hash={hsh}&cid={cid}&t={t}&referer={WebUtility.UrlEncode(site)}&s={s}&e={e}&dm=cd";
@@ -376,7 +380,7 @@ public class ServiceTests
         var solution = await Service.SolveDataDomeAsync(
             siteUrl: site,
             captchaUrl: captchaUrl,
-            proxy);
+            sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -384,14 +388,14 @@ public class ServiceTests
         _output.WriteLine($"Response: {solution.Response}");
     }
 
-    protected Task DataDomeTest_WithProxy() => DataDomeTest(_fixture.Config.Proxy);
+    protected Task DataDomeTest_WithProxy() => DataDomeTest(_fixture.Config.SessionParams);
 
-    private async Task CloudflareTurnstileTest(Proxy? proxy)
+    private async Task CloudflareTurnstileTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveCloudflareTurnstileAsync(
             siteKey: "0x4AAAAAAAVrOwQWPlm3Bnr5",
             siteUrl: "https://2captcha.com/demo/cloudflare-turnstile",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -400,20 +404,20 @@ public class ServiceTests
         _output.WriteLine($"User-Agent: {solution.UserAgent}");
     }
     
-    protected Task CloudflareTurnstileTest_NoProxy() => CloudflareTurnstileTest(new Proxy
+    protected Task CloudflareTurnstileTest_NoProxy() => CloudflareTurnstileTest(new SessionParams
     {
         // User-Agent required
-        UserAgent = _fixture.Config.Proxy.UserAgent
+        UserAgent = _fixture.Config.SessionParams.UserAgent
     });
     
-    protected Task CloudflareTurnstileTest_WithProxy() => CloudflareTurnstileTest(_fixture.Config.Proxy);
+    protected Task CloudflareTurnstileTest_WithProxy() => CloudflareTurnstileTest(_fixture.Config.SessionParams);
 
-    private async Task LeminCroppedTest(Proxy? proxy)
+    private async Task LeminCroppedTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveLeminCroppedAsync(
             captchaId: "CROPPED_3dfdd5c_d1872b526b794d83ba3b365eb15a200b",
             siteUrl: "https://2captcha.com/demo/lemin",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Answer);
         Assert.NotEqual(string.Empty, solution.ChallengeId);
@@ -425,9 +429,9 @@ public class ServiceTests
     
     protected Task LeminCroppedTest_NoProxy() => LeminCroppedTest(null);
     
-    protected Task LeminCroppedTest_WithProxy() => LeminCroppedTest(_fixture.Config.Proxy);
+    protected Task LeminCroppedTest_WithProxy() => LeminCroppedTest(_fixture.Config.SessionParams);
     
-    private async Task AmazonWafTest(Proxy? proxy)
+    private async Task AmazonWafTest(SessionParams? sessionParams)
     {
         using var httpClient = new HttpClient();
         using var response = await httpClient.GetAsync("https://nopecha.com/captcha/awscaptcha");
@@ -449,7 +453,7 @@ public class ServiceTests
             context: context,
             challengeScript: challengeScript,
             captchaScript: captchaScript,
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -459,14 +463,14 @@ public class ServiceTests
     
     protected Task AmazonWafTest_NoProxy() => AmazonWafTest(null);
     
-    protected Task AmazonWafTest_WithProxy() => AmazonWafTest(_fixture.Config.Proxy);
+    protected Task AmazonWafTest_WithProxy() => AmazonWafTest(_fixture.Config.SessionParams);
 
-    private async Task CyberSiAraTest(Proxy? proxy)
+    private async Task CyberSiAraTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveCyberSiAraAsync(
             masterUrlId: "ABEBCAFBAAEDADFCBCCBEBAFCDDBBFEF",
             siteUrl: "https://mycybersiara.com/login",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -474,20 +478,20 @@ public class ServiceTests
         _output.WriteLine($"Response: {solution.Response}");
     }
     
-    protected Task CyberSiAraTest_NoProxy() => CyberSiAraTest(new Proxy
+    protected Task CyberSiAraTest_NoProxy() => CyberSiAraTest(new SessionParams
     {
         // User-Agent required
-        UserAgent = _fixture.Config.Proxy.UserAgent
+        UserAgent = _fixture.Config.SessionParams.UserAgent
     });
     
-    protected Task CyberSiAraTest_WithProxy() => CyberSiAraTest(_fixture.Config.Proxy);
+    protected Task CyberSiAraTest_WithProxy() => CyberSiAraTest(_fixture.Config.SessionParams);
     
-    private async Task MtCaptchaTest(Proxy? proxy)
+    private async Task MtCaptchaTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveMtCaptchaAsync(
             siteKey: "MTPublic-KzqLY1cKH",
             siteUrl: "https://2captcha.com/demo/mtcaptcha",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -497,15 +501,15 @@ public class ServiceTests
     
     protected Task MtCaptchaTest_NoProxy() => MtCaptchaTest(null);
     
-    protected Task MtCaptchaTest_WithProxy() => MtCaptchaTest(_fixture.Config.Proxy);
+    protected Task MtCaptchaTest_WithProxy() => MtCaptchaTest(_fixture.Config.SessionParams);
 
-    private async Task CutCaptchaTest(Proxy? proxy)
+    private async Task CutCaptchaTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveCutCaptchaAsync(
             siteUrl: "https://filecrypt.co/Container/BB072CC14C.html",
             miseryKey: "a46cd428f9cd7b965f6dcb84741e733769725550",
             apiKey: "SAs61IAI",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -515,14 +519,14 @@ public class ServiceTests
     
     protected Task CutCaptchaTest_NoProxy() => CutCaptchaTest(null);
     
-    protected Task CutCaptchaTest_WithProxy() => CutCaptchaTest(_fixture.Config.Proxy);
+    protected Task CutCaptchaTest_WithProxy() => CutCaptchaTest(_fixture.Config.SessionParams);
     
-    private async Task FriendlyCaptchaTest(Proxy? proxy)
+    private async Task FriendlyCaptchaTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveFriendlyCaptchaAsync(
             siteKey: "FCMGEMUD2K3JJ36P",
             siteUrl: "https://friendlycaptcha.com/signup/account/starter/",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -532,15 +536,15 @@ public class ServiceTests
     
     protected Task FriendlyCaptchaTest_NoProxy() => FriendlyCaptchaTest(null);
     
-    protected Task FriendlyCaptchaTest_WithProxy() => FriendlyCaptchaTest(_fixture.Config.Proxy);
+    protected Task FriendlyCaptchaTest_WithProxy() => FriendlyCaptchaTest(_fixture.Config.SessionParams);
 
-    private async Task AtbCaptchaTest(Proxy? proxy)
+    private async Task AtbCaptchaTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveAtbCaptchaAsync(
             appId: "af25e409b33d722a95e56a230ff8771c",
             apiServer: "https://cap.aisecurius.com",
             siteUrl: "https://renslider.com",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -550,14 +554,14 @@ public class ServiceTests
     
     protected Task AtbCaptchaTest_NoProxy() => AtbCaptchaTest(null);
     
-    protected Task AtbCaptchaTest_WithProxy() => AtbCaptchaTest(_fixture.Config.Proxy);
+    protected Task AtbCaptchaTest_WithProxy() => AtbCaptchaTest(_fixture.Config.SessionParams);
 
-    private async Task TencentCaptchaTest(Proxy? proxy)
+    private async Task TencentCaptchaTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveTencentCaptchaAsync(
             appId: "2009899766",
             siteUrl: "https://www.tencentcloud.com/account/register",
-            proxy: proxy);
+            sessionParams: sessionParams);
 
         Assert.NotEqual(string.Empty, solution.Ticket);
         Assert.NotEqual(string.Empty, solution.RandomString);
@@ -571,7 +575,7 @@ public class ServiceTests
     
     protected Task TencentCaptchaTest_NoProxy() => TencentCaptchaTest(null);
     
-    protected Task TencentCaptchaTest_WithProxy() => TencentCaptchaTest(_fixture.Config.Proxy);
+    protected Task TencentCaptchaTest_WithProxy() => TencentCaptchaTest(_fixture.Config.SessionParams);
 
     protected async Task AudioCaptchaTest()
     {
@@ -593,13 +597,13 @@ public class ServiceTests
         _output.WriteLine($"Response: {solution.Response}");
     }
 
-    private async Task RecaptchaMobileTest(Proxy? proxy)
+    private async Task RecaptchaMobileTest(SessionParams? sessionParams)
     {
         var solution = await Service.SolveRecaptchaMobileAsync(
             appPackageName: "",
             appKey: "",
             appAction: "login",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.Response);
         
@@ -609,9 +613,9 @@ public class ServiceTests
     
     protected Task RecaptchaMobileTest_NoProxy() => RecaptchaMobileTest(null);
     
-    protected Task RecaptchaMobileTest_WithProxy() => RecaptchaMobileTest(_fixture.Config.Proxy);
+    protected Task RecaptchaMobileTest_WithProxy() => RecaptchaMobileTest(_fixture.Config.SessionParams);
 
-    private async Task GeeTestV4Test(Proxy? proxy)
+    private async Task GeeTestV4Test(SessionParams? sessionParams)
     {
         using var httpClient = new HttpClient();
         using var response = await httpClient.GetAsync("https://2captcha.com/demo/geetest-v4");
@@ -620,7 +624,7 @@ public class ServiceTests
         var solution = await Service.SolveGeeTestV4Async(
             captchaId: "42977dc9-a215-4b09-aa14-945ef310d829",
             siteUrl: "https://2captcha.com/demo/geetest-v4",
-            proxy: proxy);
+            sessionParams: sessionParams);
         
         Assert.NotEqual(string.Empty, solution.CaptchaId);
         Assert.NotEqual(string.Empty, solution.LotNumber);
@@ -638,5 +642,5 @@ public class ServiceTests
     
     protected Task GeeTestV4Test_NoProxy() => GeeTestV4Test(null);
     
-    protected Task GeeTestV4Test_WithProxy() => GeeTestV4Test(_fixture.Config.Proxy);
+    protected Task GeeTestV4Test_WithProxy() => GeeTestV4Test(_fixture.Config.SessionParams);
 }

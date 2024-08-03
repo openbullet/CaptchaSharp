@@ -1,5 +1,4 @@
-﻿using CaptchaSharp.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,12 +16,14 @@ internal class AntiCaptchaTask : AntiCaptchaTaskProxyless
     // Format cookiename1=cookievalue1; cookiename2=cookievalue2
     public string? Cookies { get; set; }
 
-    public AntiCaptchaTask SetProxy(Proxy proxy)
+    public AntiCaptchaTask WithSessionParams(SessionParams sessionParams)
     {
-        UserAgent = proxy.UserAgent;
-        SetCookies(proxy.Cookies);
+        UserAgent = sessionParams.UserAgent;
+        SetCookies(sessionParams.Cookies);
+        
+        var proxy = sessionParams.Proxy;
 
-        if (string.IsNullOrEmpty(proxy.Host))
+        if (proxy is null)
         {
             return this;
         }
@@ -42,13 +43,13 @@ internal class AntiCaptchaTask : AntiCaptchaTaskProxyless
         return this;
     }
 
-    private void SetCookies(IEnumerable<(string Name, string Value)>? cookies)
+    private void SetCookies(Dictionary<string, string>? cookies)
     {
         if (cookies == null)
         {
             return;
         }
 
-        Cookies = string.Join("; ", cookies.Select(c => $"{c.Name}={c.Value}"));
+        Cookies = string.Join("; ", cookies.Select(c => $"{c.Key}={c.Value}"));
     }
 }

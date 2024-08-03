@@ -37,19 +37,19 @@ public class NextCaptchaService : CustomAntiCaptchaService
     #region Solve Methods
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaMobileAsync(
-        string appPackageName, string appKey, string appAction, Proxy? proxy = null,
+        string appPackageName, string appKey, string appAction, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
 
-        if (proxy is not null)
+        if (sessionParams?.Proxy is not null)
         {
             content.Task = new RecaptchaMobileTask
             {
                 AppPackageName = appPackageName,
                 AppKey = appKey,
                 AppAction = appAction,
-            }.SetProxy(proxy);
+            }.WithSessionParams(sessionParams);
         }
         else
         {
