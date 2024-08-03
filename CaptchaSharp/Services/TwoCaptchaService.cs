@@ -688,6 +688,34 @@ public class TwoCaptchaService : CaptchaService
                 response, CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "geetest_v4")
+                .Add("captcha_id", captchaId)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertProxy(proxy))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<GeeTestV4Response>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTestV4,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<GeeTestV4Response>(
+                response, CaptchaType.GeeTestV4,
+                cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -792,6 +820,11 @@ public class TwoCaptchaService : CaptchaService
                 {
                     return response.Deserialize<TwoCaptchaTencentCaptchaResponse>()
                         .Request!.ToTencentCaptchaResponse(task.Id) as T;
+                }
+                else if (task.Type == CaptchaType.GeeTestV4)
+                {
+                    return response.Deserialize<TwoCaptchaGeeTestV4Response>()
+                        .Request!.ToGeeTestV4Response(task.Id) as T;
                 }
 
                 var tcResponse = response.Deserialize<TwoCaptchaResponse>();

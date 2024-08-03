@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using CaptchaSharp.Extensions;
 using CaptchaSharp.Services;
 using Xunit;
 using Xunit.Abstractions;
@@ -605,4 +606,33 @@ public class ServiceTests
     protected Task RecaptchaMobileTest_NoProxy() => RecaptchaMobileTest(null);
     
     protected Task RecaptchaMobileTest_WithProxy() => RecaptchaMobileTest(_fixture.Config.Proxy);
+
+    private async Task GeeTestV4Test(Proxy? proxy)
+    {
+        using var httpClient = new HttpClient();
+        using var response = await httpClient.GetAsync("https://2captcha.com/demo/geetest-v4");
+        var pageSource = await response.Content.ReadAsStringAsync();
+        
+        var solution = await Service.SolveGeeTestV4Async(
+            captchaId: "42977dc9-a215-4b09-aa14-945ef310d829",
+            siteUrl: "https://2captcha.com/demo/geetest-v4",
+            proxy: proxy);
+        
+        Assert.NotEqual(string.Empty, solution.CaptchaId);
+        Assert.NotEqual(string.Empty, solution.LotNumber);
+        Assert.NotEqual(string.Empty, solution.PassToken);
+        Assert.NotEqual(string.Empty, solution.GenTime);
+        Assert.NotEqual(string.Empty, solution.CaptchaOutput);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"GeeTest Captcha ID: {solution.CaptchaId}");
+        _output.WriteLine($"Lot Number: {solution.LotNumber}");
+        _output.WriteLine($"Pass Token: {solution.PassToken}");
+        _output.WriteLine($"Gen Time: {solution.GenTime}");
+        _output.WriteLine($"Captcha Output: {solution.CaptchaOutput}");
+    }
+    
+    protected Task GeeTestV4Test_NoProxy() => GeeTestV4Test(null);
+    
+    protected Task GeeTestV4Test_WithProxy() => GeeTestV4Test(_fixture.Config.Proxy);
 }

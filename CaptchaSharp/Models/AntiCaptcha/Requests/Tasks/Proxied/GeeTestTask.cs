@@ -6,6 +6,7 @@ internal class GeeTestTask : AntiCaptchaTask
     public string? Gt { get; set; }
     public string? Challenge { get; set; }
     public string? GeetestApiServerSubdomain { get; set; }
+    public int? Version { get; set; } = 3;
 
     public GeeTestTask()
     {

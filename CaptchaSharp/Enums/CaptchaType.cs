@@ -68,4 +68,7 @@ public enum CaptchaType
     
     /// <summary>Google ReCaptcha Mobile.</summary>
     ReCaptchaMobile = 1 << 20,
+    
+    /// <summary>GeeTest v4.</summary>
+    GeeTestV4 = 1 << 21,
 }

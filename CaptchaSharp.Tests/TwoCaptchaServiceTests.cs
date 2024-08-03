@@ -60,4 +60,6 @@ public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper
     [Fact] public Task SolveTencentCaptchaAsync_NoProxy_ValidSolution() => TencentCaptchaTest_NoProxy();
     [Fact] public Task SolveTencentCaptchaAsync_WithProxy_ValidSolution() => TencentCaptchaTest_WithProxy();
     [Fact] public Task SolveAudioCaptchaAsync_ValidCaptcha_ValidSolution() => AudioCaptchaTest();
+    [Fact] public Task SolveGeeTestV4Async_NoProxy_ValidSolution() => GeeTestV4Test_NoProxy();
+    [Fact] public Task SolveGeeTestV4Async_WithProxy_ValidSolution() => GeeTestV4Test_WithProxy();
 }

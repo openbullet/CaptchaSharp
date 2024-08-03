@@ -684,6 +684,35 @@ public abstract class CaptchaService : IDisposable
         throw new NotSupportedException();
     }
     
+    /// <summary>Solves a GeeTest V4 captcha.</summary>
+    ///
+    /// <param name="captchaId">The value of the captcha_id parameter on the page.</param>
+    /// <param name="siteUrl">The URL where the captcha appears.</param>
+    ///
+    /// <param name="proxy">
+    /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
+    /// going to send it from when you submit the form. It can help bypass some blocks. If null, the service will 
+    /// fetch the captcha without using a proxy.
+    /// </param>
+    /// 
+    /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+    /// 
+    /// <returns>
+    /// A <see cref="GeeTestV4Response"/> containing the captcha id to be used with 
+    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// captcha solution.
+    /// </returns>
+    /// 
+    /// <exception cref="TaskCreationException"></exception>
+    /// <exception cref="TaskSolutionException"></exception>
+    /// <exception cref="TimeoutException"></exception>
+    public virtual Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl,
+        Proxy? proxy = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+    
     /// <summary>
     /// Reports a captcha solution as good or bad to the service.
     /// Mostly used for reporting bad solutions for image captchas and get the funds back.

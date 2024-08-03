@@ -233,6 +233,24 @@ public class ImageTyperzService : CaptchaService
             response, CaptchaType.CloudflareTurnstile, cancellationToken);
     }
 
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostToStringAsync(
+            "captchaapi/UploadGeeTestV4.ashx",
+            GetAuthAffiliatePair()
+                .Add("action", "UPLOADCAPTCHA")
+                .Add("domain", siteUrl)
+                .Add("geetestid", captchaId)
+                .Add(GetProxyParams(proxy)),
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<GeeTestV4Response>(
+            response, CaptchaType.GeeTestV4, cancellationToken);
+    }
     #endregion
 
     #region Getting the result
@@ -326,6 +344,26 @@ public class ImageTyperzService : CaptchaService
                 Id = task.Id,
                 Response = cloudflareResponse["Response"]!.Value<string>()!,
                 UserAgent = cloudflareResponse["UserAgent"]!.Value<string>()!
+            } as T;
+        }
+
+        if (typeof(T) == typeof(GeeTestV4Response))
+        {
+            if (task.Type is not CaptchaType.GeeTestV4)
+            {
+                throw new TaskSolutionException("The task is not a GeeTest v4 captcha");   
+            }
+            
+            var geeTestV4Response = JObject.Parse(response.Response);
+            
+            return new GeeTestV4Response
+            {
+                Id = task.Id,
+                CaptchaId = "", // Not returned by the API
+                LotNumber = geeTestV4Response["lot_number"]!.Value<string>()!,
+                PassToken = geeTestV4Response["pass_token"]!.Value<string>()!,
+                GenTime = geeTestV4Response["gen_time"]!.Value<string>()!,
+                CaptchaOutput = geeTestV4Response["captcha_output"]!.Value<string>()!
             } as T;
         }
 

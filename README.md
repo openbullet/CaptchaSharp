@@ -34,12 +34,13 @@ This library supports the following captcha solving services
 This library supports the following captcha types
 - Text (with language options)
 - Image (with options like phrase, case sensitivity, calculations)
-- ReCaptcha V2 (incl. invisible, enterprise)
-- ReCaptcha V3 (incl. enterprise)
+- ReCaptcha v2 (incl. invisible, enterprise)
+- ReCaptcha v3 (incl. enterprise)
 - ArkoseLabs FunCaptcha
 - HCaptcha
 - KeyCaptcha
-- GeeTest
+- GeeTest v3
+- GeeTest v4
 - Capy
 - DataDome
 - Cloudflare Turnstile

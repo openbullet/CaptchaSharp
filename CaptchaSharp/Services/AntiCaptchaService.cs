@@ -333,6 +333,42 @@ public class AntiCaptchaService : CaptchaService
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+            
+        if (proxy is not null)
+        {
+            content.Task = new GeeTestTask
+            {
+                Gt = captchaId,
+                WebsiteURL = siteUrl,
+                Version = 4
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            content.Task = new GeeTestTaskProxyless
+            {
+                Gt = captchaId,
+                WebsiteURL = siteUrl,
+                Version = 4
+            };
+        }
+            
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
+            cancellationToken).ConfigureAwait(false);
+    }
+
     #endregion
 
     #region Getting the result
@@ -399,6 +435,7 @@ public class AntiCaptchaService : CaptchaService
             CaptchaType.ImageCaptcha => solution.ToObject<ImageCaptchaAntiCaptchaTaskSolution>(),
             CaptchaType.GeeTest => solution.ToObject<GeeTestAntiCaptchaTaskSolution>(),
             CaptchaType.CloudflareTurnstile => solution.ToObject<TurnstileAntiCaptchaTaskSolution>(),
+            CaptchaType.GeeTestV4 => solution.ToObject<GeeTestV4AntiCaptchaTaskSolution>(),
             _ => throw new NotSupportedException($"The {task.Type} captcha type is not supported")
         } ?? throw new TaskSolutionException(response);
 

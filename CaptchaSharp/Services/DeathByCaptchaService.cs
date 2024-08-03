@@ -709,6 +709,42 @@ public class DeathByCaptchaService : CaptchaService
             CaptchaType.AudioCaptcha, cancellationToken);
     }
 
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        DbcTaskProxyless task;
+        
+        if (proxy is not null)
+        {
+            task = new GeeTestV4DbcTask
+            {
+                CaptchaId = captchaId,
+                PageUrl = siteUrl
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            task = new GeeTestV4DbcTaskProxyless
+            {
+                CaptchaId = captchaId,
+                PageUrl = siteUrl
+            };
+        }
+        
+        var response = await HttpClient.PostAsync(
+                "captcha",
+                GetAuthPair()
+                    .Add("type", 9)
+                    .Add("geetest_params", task.Serialize()),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<GeeTestV4Response>(
+            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
+            CaptchaType.GeeTestV4, cancellationToken);
+    }
     #endregion
 
     #region Getting the result
@@ -796,6 +832,20 @@ public class DeathByCaptchaService : CaptchaService
             {
                 Id = task.Id,
                 Response = text,
+            } as T;
+        }
+
+        if (typeof(T) == typeof(GeeTestV4Response))
+        {
+            var geeTestV4Response = text.Deserialize<GeeTestV4DbcResponse>();
+            return new GeeTestV4Response
+            {
+                Id = task.Id,
+                CaptchaId = geeTestV4Response.CaptchaId,
+                LotNumber = geeTestV4Response.LotNumber,
+                PassToken = geeTestV4Response.PassToken,
+                GenTime = geeTestV4Response.GenTime,
+                CaptchaOutput = geeTestV4Response.CaptchaOutput
             } as T;
         }
         

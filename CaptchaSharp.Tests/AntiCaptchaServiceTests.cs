@@ -35,4 +35,6 @@ public class AntiCaptchaServiceTests(AntiCaptchaFixture fixture, ITestOutputHelp
     [Fact] public Task SolveGeeTestAsync_WithProxy_ValidSolution() => GeeTestTest_WithProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_NoProxy_ValidSolution() => CloudflareTurnstileTest_NoProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_WithProxy_ValidSolution() => CloudflareTurnstileTest_WithProxy();
+    [Fact] public Task SolveGeeTestV4Async_NoProxy_ValidSolution() => GeeTestV4Test_NoProxy();
+    [Fact] public Task SolveGeeTestV4Async_WithProxy_ValidSolution() => GeeTestV4Test_WithProxy();
 }
