@@ -131,6 +131,5 @@ Unit tests are included in the `CaptchaSharp.Tests` project. In order to test, y
 
 ## What needs to be improved
 - Drop `Newtonsoft.Json` for `System.Text.Json`
-- `StringPairCollection.Add()` should also take null values, and by default ignore the key-value pair if the value is null.
 - Implement better exception handling for specific error codes. For example when there is zero balance or when a solver method returns a bad authentication, they will currently fall in the generic `TaskCreationException` type.
 - Add support for recognition APIs (right now only token-based APIs are supported).

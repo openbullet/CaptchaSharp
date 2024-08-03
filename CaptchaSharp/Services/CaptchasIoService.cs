@@ -43,8 +43,8 @@ public class CaptchasIoService : CustomTwoCaptchaService
         var multipartData = new StringPairCollection()
             .Add("key", ApiKey)
             .Add("method", "audio")
-            .Add("json", "1", UseJsonFlag)
-            .Add("header_acao", "1", AddAcaoHeader)
+            .Add("json", UseJsonFlag ? "1" : null)
+            .Add("header_acao", AddAcaoHeader ? "1" : null)
             .ToMultipartFormDataContent();
         
         // Add the "file" as a multipart file from base64 (convert to byte array)

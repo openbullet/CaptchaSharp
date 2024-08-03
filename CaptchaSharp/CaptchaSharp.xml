@@ -322,6 +322,26 @@
         <member name="F:CaptchaSharp.Enums.ProxyType.SOCKS5">
             <summary></summary>
         </member>
+        <member name="T:CaptchaSharp.Enums.StringPairValueHandling">
+            <summary>
+            Specifies how to handle the values of the string pairs.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.StringPairValueHandling.AlwaysAdd">
+            <summary>
+            Always add the pair to the collection. Null values are converted to empty strings.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.StringPairValueHandling.AddIfNotNull">
+            <summary>
+            Add the pair to the collection only if the value is not null.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Enums.StringPairValueHandling.AddIfNotNullOrEmpty">
+            <summary>
+            Add the pair to the collection only if the value is not null or empty.
+            </summary>
+        </member>
         <member name="T:CaptchaSharp.Exceptions.BadAuthenticationException">
             <summary>An exception that is thrown when the credentials are invalid.</summary>
         </member>
@@ -877,24 +897,41 @@
             </summary>
         </member>
         <member name="T:CaptchaSharp.Models.StringPairCollection">
-            <summary>A collection of string pairs.</summary>
+            <summary>
+            A collection of string pairs.
+            </summary>
         </member>
-        <member name="M:CaptchaSharp.Models.StringPairCollection.Add(System.String,System.String,System.Boolean)">
-            <summary>Adds a new pair to the collection if <paramref name="addCondition"/> is true.</summary>
+        <member name="M:CaptchaSharp.Models.StringPairCollection.#ctor(CaptchaSharp.Enums.StringPairValueHandling)">
+            <summary></summary>
         </member>
-        <member name="M:CaptchaSharp.Models.StringPairCollection.Add``2(``0,``1,System.Boolean)">
-            <summary>Adds a new pair to the collection if <paramref name="addCondition"/> is true by 
-            calling the ToString() method on <paramref name="first"/> and <paramref name="second"/>.</summary>
+        <member name="M:CaptchaSharp.Models.StringPairCollection.Add``1(System.String,``0)">
+            <summary>
+            Adds a new pair to the collection. The <paramref name="second"/> value is converted
+            to string and handled according to the <see cref="P:CaptchaSharp.Models.StringPairCollection.ValueHandling"/> property.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Models.StringPairCollection.Add``1(System.String,``0,System.Boolean)">
+            <summary>
+            Adds a new pair to the collection only if the <paramref name="condition"/> is true.
+            The <paramref name="second"/> value is converted
+            to string and handled according to the <see cref="P:CaptchaSharp.Models.StringPairCollection.ValueHandling"/> property.
+            </summary>
         </member>
         <member name="M:CaptchaSharp.Models.StringPairCollection.Add(System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}})">
-            <summary>Adds multiple new pairs to the collection.</summary>
+            <summary>
+            Adds multiple new pairs to the collection.
+            </summary>
         </member>
         <member name="M:CaptchaSharp.Models.StringPairCollection.ToHttpQueryString">
-            <summary>Outputs a string like <c>name1=value1&amp;name2=value2</c></summary>
+            <summary>
+            Outputs a string like <c>name1=value1&amp;name2=value2</c>.
+            </summary>
         </member>
         <member name="M:CaptchaSharp.Models.StringPairCollection.ToMultipartFormDataContent">
-            <summary>Outputs a new <see cref="T:System.Net.Http.MultipartFormDataContent"/> where each pair 
-            of the collection becomes a <see cref="T:System.Net.Http.StringContent"/>.</summary>
+            <summary>
+            Outputs a new <see cref="T:System.Net.Http.MultipartFormDataContent"/> where each pair 
+            of the collection becomes a <see cref="T:System.Net.Http.StringContent"/>.
+            </summary>
         </member>
         <member name="T:CaptchaSharp.Models.StringResponse">
             <summary>A captcha response with a string solution.</summary>

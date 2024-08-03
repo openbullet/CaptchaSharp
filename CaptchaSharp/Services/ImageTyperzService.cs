@@ -99,7 +99,7 @@ public class ImageTyperzService : CaptchaService
                 .Add("googlekey", siteKey)
                 .Add("recaptchatype", invisible ? 2 : 1, !enterprise)
                 .Add("enterprise_type", "v2", enterprise)
-                .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
+                .Add("data-s", dataS)
                 .Add(GetProxyParams(proxy)),
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -144,7 +144,7 @@ public class ImageTyperzService : CaptchaService
                 .Add("pageurl", siteUrl)
                 .Add("sitekey", publicKey)
                 .Add("s_url", serviceUrl)
-                .Add("data", data!, !string.IsNullOrEmpty(data))
+                .Add("data", data)
                 .Add(GetProxyParams(proxy)),
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -166,7 +166,7 @@ public class ImageTyperzService : CaptchaService
                 .Add("pageurl", siteUrl)
                 .Add("sitekey", siteKey)
                 .Add("invisible", 1, invisible)
-                .Add("HcaptchaEnterprise", enterprisePayload!, !string.IsNullOrEmpty(enterprisePayload))
+                .Add("HcaptchaEnterprise", enterprisePayload)
                 .Add(GetProxyParams(proxy)),
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -186,7 +186,7 @@ public class ImageTyperzService : CaptchaService
                 .Add("action", "UPLOADCAPTCHA")
                 .Add("gt", gt)
                 .Add("challenge", challenge)
-                .Add("api_server", apiServer!, !string.IsNullOrEmpty(apiServer))
+                .Add("api_server", apiServer)
                 .Add("domain", siteUrl)
                 .Add(GetProxyParams(proxy)),
             cancellationToken)
@@ -227,8 +227,8 @@ public class ImageTyperzService : CaptchaService
                 .Add("action", "UPLOADCAPTCHA")
                 .Add("pageurl", siteUrl)
                 .Add("sitekey", siteKey)
-                .Add("taction", action!, !string.IsNullOrEmpty(action))
-                .Add("data", data!, !string.IsNullOrEmpty(data))
+                .Add("taction", action)
+                .Add("data", data)
                 .Add(GetProxyParams(proxy)),
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
