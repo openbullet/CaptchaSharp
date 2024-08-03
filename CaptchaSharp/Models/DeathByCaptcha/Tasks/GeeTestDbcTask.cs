@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.DeathByCaptcha.Tasks;
 
-internal class GeeTestDbcTaskProxyless : DbcTaskProxyless
+internal class GeeTestDbcTask : DbcTask
 {
     [JsonProperty("gt")]
     public required string Gt { get; set; }

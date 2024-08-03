@@ -2,7 +2,7 @@
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.DeathByCaptcha.Tasks;
-using CaptchaSharp.Models.DeathByCaptcha.Tasks.Proxied;
+using CaptchaSharp.Models.DeathByCaptcha.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -115,24 +115,11 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-
-        if (proxy is not null)
+        var task = new RecaptchaV2DbcTask
         {
-            task = new RecaptchaV2DbcTask
-            {
-                GoogleKey = siteKey,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new RecaptchaV2DbcTaskProxyless
-            {
-                GoogleKey = siteKey,
-                PageUrl = siteUrl
-            };
-        }
+            GoogleKey = siteKey,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -152,28 +139,13 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
         bool enterprise = false, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-
-        if (proxy is not null)
+        var task = new RecaptchaV3DbcTask
         {
-            task = new RecaptchaV3DbcTask
-            {
-                GoogleKey = siteKey,
-                PageUrl = siteUrl,
-                Action = action,
-                MinScore = minScore
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new RecaptchaV3DbcTaskProxyless
-            {
-                GoogleKey = siteKey,
-                PageUrl = siteUrl,
-                Action = action,
-                MinScore = minScore
-            };
-        }
+            GoogleKey = siteKey,
+            PageUrl = siteUrl,
+            Action = action,
+            MinScore = minScore
+        }.SetProxy(proxy);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -193,24 +165,11 @@ public class DeathByCaptchaService : CaptchaService
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
         string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-
-        if (proxy is not null)
+        var task = new FunCaptchaDbcTask
         {
-            task = new FunCaptchaDbcTask
-            {
-                PublicKey = publicKey,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new FunCaptchaDbcTaskProxyless
-            {
-                PublicKey = publicKey,
-                PageUrl = siteUrl
-            };
-        }
+            PublicKey = publicKey,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -230,24 +189,11 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-
-        if (proxy is not null)
+        var task = new HCaptchaDbcTask
         {
-            task = new HCaptchaDbcTask
-            {
-                SiteKey = siteKey,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new HCaptchaDbcTaskProxyless
-            {
-                SiteKey = siteKey,
-                PageUrl = siteUrl
-            };
-        }
+            SiteKey = siteKey,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -267,30 +213,14 @@ public class DeathByCaptchaService : CaptchaService
         string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-
-        if (proxy is not null)
+        var task = new KeyCaptchaDbcTask
         {
-            task = new KeyCaptchaDbcTask
-            {
-                UserId = userId,
-                SessionId = sessionId,
-                WebServerSign = webServerSign1,
-                WebServerSign2 = webServerSign2,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new KeyCaptchaDbcTaskProxyless
-            {
-                UserId = userId,
-                SessionId = sessionId,
-                WebServerSign = webServerSign1,
-                WebServerSign2 = webServerSign2,
-                PageUrl = siteUrl
-            };
-        }
+            UserId = userId,
+            SessionId = sessionId,
+            WebServerSign = webServerSign1,
+            WebServerSign2 = webServerSign2,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
 
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -310,26 +240,12 @@ public class DeathByCaptchaService : CaptchaService
         string gt, string challenge, string siteUrl, string? apiServer = null,
         Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new GeeTestDbcTask
         {
-            task = new GeeTestDbcTask
-            {
-                Gt = gt,
-                Challenge = challenge,
-                PageUrl = siteUrl,
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new GeeTestDbcTaskProxyless
-            {
-                Gt = gt,
-                Challenge = challenge,
-                PageUrl = siteUrl,
-            };
-        }
+            Gt = gt,
+            Challenge = challenge,
+            PageUrl = siteUrl,
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -349,24 +265,11 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new CapyDbcTask
         {
-            task = new CapyDbcTask
-            {
-                CaptchaKey = siteKey,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new CapyDbcTaskProxyless
-            {
-                CaptchaKey = siteKey,
-                PageUrl = siteUrl
-            };
-        }
+            CaptchaKey = siteKey,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -451,24 +354,11 @@ public class DeathByCaptchaService : CaptchaService
         string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
         string? divId = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new LeminCroppedDbcTask
         {
-            task = new LeminCroppedDbcTask
-            {
-                CaptchaId = captchaId,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new LeminCroppedDbcTaskProxyless
-            {
-                CaptchaId = captchaId,
-                PageUrl = siteUrl
-            };
-        }
+            CaptchaId = captchaId,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -488,32 +378,15 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
         string? captchaScript = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new AmazonWafDbcTask
         {
-            task = new AmazonWafDbcTask
-            {
-                SiteKey = siteKey,
-                Iv = iv,
-                Context = context,
-                PageUrl = siteUrl,
-                ChallengeJs = challengeScript,
-                CaptchaJs = captchaScript
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new AmazonWafDbcTaskProxyless
-            {
-                SiteKey = siteKey,
-                Iv = iv,
-                Context = context,
-                PageUrl = siteUrl,
-                ChallengeJs = challengeScript,
-                CaptchaJs = captchaScript
-            };
-        }
+            SiteKey = siteKey,
+            Iv = iv,
+            Context = context,
+            PageUrl = siteUrl,
+            ChallengeJs = challengeScript,
+            CaptchaJs = captchaScript
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -538,26 +411,12 @@ public class DeathByCaptchaService : CaptchaService
             throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
         }
         
-        DbcTaskProxyless task;
-        
-        if (proxy.Host is not null)
+        var task = new CyberSiAraDbcTask
         {
-            task = new CyberSiAraDbcTask
-            {
-                SlideUrlId = masterUrlId,
-                PageUrl = siteUrl,
-                UserAgent = proxy.UserAgent
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new CyberSiAraDbcTaskProxyless
-            {
-                SlideUrlId = masterUrlId,
-                PageUrl = siteUrl,
-                UserAgent = proxy.UserAgent
-            };
-        }
+            SlideUrlId = masterUrlId,
+            PageUrl = siteUrl,
+            UserAgent = proxy.UserAgent
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -577,24 +436,11 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new MtCaptchaDbcTask
         {
-            task = new MtCaptchaDbcTask
-            {
-                SiteKey = siteKey,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new MtCaptchaDbcTaskProxyless
-            {
-                SiteKey = siteKey,
-                PageUrl = siteUrl
-            };
-        }
+            SiteKey = siteKey,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -614,26 +460,12 @@ public class DeathByCaptchaService : CaptchaService
         string miseryKey, string apiKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new CutCaptchaDbcTask
         {
-            task = new CutCaptchaDbcTask
-            {
-                MiseryKey = miseryKey,
-                ApiKey = apiKey,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new CutCaptchaDbcTaskProxyless
-            {
-                MiseryKey = miseryKey,
-                ApiKey = apiKey,
-                PageUrl = siteUrl
-            };
-        }
+            MiseryKey = miseryKey,
+            ApiKey = apiKey,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -653,24 +485,11 @@ public class DeathByCaptchaService : CaptchaService
         string siteKey, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new FriendlyCaptchaDbcTask
         {
-            task = new FriendlyCaptchaDbcTask
-            {
-                SiteKey = siteKey,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new FriendlyCaptchaDbcTaskProxyless
-            {
-                SiteKey = siteKey,
-                PageUrl = siteUrl
-            };
-        }
+            SiteKey = siteKey,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",
@@ -717,24 +536,11 @@ public class DeathByCaptchaService : CaptchaService
         string captchaId, string siteUrl, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
-        DbcTaskProxyless task;
-        
-        if (proxy is not null)
+        var task = new GeeTestV4DbcTask
         {
-            task = new GeeTestV4DbcTask
-            {
-                CaptchaId = captchaId,
-                PageUrl = siteUrl
-            }.SetProxy(proxy);
-        }
-        else
-        {
-            task = new GeeTestV4DbcTaskProxyless
-            {
-                CaptchaId = captchaId,
-                PageUrl = siteUrl
-            };
-        }
+            CaptchaId = captchaId,
+            PageUrl = siteUrl
+        }.SetProxy(proxy);
         
         var response = await HttpClient.PostAsync(
                 "captcha",

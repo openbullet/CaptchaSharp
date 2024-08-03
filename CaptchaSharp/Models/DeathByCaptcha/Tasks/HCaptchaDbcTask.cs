@@ -2,10 +2,10 @@ using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.DeathByCaptcha.Tasks;
 
-internal class LeminCroppedDbcTaskProxyless : DbcTaskProxyless
+internal class HCaptchaDbcTask : DbcTask
 {
-    [JsonProperty("captchaid")]
-    public required string CaptchaId { get; set; }
+    [JsonProperty("sitekey")]
+    public required string SiteKey { get; set; }
     
     [JsonProperty("pageurl")]
     public required string PageUrl { get; set; }

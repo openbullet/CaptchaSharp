@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.DeathByCaptcha.Tasks;
 
-internal class CyberSiAraDbcTaskProxyless : DbcTaskProxyless
+internal class CyberSiAraDbcTask : DbcTask
 {
     [JsonProperty("slideurlid")]
     public required string SlideUrlId { get; set; }

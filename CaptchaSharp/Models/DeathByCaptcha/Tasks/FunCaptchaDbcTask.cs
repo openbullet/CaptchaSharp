@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CaptchaSharp.Models.DeathByCaptcha.Tasks.Proxied;
+namespace CaptchaSharp.Models.DeathByCaptcha.Tasks;
 
 internal class FunCaptchaDbcTask : DbcTask
 {

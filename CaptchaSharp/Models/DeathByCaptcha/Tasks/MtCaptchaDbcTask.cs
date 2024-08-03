@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace CaptchaSharp.Models.DeathByCaptcha.Tasks.Proxied;
+namespace CaptchaSharp.Models.DeathByCaptcha.Tasks;
 
-internal class FriendlyCaptchaDbcTask : DbcTask
+internal class MtCaptchaDbcTask : DbcTask
 {
     [JsonProperty("sitekey")]
     public required string SiteKey { get; set; }
