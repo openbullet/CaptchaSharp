@@ -1,41 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CaptchaSharp.Enums
+namespace CaptchaSharp.Enums;
+
+/// <summary></summary>
+[Flags]
+public enum CaptchaServiceCapabilities
 {
     /// <summary></summary>
-    [Flags]
-    public enum CaptchaServiceCapabilities
-    {
-        /// <summary></summary>
-        None = 0,
+    None = 0,
 
-        /// <summary></summary>
-        LanguageGroup = 1,
+    /// <summary></summary>
+    LanguageGroup = 1 << 0,
 
-        /// <summary></summary>
-        Language = 2,
+    /// <summary></summary>
+    Language = 1 << 1,
 
-        /// <summary></summary>
-        Phrases = 4,
+    /// <summary></summary>
+    Phrases = 1 << 2,
 
-        /// <summary></summary>
-        CaseSensitivity = 8,
+    /// <summary></summary>
+    CaseSensitivity = 1 << 3,
 
-        /// <summary></summary>
-        CharacterSets = 16,
+    /// <summary></summary>
+    CharacterSets = 1 << 4,
 
-        /// <summary></summary>
-        Calculations = 32,
+    /// <summary></summary>
+    Calculations = 1 << 5,
 
-        /// <summary></summary>
-        MinLength = 64,
+    /// <summary></summary>
+    MinLength = 1 << 6,
 
-        /// <summary></summary>
-        MaxLength = 128,
+    /// <summary></summary>
+    MaxLength = 1 << 7,
 
-        /// <summary></summary>
-        Instructions = 256
-    }
+    /// <summary></summary>
+    Instructions = 1 << 8,
 }

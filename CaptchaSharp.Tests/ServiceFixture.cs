@@ -1,14 +1,10 @@
-﻿namespace CaptchaSharp.Tests
-{
-    public abstract class ServiceFixture
-    {
-        private readonly ConfigFixture configFixture;
-        public Config Config => configFixture.Config;
-        public CaptchaService Service { get; set; }
+﻿using CaptchaSharp.Services;
 
-        public ServiceFixture()
-        {
-            configFixture = new ConfigFixture();
-        }
-    }
+namespace CaptchaSharp.Tests;
+
+public abstract class ServiceFixture
+{
+    private readonly ConfigFixture _configFixture = new();
+    public Config Config => _configFixture.Config;
+    public required CaptchaService Service { get; init; }
 }

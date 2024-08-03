@@ -2,49 +2,55 @@
 using System;
 using System.Net.Http;
 
-namespace CaptchaSharp.Services
+namespace CaptchaSharp.Services;
+
+/// <summary>
+/// The service provided by a service that implements the 2captcha API.
+/// </summary>
+public class CustomTwoCaptchaService : TwoCaptchaService
 {
-    /// <summary>The service provided by a service that implements the 2captcha API.</summary>
-    public class CustomTwoCaptchaService : TwoCaptchaService
+    /// <summary>
+    /// Initializes a <see cref="CustomTwoCaptchaService"/>.
+    /// </summary>
+    /// <param name="apiKey">The API key to use.</param>
+    /// <param name="baseUri">The base URI of the service.</param>
+    /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
+    /// <param name="overrideHostHeader">Whether to override the Host header to 2captcha.com.</param>
+    public CustomTwoCaptchaService(
+        string apiKey, Uri baseUri, HttpClient? httpClient = null, bool overrideHostHeader = true)
+        : base(apiKey, httpClient)
     {
-        /// <summary>Initializes a <see cref="CustomTwoCaptchaService"/> using the given <paramref name="apiKey"/>, 
-        /// <paramref name="baseUri"/> and <paramref name="httpClient"/>.
-        /// If <paramref name="httpClient"/> is null, a default one will be created.
-        /// If <paramref name="overrideHostHeader"/> is true, the Host header will be changed to 2captcha.com</summary>
-        public CustomTwoCaptchaService(string apiKey, Uri baseUri, HttpClient httpClient = null, bool overrideHostHeader = true)
-            : base(apiKey, httpClient)
-        {
-            SetupHttpClient(baseUri, overrideHostHeader);
+        SetupHttpClient(baseUri, overrideHostHeader);
 
-            // Services that implement the 2captcha API don't always support
-            // JSON responses so we will not set the json=1 flag
-            UseJsonFlag = false;
-        }
-
-        /// <summary>Sets 2captcha.com as host and <paramref name="baseUri"/> as <see cref="HttpClient.BaseAddress"/> 
-        /// for the <see cref="HttpClient"/> requests.</summary>
-        protected void SetupHttpClient(Uri baseUri, bool overrideHostHeader = true)
-        {
-            if (overrideHostHeader)
-            {
-                // Use 2captcha.com as host header to simulate an entry in the hosts file
-                httpClient.DefaultRequestHeaders.Host = "2captcha.com";
-            }
-            
-            httpClient.BaseAddress = baseUri;
-        }
-
-        #region Supported Types
-        /// <summary>The supported captcha types for this service.</summary>
-        public CaptchaType SupportedCaptchaTypes { get; set; } =
-            CaptchaType.TextCaptcha |
-            CaptchaType.ImageCaptcha |
-            CaptchaType.ReCaptchaV2 |
-            CaptchaType.ReCaptchaV3 |
-            CaptchaType.FunCaptcha |
-            CaptchaType.HCaptcha |
-            CaptchaType.KeyCaptcha |
-            CaptchaType.GeeTest;
-        #endregion
+        // Services that implement the 2captcha API don't always support
+        // JSON responses so we will not set the json=1 flag
+        UseJsonFlag = false;
     }
+
+    private void SetupHttpClient(Uri baseUri, bool overrideHostHeader = true)
+    {
+        if (overrideHostHeader)
+        {
+            // Use 2captcha.com as host header to simulate an entry in the hosts file
+            HttpClient.DefaultRequestHeaders.Host = "2captcha.com";
+        }
+            
+        HttpClient.BaseAddress = baseUri;
+    }
+
+    #region Supported Types
+    /// <summary>The supported captcha types for this service.</summary>
+    public CaptchaType SupportedCaptchaTypes { get; set; } =
+        CaptchaType.TextCaptcha |
+        CaptchaType.ImageCaptcha |
+        CaptchaType.ReCaptchaV2 |
+        CaptchaType.ReCaptchaV3 |
+        CaptchaType.FunCaptcha |
+        CaptchaType.HCaptcha |
+        CaptchaType.KeyCaptcha |
+        CaptchaType.GeeTest |
+        CaptchaType.Capy |
+        CaptchaType.DataDome |
+        CaptchaType.CloudflareTurnstile;
+    #endregion
 }

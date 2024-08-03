@@ -1,0 +1,28 @@
+name: .NET Build and Publish Nuget Package
+
+on:
+  push:
+    tags: 
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+defaults:
+  run:
+    working-directory: src
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 8.0.x
+
+    # Don't override the version of the package, trust the version in the project file
+    - name: Create Nuget Package
+      run: dotnet pack --output nupkgs --configuration Release
+
+    - name: Upload Nuget Package
+      run: dotnet nuget push nupkgs/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json

@@ -5,357 +5,784 @@ using System.Threading.Tasks;
 using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.TwoCaptcha;
+using CaptchaSharp.Models.TwoCaptcha;
 using System.Collections.Generic;
 using System;
+using System.Collections.Immutable;
+using CaptchaSharp.Extensions;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 using Newtonsoft.Json.Linq;
 
-namespace CaptchaSharp.Services
+namespace CaptchaSharp.Services;
+
+/// <summary>
+/// The service provided by https://2captcha.com/
+/// </summary>
+public class TwoCaptchaService : CaptchaService
 {
-    /// <summary>The service provided by <c>https://2captcha.com/</c></summary>
-    public class TwoCaptchaService : CaptchaService
+    /// <summary>
+    /// Your secret api key.
+    /// </summary>
+    public string ApiKey { get; set; }
+
+    /// <summary>
+    /// Set it to false if the service does not support json responses.
+    /// </summary>
+    public bool UseJsonFlag { get; init; } = true;
+
+    /// <summary>
+    /// Will include an Access-Control-Allow-Origin:* header in the response for 
+    /// cross-domain AJAX requests in web applications.
+    /// </summary>
+    public bool AddAcaoHeader { get; set; } = false;
+
+    /// <summary>The ID of the software developer.</summary>
+    private const int _softId = 2658;
+    
+    private readonly ImmutableList<CaptchaLanguage> _supportedAudioLanguages = new List<CaptchaLanguage>()
     {
-        /// <summary>Your secret api key.</summary>
-        public string ApiKey { get; set; }
+        CaptchaLanguage.English,
+        CaptchaLanguage.French,
+        CaptchaLanguage.German,
+        CaptchaLanguage.Greek,
+        CaptchaLanguage.Portuguese,
+        CaptchaLanguage.Russian
+    }.ToImmutableList();
 
-        /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
-        protected HttpClient httpClient;
+    /// <summary>
+    /// Initializes a <see cref="TwoCaptchaService"/>.</summary>
+    /// <param name="apiKey">The API key to use.</param>
+    /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
+    public TwoCaptchaService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
+    {
+        ApiKey = apiKey;
+        HttpClient.BaseAddress = new Uri("http://2captcha.com");
+    }
 
-        /// <summary>Set it to false if the service does not support json responses.</summary>
-        public bool UseJsonFlag { get; set; } = true;
+    #region Getting the Balance
+    /// <inheritdoc/>
+    public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.GetStringAsync("res.php",
+            new StringPairCollection() 
+                .Add("key", ApiKey)
+                .Add("action", "getbalance")
+                .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
+            cancellationToken)
+            .ConfigureAwait(false);
 
-        /// <summary>Will include an Access-Control-Allow-Origin:* header in the response for 
-        /// cross-domain AJAX requests in web applications.</summary>
-        public bool AddACAOHeader { get; set; } = false;
-
-        /// <summary>The ID of the software developer.</summary>
-        private readonly int softId = 2658;
-
-        /// <summary>Initializes a <see cref="TwoCaptchaService"/> using the given <paramref name="apiKey"/> and 
-        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
-        public TwoCaptchaService(string apiKey, HttpClient httpClient = null)
+        if (UseJsonFlag)
         {
-            ApiKey = apiKey;
-            this.httpClient = httpClient ?? new HttpClient();
-            this.httpClient.BaseAddress = new Uri("http://2captcha.com");
-        }
+            var tcResponse = response.Deserialize<TwoCaptchaResponse>();
 
-        #region Getting the Balance
-        /// <inheritdoc/>
-        public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.GetStringAsync
-                ("res.php",
-                new StringPairCollection() 
-                    .Add("key", ApiKey)
-                    .Add("action", "getbalance")
-                    .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
-                cancellationToken);
-
-            if (UseJsonFlag)
+            if (tcResponse.IsErrorCode)
             {
-                var tcResponse = response.Deserialize<Response>();
-
-                if (tcResponse.IsErrorCode)
-                    throw new BadAuthenticationException(tcResponse.Request);
-
-                return decimal.Parse(tcResponse.Request, CultureInfo.InvariantCulture);
+                throw new BadAuthenticationException(tcResponse.Request!);
             }
-            else
+
+            return decimal.Parse(tcResponse.Request!, CultureInfo.InvariantCulture);
+        }
+
+        if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out var balance))
+        {
+            return balance;
+        }
+
+        throw new BadAuthenticationException(response);
+    }
+    #endregion
+
+    #region Solve Methods
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveTextCaptchaAsync(
+        string text, TextCaptchaOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("textcaptcha", text)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertCapabilities(options))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TextCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.TextCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveImageCaptchaAsync(
+        string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "base64")
+                .Add("body", base64)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertCapabilities(options))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ImageCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.ImageCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaV2Async(
+        string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "userrecaptcha")
+                .Add("googlekey", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("data-s", dataS)
+                .Add("enterprise", Convert.ToInt32(enterprise).ToString())
+                .Add("invisible", Convert.ToInt32(invisible).ToString())
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ReCaptchaV2,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.ReCaptchaV2,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaV3Async(
+        string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "userrecaptcha")
+                .Add("version", "v3")
+                .Add("googlekey", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("action", action)
+                .Add("enterprise", Convert.ToInt32(enterprise).ToString())
+                .Add("min_score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ReCaptchaV3,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.ReCaptchaV3,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveFuncaptchaAsync(
+        string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var pairs = new StringPairCollection()
+            .Add("key", ApiKey)
+            .Add("method", "funcaptcha")
+            .Add("publickey", publicKey)
+            .Add("surl", serviceUrl)
+            .Add("pageurl", siteUrl)
+            .Add("nojs", Convert.ToInt32(noJs).ToString())
+            .Add("soft_id", _softId)
+            .Add("json", "1", UseJsonFlag)
+            .Add("header_acao", "1", AddAcaoHeader)
+            .Add(ConvertSessionParams(sessionParams));
+        
+        // If data is not null and is a JSON object, set
+        // data[key] = value in the request for each key-value pair
+        if (!string.IsNullOrEmpty(data) && data.StartsWith('{') && data.EndsWith('}'))
+        {
+            var jObject = JObject.Parse(data);
+            foreach (var property in jObject.Properties())
             {
-                if (decimal.TryParse(response, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal balance))
-                    return balance;
-
-                else
-                    throw new BadAuthenticationException(response);
+                pairs.Add($"data[{property.Name}]", property.Value.ToString());
             }
         }
-        #endregion
+        
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            pairs.ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
 
-        #region Solve Methods
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveTextCaptchaAsync
-            (string text, TextCaptchaOptions options = default, CancellationToken cancellationToken = default)
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.FunCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.FunCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveHCaptchaAsync(
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "hcaptcha")
+                .Add("sitekey", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("invisible", Convert.ToInt32(invisible).ToString())
+                .Add("data", enterprisePayload)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.HCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.HCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveKeyCaptchaAsync(
+        string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "keycaptcha")
+                .Add("s_s_c_user_id", userId)
+                .Add("s_s_c_session_id", sessionId)
+                .Add("s_s_c_web_server_sign", webServerSign1)
+                .Add("s_s_c_web_server_sign2", webServerSign2)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.KeyCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.KeyCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestResponse> SolveGeeTestAsync(
+        string gt, string challenge, string siteUrl, string? apiServer = null,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "geetest")
+                .Add("gt", gt)
+                .Add("challenge", challenge)
+                .Add("api_server", apiServer)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<GeeTestResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTest,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<GeeTestResponse>(
+                response, CaptchaType.GeeTest,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<CapyResponse> SolveCapyAsync(
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "capy")
+                .Add("captchakey", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<CapyResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.Capy,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<CapyResponse>(
+                response, CaptchaType.Capy,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveDataDomeAsync(
+        string siteUrl, string captchaUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        // Make sure there is a proxy with a User-Agent
+        if (string.IsNullOrEmpty(sessionParams?.UserAgent) || sessionParams.Proxy is null)
         {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("textcaptcha", text)
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertCapabilities(options))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
+            throw new ArgumentException("A proxy with a User-Agent is required for DataDome captchas.");
+        }
+            
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "datadome")
+                .Add("captcha_url", captchaUrl)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
 
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.TextCaptcha, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.TextCaptcha, cancellationToken).ConfigureAwait(false)
-                ) as StringResponse;
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.DataDome,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.DataDome,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
+        string siteKey, string siteUrl, string? action = null, string? data = null,
+        string? pageData = null, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        // Make sure there is a proxy with a User-Agent
+        if (string.IsNullOrEmpty(sessionParams?.UserAgent))
+        {
+            throw new ArgumentException("A User-Agent is required for Cloudflare Turnstile captchas.");
+        }
+            
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "turnstile")
+                .Add("sitekey", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("action", action)
+                .Add("data", data)
+                .Add("pagedata", pageData)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<CloudflareTurnstileResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CloudflareTurnstile,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<CloudflareTurnstileResponse>(
+                response, CaptchaType.CloudflareTurnstile,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<LeminCroppedResponse> SolveLeminCroppedAsync(
+        string captchaId, string siteUrl, string apiServer = "https://api.leminnow.com/",
+        string? divId = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "lemin")
+                .Add("captcha_id", captchaId)
+                .Add("pageurl", siteUrl)
+                .Add("api_server", apiServer)
+                .Add("div_id", divId)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<LeminCroppedResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.LeminCropped,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<LeminCroppedResponse>(
+                response, CaptchaType.LeminCropped,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAmazonWafAsync(
+        string siteKey, string iv, string context, string siteUrl, string? challengeScript = null,
+        string? captchaScript = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "amazon_waf")
+                .Add("sitekey", siteKey)
+                .Add("iv", iv)
+                .Add("context", context)
+                .Add("pageurl", siteUrl)
+                .Add("challenge_script", challengeScript)
+                .Add("captcha_script", captchaScript)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AmazonWaf,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.AmazonWaf,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveCyberSiAraAsync(
+        string masterUrlId, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (sessionParams?.UserAgent is null)
+        {
+            throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
+        }
+        
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "cybersiara")
+                .Add("master_url_id", masterUrlId)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CyberSiAra,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.CyberSiAra,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveMtCaptchaAsync(
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "mt_captcha")
+                .Add("sitekey", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.MtCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.MtCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveCutCaptchaAsync(
+        string miseryKey, string apiKey, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "cutcaptcha")
+                .Add("misery_key", miseryKey)
+                .Add("api_key", apiKey)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CutCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.CutCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveFriendlyCaptchaAsync(
+        string siteKey, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "friendly_captcha")
+                .Add("sitekey", siteKey)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.FriendlyCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.FriendlyCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAtbCaptchaAsync(
+        string appId, string apiServer, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "atb_captcha")
+                .Add("app_id", appId)
+                .Add("api_server", apiServer)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AtbCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.AtbCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<TencentCaptchaResponse> SolveTencentCaptchaAsync(
+        string appId, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "tencent")
+                .Add("app_id", appId)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<TencentCaptchaResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TencentCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<TencentCaptchaResponse>(
+                response, CaptchaType.TencentCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveAudioCaptchaAsync(
+        string base64, AudioCaptchaOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "audio")
+                .Add("body", base64)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertCapabilities(options))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<StringResponse>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AudioCaptcha,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<StringResponse>(
+                response, CaptchaType.AudioCaptcha,
+                cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostMultipartToStringAsync("in.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("method", "geetest_v4")
+                .Add("captcha_id", captchaId)
+                .Add("pageurl", siteUrl)
+                .Add("soft_id", _softId)
+                .Add("json", "1", UseJsonFlag)
+                .Add("header_acao", "1", AddAcaoHeader)
+                .Add(ConvertSessionParams(sessionParams))
+                .ToMultipartFormDataContent(),
+            cancellationToken)
+            .ConfigureAwait(false);
+        
+        return UseJsonFlag
+            ? await GetResult<GeeTestV4Response>(
+                response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTestV4,
+                cancellationToken).ConfigureAwait(false)
+            : await GetResult<GeeTestV4Response>(
+                response, CaptchaType.GeeTestV4,
+                cancellationToken).ConfigureAwait(false);
+    }
+    #endregion
+
+    #region Getting the result
+    private async Task<T> GetResult<T>(
+        TwoCaptchaResponse twoCaptchaResponse, CaptchaType type, CancellationToken cancellationToken = default)
+        where T : CaptchaResponse
+    {
+        if (twoCaptchaResponse.IsErrorCode)
+        {
+            throw new TaskCreationException(twoCaptchaResponse.Request!);
         }
 
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveImageCaptchaAsync
-            (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "base64")
-                    .Add("body", base64)
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertCapabilities(options))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
+        var task = new CaptchaTask(twoCaptchaResponse.Request!, type);
 
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false)
-                ) as StringResponse;
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
+    }
+
+    internal async Task<T> GetResult<T>(
+        string response, CaptchaType type, CancellationToken cancellationToken = default)
+        where T : CaptchaResponse
+    {
+        if (IsErrorCode(response))
+            throw new TaskCreationException(response);
+
+        var task = new CaptchaTask(TakeSecondSlice(response), type);
+
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary></summary>
+    protected override async Task<T?> CheckResultAsync<T>(
+        CaptchaTask task, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        var response = await HttpClient.GetStringAsync("res.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("action", "get")
+                .Add("id", task.Id)
+                .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
+            cancellationToken).ConfigureAwait(false);
+
+        if (response.Contains("CAPCHA_NOT_READY"))
+        {
+            return null;
         }
 
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
+        task.Completed = true;
+
+        try
         {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "userrecaptcha")
-                    .Add("googlekey", siteKey)
-                    .Add("pageurl", siteUrl)
-                    .Add("data-s", dataS, !string.IsNullOrEmpty(dataS))
-                    .Add("enterprise", Convert.ToInt32(enterprise).ToString())
-                    .Add("invisible", Convert.ToInt32(invisible).ToString())
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false)
-                ) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "userrecaptcha")
-                    .Add("version", "v3")
-                    .Add("googlekey", siteKey)
-                    .Add("pageurl", siteUrl)
-                    .Add("action", action)
-                    .Add("enterprise", Convert.ToInt32(enterprise).ToString())
-                    .Add("min_score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false)
-                ) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveFuncaptchaAsync
-            (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "funcaptcha")
-                    .Add("publickey", publicKey)
-                    .Add("surl", serviceUrl)
-                    .Add("pageurl", siteUrl)
-                    .Add("nojs", Convert.ToInt32(noJS).ToString())
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false)
-                ) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveHCaptchaAsync
-            (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "hcaptcha")
-                    .Add("sitekey", siteKey)
-                    .Add("pageurl", siteUrl)
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false)
-                ) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveKeyCaptchaAsync
-            (string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "keycaptcha")
-                    .Add("s_s_c_user_id", userId)
-                    .Add("s_s_c_session_id", sessionId)
-                    .Add("s_s_c_web_server_sign", webServerSign1)
-                    .Add("s_s_c_web_server_sign2", webServerSign2)
-                    .Add("pageurl", siteUrl)
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.KeyCaptcha, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.KeyCaptcha, cancellationToken).ConfigureAwait(false)
-                ) as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<GeeTestResponse> SolveGeeTestAsync
-            (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "geetest")
-                    .Add("gt", gt)
-                    .Add("challenge", challenge)
-                    .Add("api_server", apiServer)
-                    .Add("pageurl", siteUrl)
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false)
-                ) as GeeTestResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<CapyResponse> SolveCapyAsync
-            (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostMultipartToStringAsync
-                ("in.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("method", "capy")
-                    .Add("captchakey", siteKey)
-                    .Add("pageurl", siteUrl)
-                    .Add("soft_id", softId)
-                    .Add("json", "1", UseJsonFlag)
-                    .Add("header_acao", "1", AddACAOHeader)
-                    .Add(ConvertProxy(proxy))
-                    .ToMultipartFormDataContent(),
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return (UseJsonFlag
-                ? await TryGetResult(response.Deserialize<Response>(), CaptchaType.Capy, cancellationToken).ConfigureAwait(false)
-                : await TryGetResult(response, CaptchaType.Capy, cancellationToken).ConfigureAwait(false)
-                ) as CapyResponse;
-        }
-        #endregion
-
-        #region Getting the result
-        internal async Task<CaptchaResponse> TryGetResult
-            (Response response, CaptchaType type, CancellationToken cancellationToken = default)
-        {
-            if (response.IsErrorCode)
-                throw new TaskCreationException(response.Request);
-
-            var task = new CaptchaTask(response.Request, type);
-
-            return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
-        }
-
-        internal async Task<CaptchaResponse> TryGetResult
-            (string response, CaptchaType type, CancellationToken cancellationToken = default)
-        {
-            if (IsErrorCode(response))
-                throw new TaskCreationException(response);
-
-            var task = new CaptchaTask(TakeSecondSlice(response), type);
-
-            return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary></summary>
-        protected async override Task<CaptchaResponse> CheckResult
-            (CaptchaTask task, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.GetStringAsync
-                ("res.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("action", "get")
-                    .Add("id", task.Id.ToString())
-                    .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
-                cancellationToken);
-
-            if (response.Contains("CAPCHA_NOT_READY"))
-                return default;
-
-            task.Completed = true;
-
             if (UseJsonFlag)
             {
                 if (task.Type == CaptchaType.GeeTest)
@@ -363,10 +790,15 @@ namespace CaptchaSharp.Services
                     var jObject = JObject.Parse(response);
                     var solution = jObject["request"];
 
+                    if (solution is null)
+                    {
+                        throw new TaskSolutionException("No solution found");
+                    }
+
                     if (solution.Type == JTokenType.Object)
                     {
                         return response.Deserialize<TwoCaptchaGeeTestResponse>()
-                            .Request.ToGeeTestResponse(task.Id);
+                            .Request?.ToGeeTestResponse(task.Id) as T;
                     }
                 }
                 else if (task.Type == CaptchaType.Capy)
@@ -374,173 +806,270 @@ namespace CaptchaSharp.Services
                     var jObject = JObject.Parse(response);
                     var solution = jObject["request"];
 
+                    if (solution is null)
+                    {
+                        throw new TaskSolutionException("No solution found");
+                    }
+                    
                     if (solution.Type == JTokenType.Object)
                     {
                         return response.Deserialize<TwoCaptchaCapyResponse>()
-                            .Request.ToCapyResponse(task.Id);
+                            .Request!.ToCapyResponse(task.Id) as T;
                     }
                 }
-
-                var tcResponse = response.Deserialize<Response>();
-
-                if (tcResponse.IsErrorCode)
-                    throw new TaskSolutionException(tcResponse.Error_Text);
-
-                return new StringResponse { Id = task.Id, Response = tcResponse.Request };
-            }
-            else
-            {
-                if (IsErrorCode(response))
-                    throw new TaskSolutionException(response);
-
-                response = TakeSecondSlice(response);
-
-                switch (task.Type)
+                else if (task.Type == CaptchaType.CloudflareTurnstile)
                 {
-                    case CaptchaType.GeeTest:
-                        return response.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id);
-
-                    case CaptchaType.Capy:
-                        return response.Deserialize<CapySolution>().ToCapyResponse(task.Id);
-
-                    default:
-                        return new StringResponse { Id = task.Id, Response = response };
+                    return response.Deserialize<TwoCaptchaCloudflareTurnstileResponse>()
+                        .ToCloudflareTurnstileResponse(task.Id) as T;
                 }
-            }
-        }
-        #endregion
+                else if (task.Type == CaptchaType.LeminCropped)
+                {
+                    return response.Deserialize<TwoCaptchaLeminCroppedResponse>()
+                        .Request!.ToLeminCroppedResponse(task.Id) as T;
+                }
+                else if (task.Type == CaptchaType.AmazonWaf)
+                {
+                    return response.Deserialize<TwoCaptchaAmazonWafResponse>()
+                        .Request!.ToStringResponse(task.Id) as T;
+                }
+                else if (task.Type == CaptchaType.TencentCaptcha) 
+                {
+                    return response.Deserialize<TwoCaptchaTencentCaptchaResponse>()
+                        .Request!.ToTencentCaptchaResponse(task.Id) as T;
+                }
+                else if (task.Type == CaptchaType.GeeTestV4)
+                {
+                    return response.Deserialize<TwoCaptchaGeeTestV4Response>()
+                        .Request!.ToGeeTestV4Response(task.Id) as T;
+                }
 
-        #region Reporting the solution
-        /// <inheritdoc/>
-        public async override Task ReportSolution
-            (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-        {
-            var action = correct ? "reportgood" : "reportbad";
-
-            var response = await httpClient.GetStringAsync
-                ("res.php",
-                new StringPairCollection()
-                    .Add("key", ApiKey)
-                    .Add("action", action)
-                    .Add("id", taskId.ToString())
-                    .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
-                cancellationToken);
-
-            if (UseJsonFlag)
-            {
-                var tcResponse = response.Deserialize<Response>();
+                var tcResponse = response.Deserialize<TwoCaptchaResponse>();
 
                 if (tcResponse.IsErrorCode)
-                    throw new TaskReportException(tcResponse.Request);
+                {
+                    throw new TaskSolutionException(tcResponse.ErrorText!);
+                }
+
+                return new StringResponse { Id = task.Id, Response = tcResponse.Request! } as T;
             }
-            else
+
+            if (IsErrorCode(response))
             {
-                if (IsErrorCode(response))
-                    throw new TaskReportException(response);
+                throw new TaskSolutionException(response);
             }
-        }
-        #endregion
 
-        #region Proxies
-        /// <summary></summary>
-        protected IEnumerable<(string, string)> ConvertProxy(Proxy proxy)
-        {
-            if (proxy == null)
-                return new (string, string)[] { };
+            response = TakeSecondSlice(response);
 
-            return new (string, string)[]
+            return task.Type switch
             {
-                ("proxy", proxy.RequiresAuthentication 
-                    ? $"{proxy.Username}:{proxy.Password}@{proxy.Host}:{proxy.Port}"
-                    : $"{proxy.Host}:{proxy.Port}"),
-                ("proxytype", proxy.Type.ToString())
-            };
+                CaptchaType.GeeTest => response.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id) as T,
+                CaptchaType.Capy => response.Deserialize<CapySolution>().ToCapyResponse(task.Id) as T,
+                _ => new StringResponse { Id = task.Id, Response = response } as T
+            };   
         }
-        #endregion
-
-        #region Utility methods
-        /// <summary>For non-json response.</summary>
-        protected bool IsErrorCode(string response)
+        catch (Exception ex)
         {
-            return !response.StartsWith("OK");
+            throw new TaskSolutionException(response, ex);
         }
-
-        /// <summary>For non-json response.</summary>
-        protected string TakeSecondSlice(string str)
-        {
-            return str.Split('|')[1];
-        }
-        #endregion
-
-        #region Capabilities
-        /// <inheritdoc/>
-        public new CaptchaServiceCapabilities Capabilities =>
-            CaptchaServiceCapabilities.LanguageGroup |
-            CaptchaServiceCapabilities.Language |
-            CaptchaServiceCapabilities.Phrases |
-            CaptchaServiceCapabilities.CaseSensitivity |
-            CaptchaServiceCapabilities.CharacterSets |
-            CaptchaServiceCapabilities.Calculations |
-            CaptchaServiceCapabilities.MinLength |
-            CaptchaServiceCapabilities.MaxLength |
-            CaptchaServiceCapabilities.Instructions;
-
-        /// <summary></summary>
-        protected IEnumerable<(string, string)> ConvertCapabilities(TextCaptchaOptions options)
-        {
-            // If null, don't return any parameters
-            if (options == null)
-                return new (string, string)[] { };
-
-            var capabilities = new List<(string, string)>();
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.LanguageGroup))
-                capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language) && options.CaptchaLanguage != CaptchaLanguage.NotSpecified)
-                capabilities.Add(("lang", options.CaptchaLanguage.ToISO6391Code()));
-
-            return capabilities;
-        }
-
-        /// <summary></summary>
-        protected IEnumerable<(string, string)> ConvertCapabilities(ImageCaptchaOptions options)
-        {
-            // If null, don't return any parameters
-            if (options == null)
-                return new (string, string)[] { };
-
-            var capabilities = new List<(string, string)>();
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.Phrases))
-                capabilities.Add(("phrase", Convert.ToInt32(options.IsPhrase).ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.CaseSensitivity))
-                capabilities.Add(("regsense", Convert.ToInt32(options.CaseSensitive).ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.CharacterSets))
-                capabilities.Add(("numeric", ((int)options.CharacterSet).ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.Calculations))
-                capabilities.Add(("calc", Convert.ToInt32(options.RequiresCalculation).ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.MinLength))
-                capabilities.Add(("min_len", options.MinLength.ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.MaxLength))
-                capabilities.Add(("max_len", options.MaxLength.ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.Instructions))
-                capabilities.Add(("textinstructions", options.TextInstructions));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.LanguageGroup))
-                capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
-
-            if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language) && options.CaptchaLanguage != CaptchaLanguage.NotSpecified)
-                capabilities.Add(("lang", options.CaptchaLanguage.ToISO6391Code()));
-
-            return capabilities;
-        }
-        #endregion
     }
+    #endregion
+
+    #region Reporting the solution
+    /// <inheritdoc/>
+    public override async Task ReportSolutionAsync(
+        string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
+    {
+        var action = correct ? "reportgood" : "reportbad";
+
+        var response = await HttpClient.GetStringAsync("res.php",
+            new StringPairCollection()
+                .Add("key", ApiKey)
+                .Add("action", action)
+                .Add("id", id)
+                .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
+            cancellationToken).ConfigureAwait(false);
+
+        if (UseJsonFlag)
+        {
+            var tcResponse = response.Deserialize<TwoCaptchaResponse>();
+
+            if (tcResponse.IsErrorCode)
+            {
+                throw new TaskReportException(tcResponse.Request!);
+            }
+        }
+        else
+        {
+            if (IsErrorCode(response))
+            {
+                throw new TaskReportException(response);
+            }
+        }
+    }
+    #endregion
+
+    #region Proxies
+    /// <summary></summary>
+    protected static IEnumerable<(string, string)> ConvertSessionParams(
+        SessionParams? sessionParams)
+    {
+        if (sessionParams is null)
+        {
+            return [];
+        }
+            
+        var pairs = new List<(string, string)>();
+            
+        if (sessionParams.UserAgent is not null)
+        {
+            pairs.Add(("userAgent", sessionParams.UserAgent));
+        }
+        
+        var proxy = sessionParams.Proxy;
+
+        if (proxy is null)
+        {
+            return pairs;
+        }
+
+        pairs.AddRange(
+        [
+            ("proxy", proxy.RequiresAuthentication
+                ? $"{proxy.Username}:{proxy.Password}@{proxy.Host}:{proxy.Port}"
+                : $"{proxy.Host}:{proxy.Port}"),
+            ("proxytype", proxy.Type.ToString())
+        ]);
+
+        return pairs;
+    }
+    #endregion
+
+    #region Utility methods
+    /// <summary>For non-json response.</summary>
+    protected bool IsErrorCode(string response)
+    {
+        return !response.StartsWith("OK") ||
+               response.Contains("ERROR", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>For non-json response.</summary>
+    protected static string TakeSecondSlice(string str)
+    {
+        return str.Split('|')[1].Replace("\r\n", "").Trim();
+    }
+    #endregion
+
+    #region Capabilities
+    /// <summary>
+    /// The capabilities of the service.
+    /// </summary>
+    public new static CaptchaServiceCapabilities Capabilities =>
+        CaptchaServiceCapabilities.LanguageGroup |
+        CaptchaServiceCapabilities.Language |
+        CaptchaServiceCapabilities.Phrases |
+        CaptchaServiceCapabilities.CaseSensitivity |
+        CaptchaServiceCapabilities.CharacterSets |
+        CaptchaServiceCapabilities.Calculations |
+        CaptchaServiceCapabilities.MinLength |
+        CaptchaServiceCapabilities.MaxLength |
+        CaptchaServiceCapabilities.Instructions;
+
+    /// <summary></summary>
+    private List<(string, string)> ConvertCapabilities(TextCaptchaOptions? options)
+    {
+        // If null, don't return any parameters
+        if (options is null)
+        {
+            return [];
+        }
+
+        var capabilities = new List<(string, string)>();
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.LanguageGroup))
+        {
+            capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language) &&
+            options.CaptchaLanguage != CaptchaLanguage.NotSpecified)
+        {
+            capabilities.Add(("lang", options.CaptchaLanguage.ToIso6391Code()));
+        }
+
+        return capabilities;
+    }
+
+    /// <summary></summary>
+    protected List<(string, string)> ConvertCapabilities(ImageCaptchaOptions? options)
+    {
+        // If null, don't return any parameters
+        if (options is null)
+        {
+            return [];
+        }
+
+        var capabilities = new List<(string, string)>();
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.Phrases))
+        {
+            capabilities.Add(("phrase", Convert.ToInt32(options.IsPhrase).ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.CaseSensitivity))
+        {
+            capabilities.Add(("regsense", Convert.ToInt32(options.CaseSensitive).ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.CharacterSets))
+        {
+            capabilities.Add(("numeric", ((int)options.CharacterSet).ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.Calculations))
+        {
+            capabilities.Add(("calc", Convert.ToInt32(options.RequiresCalculation).ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.MinLength))
+        {
+            capabilities.Add(("min_len", options.MinLength.ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.MaxLength))
+        {
+            capabilities.Add(("max_len", options.MaxLength.ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.Instructions))
+        {
+            capabilities.Add(("textinstructions", options.TextInstructions));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.LanguageGroup))
+        {
+            capabilities.Add(("language", ((int)options.CaptchaLanguageGroup).ToString()));
+        }
+
+        if (Capabilities.HasFlag(CaptchaServiceCapabilities.Language) &&
+            options.CaptchaLanguage != CaptchaLanguage.NotSpecified)
+        {
+            capabilities.Add(("lang", options.CaptchaLanguage.ToIso6391Code()));
+        }
+
+        return capabilities;
+    }
+    
+    /// <summary></summary>
+    protected List<(string, string)> ConvertCapabilities(AudioCaptchaOptions? options)
+    {
+        var language = options?.CaptchaLanguage ?? CaptchaLanguage.English;
+        
+        if (!_supportedAudioLanguages.Contains(language))
+        {
+            throw new ArgumentException("The language is not supported by the service.");
+        }
+        
+        return [("lang", language.ToIso6391Code())];
+    }
+    #endregion
 }

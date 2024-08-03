@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -16,10 +17,13 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.27.0.93347">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CaptchaSharp.Services.More\CaptchaSharp.Services.More.csproj" />
     <ProjectReference Include="..\CaptchaSharp\CaptchaSharp.csproj" />
   </ItemGroup>
 

@@ -1,39 +1,74 @@
 ﻿using System;
 
-namespace CaptchaSharp.Enums
+namespace CaptchaSharp.Enums;
+
+/// <summary></summary>
+[Flags]
+public enum CaptchaType
 {
-    /// <summary></summary>
-    [Flags]
-    public enum CaptchaType
-    {
-        /// <summary>A captcha that is a plaintext question.</summary>
-        TextCaptcha,
+    /// <summary>A captcha that is a plaintext question.</summary>
+    TextCaptcha = 1 << 0,
 
-        /// <summary>A captcha that is made by an image with some text to recognize.</summary>
-        ImageCaptcha,
+    /// <summary>A captcha that is made by an image with some text to recognize.</summary>
+    ImageCaptcha = 1 << 1,
 
-        /// <summary>A type of puzzle captcha.</summary>
-        FunCaptcha,
+    /// <summary>A type of puzzle captcha.</summary>
+    FunCaptcha = 1 << 2,
 
-        /// <summary>The Google ReCaptcha v2.</summary>
-        ReCaptchaV2,
+    /// <summary>The Google ReCaptcha v2.</summary>
+    ReCaptchaV2 = 1 << 3,
 
-        /// <summary>The Google ReCaptcha v3.</summary>
-        ReCaptchaV3,
+    /// <summary>The Google ReCaptcha v3.</summary>
+    ReCaptchaV3 = 1 << 4,
 
-        /// <summary>A type of token captcha.</summary>
-        HCaptcha,
+    /// <summary>A type of token captcha.</summary>
+    HCaptcha = 1 << 5,
 
-        /// <summary>A type of token captcha.</summary>
-        KeyCaptcha,
+    /// <summary>A type of token captcha.</summary>
+    KeyCaptcha = 1 << 6,
 
-        /// <summary>A type of challenge based captcha.</summary>
-        GeeTest,
+    /// <summary>A type of challenge based captcha.</summary>
+    GeeTest = 1 << 7,
 
-        /// <summary>A type of token captcha.</summary>
-        Capy,
+    /// <summary>A type of token captcha.</summary>
+    Capy = 1 << 8,
 
-        /// <summary>A type of challenge based captcha.</summary>
-        DataDome
-    }
+    /// <summary>A type of challenge based captcha.</summary>
+    DataDome = 1 << 9,
+    
+    /// <summary>Cloudflare's Turnstile captcha.</summary>
+    CloudflareTurnstile = 1 << 10,
+    
+    /// <summary>Lemin Cropped captcha.</summary>
+    LeminCropped = 1 << 11,
+    
+    /// <summary>Amazon WAF captcha.</summary>
+    AmazonWaf = 1 << 12,
+    
+    /// <summary>Cyber SiARA captcha.</summary>
+    CyberSiAra = 1 << 13,
+    
+    /// <summary>MT Captcha.</summary>
+    MtCaptcha = 1 << 14,
+    
+    /// <summary>Cut Captcha.</summary>
+    CutCaptcha = 1 << 15,
+    
+    /// <summary>Friendly Captcha.</summary>
+    FriendlyCaptcha = 1 << 16,
+    
+    /// <summary>atbCaptcha.</summary>
+    AtbCaptcha = 1 << 17,
+    
+    /// <summary>Tencent Captcha.</summary>
+    TencentCaptcha = 1 << 18,
+    
+    /// <summary>A captcha that is an audio file with some text to recognize.</summary>
+    AudioCaptcha = 1 << 19,
+    
+    /// <summary>Google ReCaptcha Mobile.</summary>
+    ReCaptchaMobile = 1 << 20,
+    
+    /// <summary>GeeTest v4.</summary>
+    GeeTestV4 = 1 << 21,
 }

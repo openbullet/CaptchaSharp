@@ -1,469 +1,578 @@
 ﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
-using CaptchaSharp.Services.AntiCaptcha.Requests;
-using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks;
-using CaptchaSharp.Services.AntiCaptcha.Requests.Tasks.Proxied;
-using CaptchaSharp.Services.AntiCaptcha.Responses;
-using CaptchaSharp.Services.AntiCaptcha.Responses.Solutions;
+using CaptchaSharp.Models.AntiCaptcha.Requests;
+using CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
+using CaptchaSharp.Models.AntiCaptcha.Requests.Tasks.Proxied;
+using CaptchaSharp.Models.AntiCaptcha.Responses;
+using CaptchaSharp.Models.AntiCaptcha.Responses.Solutions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CaptchaSharp.Extensions;
+using CaptchaSharp.Models.CaptchaOptions;
+using CaptchaSharp.Models.CaptchaResponses;
 
-namespace CaptchaSharp.Services
+namespace CaptchaSharp.Services;
+
+/// <summary>
+/// The service provided by https://anti-captcha.com/
+/// </summary>
+public class AntiCaptchaService : CaptchaService
 {
-    /// <summary>The service provided by <c>https://anti-captcha.com/</c></summary>
-    public class AntiCaptchaService : CaptchaService
+    /// <summary>
+    /// Your secret api key.
+    /// </summary>
+    public string ApiKey { get; set; }
+
+    /// <summary>
+    /// The ID of the software developer.
+    /// </summary>
+    protected int? SoftId = 934;
+
+    /// <summary>
+    /// Initializes a <see cref="AntiCaptchaService"/>.
+    /// </summary>
+    /// <param name="apiKey">Your secret api key.</param>
+    /// <param name="httpClient">The <see cref="System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+    public AntiCaptchaService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
-        /// <summary>Your secret api key.</summary>
-        public string ApiKey { get; set; }
+        ApiKey = apiKey;
+        this.HttpClient.BaseAddress = new Uri("https://api.anti-captcha.com");
+    }
 
-        /// <summary>The default <see cref="HttpClient"/> used for requests.</summary>
-        protected HttpClient httpClient;
+    #region Getting the Balance
+    /// <inheritdoc/>
+    public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostJsonAsync<GetBalanceAntiCaptchaResponse>(
+            "getBalance", new AntiCaptchaRequest { ClientKey = ApiKey },
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        /// <summary>The ID of the software developer.</summary>
-        private readonly int softId = 934;
-
-        /// <summary>Initializes a <see cref="AntiCaptchaService"/> using the given <paramref name="apiKey"/> and 
-        /// <paramref name="httpClient"/>. If <paramref name="httpClient"/> is null, a default one will be created.</summary>
-        public AntiCaptchaService(string apiKey, HttpClient httpClient = null)
+        if (response.IsError)
         {
-            ApiKey = apiKey;
-            this.httpClient = httpClient ?? new HttpClient();
-            this.httpClient.BaseAddress = new Uri("https://api.anti-captcha.com");
+            throw new BadAuthenticationException($"{response.ErrorCode}: {response.ErrorDescription}");
         }
 
-        #region Getting the Balance
-        /// <inheritdoc/>
-        public async override Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostJsonToStringAsync
-                ("getBalance",
-                new Request() { ClientKey = ApiKey },
-                cancellationToken)
-                .ConfigureAwait(false);
+        return response.Balance;
+    }
+    #endregion
 
-            var balanceResponse = response.Deserialize<GetBalanceResponse>();
-
-            if (balanceResponse.IsError)
-                throw new BadAuthenticationException($"{balanceResponse.ErrorCode}: {balanceResponse.ErrorDescription}");
-
-            return new decimal(balanceResponse.Balance);
-        }
-        #endregion
-
-        #region Solve Methods
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveImageCaptchaAsync
-            (string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostJsonToStringAsync
-                ("createTask",
+    #region Solve Methods
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveImageCaptchaAsync(
+        string base64, ImageCaptchaOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
                 AddImageCapabilities(
-                    new CaptchaTaskRequest
+                    new CaptchaTaskAntiCaptchaRequest
                     {
                         ClientKey = ApiKey,
-                        SoftId = softId,
+                        SoftId = SoftId,
                         Task = new ImageCaptchaTask
                         {
                             Body = base64
                         }
                     }, options),
-                cancellationToken)
-                .ConfigureAwait(false);
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.ImageCaptcha, cancellationToken)
-                as StringResponse;
-        }
+        return await GetResult<StringResponse>(response, CaptchaType.ImageCaptcha,
+            cancellationToken).ConfigureAwait(false);
+    }
 
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveRecaptchaV2Async
-            (string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaV2Async(
+        string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+
+        if (enterprise)
         {
-            var content = CreateTaskRequest();
-
-            if (enterprise)
+            if (sessionParams?.Proxy is not null)
             {
-                if (proxy != null)
+                content.Task = new RecaptchaV2EnterpriseTask
                 {
-                    content.Task = new RecaptchaV2EnterpriseTask
-                    {
-                        WebsiteKey = siteKey,
-                        WebsiteURL = siteUrl,
-                        EnterprisePayload = new Dictionary<string, string>()
-                    }.SetProxy(proxy);
-                    
-                    if (!string.IsNullOrEmpty(dataS))
-                        ((RecaptchaV2EnterpriseTask)content.Task).EnterprisePayload.Add("s", dataS);
-                }
-                else
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    EnterprisePayload = new Dictionary<string, string>()
+                }.WithSessionParams(sessionParams);
+
+                if (!string.IsNullOrEmpty(dataS))
                 {
-                    content.Task = new RecaptchaV2EnterpriseTaskProxyless
-                    {
-                        WebsiteKey = siteKey,
-                        WebsiteURL = siteUrl,
-                        EnterprisePayload = new Dictionary<string, string>()
-                    };
-                    
-                    if (!string.IsNullOrEmpty(dataS))
-                        ((RecaptchaV2EnterpriseTaskProxyless)content.Task).EnterprisePayload.Add("s", dataS);
+                    ((RecaptchaV2EnterpriseTask)content.Task).EnterprisePayload?.Add("s", dataS);
                 }
             }
             else
             {
-                if (proxy != null)
+                content.Task = new RecaptchaV2EnterpriseTaskProxyless
                 {
-                    content.Task = new RecaptchaV2Task
-                    {
-                        WebsiteKey = siteKey,
-                        WebsiteURL = siteUrl,
-                        IsInvisible = invisible
-                    }.SetProxy(proxy);
-                }
-                else
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    EnterprisePayload = new Dictionary<string, string>()
+                };
+
+                if (!string.IsNullOrEmpty(dataS))
                 {
-                    content.Task = new RecaptchaV2TaskProxyless
-                    {
-                        WebsiteKey = siteKey,
-                        WebsiteURL = siteUrl,
-                        IsInvisible = invisible
-                    };
+                    ((RecaptchaV2EnterpriseTaskProxyless)content.Task).EnterprisePayload?.Add("s", dataS);
                 }
             }
+        }
+        else
+        {
+            if (sessionParams?.Proxy is not null)
+            {
+                content.Task = new RecaptchaV2Task
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    IsInvisible = invisible
+                }.WithSessionParams(sessionParams);
+            }
+            else
+            {
+                content.Task = new RecaptchaV2TaskProxyless
+                {
+                    WebsiteKey = siteKey,
+                    WebsiteURL = siteUrl,
+                    IsInvisible = invisible
+                };
+            }
+        }
             
-            var response = await httpClient.PostJsonToStringAsync
-                ("createTask",
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
                 content,
-                cancellationToken)
-                .ConfigureAwait(false);
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.ReCaptchaV2, cancellationToken)
-                as StringResponse;
+        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveRecaptchaV3Async(
+        string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f, bool enterprise = false,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        // Only min scores of 0.3, 0.7 and 0.9 are supported
+
+        var content = CreateTaskRequest();
+
+        content.Task = new RecaptchaV3TaskProxyless
+        {
+            WebsiteKey = siteKey,
+            WebsiteURL = siteUrl,
+            PageAction = action,
+            MinScore = minScore,
+            IsEnterprise = enterprise
+        };
+
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV3,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveFuncaptchaAsync(
+        string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
+        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        if (noJs)
+        {
+            throw new NotSupportedException("This service does not support no js solving");
         }
 
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveRecaptchaV3Async
-            (string siteKey, string siteUrl, string action = "verify", float minScore = 0.4F, bool enterprise = false,
-            Proxy proxy = null, CancellationToken cancellationToken = default)
+        var content = CreateTaskRequest();
+
+        if (sessionParams?.Proxy is not null)
         {
-            if (proxy != null)
-                throw new NotSupportedException("Proxies are not supported");
+            content.Task = new FunCaptchaTask
+            {
+                WebsitePublicKey = publicKey,
+                WebsiteUrl = siteUrl,
+                FuncaptchaApiJsSubdomain = serviceUrl,
+                Data = data
+            }.WithSessionParams(sessionParams);
+        }
+        else
+        {
+            content.Task = new FunCaptchaTaskProxyless
+            {
+                WebsitePublicKey = publicKey,
+                WebsiteUrl = siteUrl,
+                FuncaptchaApiJsSubdomain = serviceUrl,
+                Data = data
+            };
+        }
 
-            if (minScore != 0.3F && minScore != 0.7F && minScore != 0.9F)
-                throw new NotSupportedException("Only min scores of 0.3, 0.7 and 0.9 are supported");
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-            var content = CreateTaskRequest();
+        return await GetResult<StringResponse>(response, CaptchaType.FunCaptcha, 
+            cancellationToken).ConfigureAwait(false);
+    }
 
-            content.Task = new RecaptchaV3TaskProxyless
+    /// <inheritdoc/>
+    public override async Task<StringResponse> SolveHCaptchaAsync(
+        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+            
+        if (sessionParams?.Proxy is not null)
+        {
+            content.Task = new HCaptchaTask
+            {
+                WebsiteKey = siteKey,
+                WebsiteUrl = siteUrl,
+                IsInvisible = invisible,
+                IsEnterprise = !string.IsNullOrEmpty(enterprisePayload),
+                EnterprisePayload = enterprisePayload is null ? null : JObject.Parse(enterprisePayload)
+            }.WithSessionParams(sessionParams);
+        }
+        else
+        {
+            content.Task = new HCaptchaTaskProxyless
+            {
+                WebsiteKey = siteKey,
+                WebsiteUrl = siteUrl,
+                IsInvisible = invisible,
+                IsEnterprise = !string.IsNullOrEmpty(enterprisePayload),
+                EnterprisePayload = enterprisePayload is null ? null : JObject.Parse(enterprisePayload)
+            };
+        }
+            
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<StringResponse>(response, CaptchaType.HCaptcha,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestResponse> SolveGeeTestAsync(
+        string gt, string challenge, string siteUrl, string? apiServer = null,
+        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+            
+        if (sessionParams?.Proxy is not null)
+        {
+            content.Task = new GeeTestTask
+            {
+                WebsiteURL = siteUrl,
+                Gt = gt,
+                Challenge = challenge,
+                GeetestApiServerSubdomain = apiServer
+            }.WithSessionParams(sessionParams);
+        }
+        else
+        {
+            content.Task = new GeeTestTaskProxyless
+            {
+                WebsiteURL = siteUrl,
+                Gt = gt,
+                Challenge = challenge,
+                GeetestApiServerSubdomain = apiServer
+            };
+        }
+
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<GeeTestResponse>(response, CaptchaType.GeeTest,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
+        string siteKey, string siteUrl, string? action = null, string? data = null,
+        string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+            
+        if (sessionParams?.Proxy is not null)
+        {
+            content.Task = new TurnstileTask
             {
                 WebsiteKey = siteKey,
                 WebsiteURL = siteUrl,
-                PageAction = action,
-                MinScore = minScore,
-                IsEnterprise = enterprise
-            };
-
-            var response = await httpClient.PostJsonToStringAsync
-                ("createTask",
-                content,
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.ReCaptchaV3, cancellationToken)
-                as StringResponse;
+                Action = action,
+                TurnstileCData = data
+            }.WithSessionParams(sessionParams);
         }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveFuncaptchaAsync
-            (string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
+        else
         {
-            if (noJS)
-                throw new NotSupportedException("This service does not support no js solving");
-
-            var content = CreateTaskRequest();
-
-            if (proxy != null)
+            content.Task = new TurnstileTaskProxyless
             {
-                content.Task = new FunCaptchaTask
-                {
-                    WebsitePublicKey = publicKey,
-                    WebsiteURL = siteUrl,
-                    FuncaptchaApiJSSubdomain = serviceUrl
-                }.SetProxy(proxy);
-            }
-            else
-            {
-                content.Task = new FunCaptchaTaskProxyless
-                {
-                    WebsitePublicKey = publicKey,
-                    WebsiteURL = siteUrl,
-                    FuncaptchaApiJSSubdomain = serviceUrl
-                };
-            }
-
-            var response = await httpClient.PostJsonToStringAsync
-                ("createTask",
-                content,
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.FunCaptcha, cancellationToken)
-                as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<StringResponse> SolveHCaptchaAsync
-            (string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
-        {
-            var content = CreateTaskRequest();
-            
-            if (proxy != null)
-            {
-                content.Task = new HCaptchaTask
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                }.SetProxy(proxy);
-            }
-            else
-            {
-                content.Task = new HCaptchaTaskProxyless
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                };
-            }
-            
-            var response = await httpClient.PostJsonToStringAsync
-                ("createTask",
-                content,
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.HCaptcha, cancellationToken)
-                as StringResponse;
-        }
-
-        /// <inheritdoc/>
-        public async override Task<GeeTestResponse> SolveGeeTestAsync
-            (string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null,
-            CancellationToken cancellationToken = default)
-        {
-            var content = CreateTaskRequest();
-            
-            if (proxy != null)
-            {
-                content.Task = new GeeTestTask
-                {
-                    WebsiteURL = siteUrl,
-                    Gt = gt,
-                    Challenge = challenge,
-                    GeetestApiServerSubdomain = apiServer
-                }.SetProxy(proxy);
-            }
-            else
-            {
-                content.Task = new GeeTestTaskProxyless
-                {
-                    WebsiteURL = siteUrl,
-                    Gt = gt,
-                    Challenge = challenge,
-                    GeetestApiServerSubdomain = apiServer
-                };
-            }
-
-            var response = await httpClient.PostJsonToStringAsync
-                ("createTask",
-                content,
-                cancellationToken)
-                .ConfigureAwait(false);
-
-            return await TryGetResult(response.Deserialize<TaskCreationResponse>(), CaptchaType.GeeTest, cancellationToken)
-                as GeeTestResponse;
-        }
-        #endregion
-
-        #region Getting the result
-        private async Task<CaptchaResponse> TryGetResult
-            (TaskCreationResponse response, CaptchaType type, CancellationToken cancellationToken = default)
-        {
-            if (response.IsError)
-                throw new TaskCreationException($"{response.ErrorCode}: {response.ErrorDescription}");
-
-            var task = new CaptchaTask(response.TaskId, type);
-
-            return await TryGetResult(task, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        protected async override Task<CaptchaResponse> CheckResult
-            (CaptchaTask task, CancellationToken cancellationToken = default)
-        {
-            var response = await httpClient.PostJsonToStringAsync
-                ("getTaskResult",
-                new GetTaskResultRequest() { ClientKey = ApiKey, TaskId = (int)task.Id },
-                cancellationToken).ConfigureAwait(false);
-
-            var result = response.Deserialize<GetTaskResultResponse>();
-
-            if (!result.IsReady)
-                return default;
-
-            task.Completed = true;
-
-            if (result.IsError)
-                throw new TaskSolutionException($"{result.ErrorCode}: {result.ErrorDescription}");
-
-            var jObject = JObject.Parse(response);
-            var solution = jObject["solution"];
-
-            switch (task.Type)
-            {
-                case CaptchaType.ReCaptchaV2:
-                case CaptchaType.ReCaptchaV3:
-                case CaptchaType.HCaptcha:
-                    result.Solution = solution.ToObject<RecaptchaSolution>();
-                    break;
-
-                case CaptchaType.FunCaptcha:
-                    result.Solution = solution.ToObject<FuncaptchaSolution>();
-                    break;
-
-                case CaptchaType.ImageCaptcha:
-                    result.Solution = solution.ToObject<ImageCaptchaSolution>();
-                    break;
-
-                case CaptchaType.GeeTest:
-                    result.Solution = solution.ToObject<GeeTestSolution>();
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-
-            return result.Solution.ToCaptchaResponse(task.Id);
-        }
-        #endregion
-
-        #region Reporting the solution
-        /// <inheritdoc/>
-        public async override Task ReportSolution
-            (long taskId, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
-        {
-            if (correct)
-                throw new NotSupportedException("This service doesn't allow reporting of good solutions");
-
-            string response;
-            ReportIncorrectCaptchaResponse incResponse;
-
-            switch (type)
-            {
-                case CaptchaType.ImageCaptcha:
-                    response = await httpClient.PostJsonToStringAsync
-                    ("reportIncorrectImageCaptcha",
-                    new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
-                    cancellationToken).ConfigureAwait(false);
-
-                    incResponse = response.Deserialize<ReportIncorrectCaptchaResponse>();
-                    break;
-
-                case CaptchaType.ReCaptchaV2:
-                case CaptchaType.ReCaptchaV3:
-                    response = await httpClient.PostJsonToStringAsync
-                    ("reportIncorrectRecaptcha",
-                    new ReportIncorrectCaptchaRequest() { ClientKey = ApiKey, TaskId = taskId },
-                    cancellationToken).ConfigureAwait(false);
-
-                    incResponse = response.Deserialize<ReportIncorrectCaptchaResponse>();
-                    break;
-
-                default:
-                    throw new NotSupportedException("Reporting is not supported for this captcha type");
-            }
-
-            if (incResponse.NotFoundOrExpired)
-                throw new TaskReportException("Captcha not found or expired");
-        }
-        #endregion
-
-        #region Private Methods
-        private CaptchaTaskRequest CreateTaskRequest()
-        {
-            return new CaptchaTaskRequest
-            {
-                ClientKey = ApiKey,
-                SoftId = softId
+                WebsiteKey = siteKey,
+                WebsiteURL = siteUrl,
+                Action = action,
+                TurnstileCData = data
             };
         }
-        #endregion
-
-        #region Capabilities
-        /// <inheritdoc/>
-        public override CaptchaServiceCapabilities Capabilities =>
-            CaptchaServiceCapabilities.Language |
-            CaptchaServiceCapabilities.Phrases |
-            CaptchaServiceCapabilities.CaseSensitivity |
-            CaptchaServiceCapabilities.CharacterSets |
-            CaptchaServiceCapabilities.Calculations |
-            CaptchaServiceCapabilities.MinLength |
-            CaptchaServiceCapabilities.MaxLength |
-            CaptchaServiceCapabilities.Instructions;
-
-        private CaptchaTaskRequest AddImageCapabilities(CaptchaTaskRequest request, ImageCaptchaOptions options)
-        {
-            if (options == null)
-                return request;
-
-            var task = request.Task as ImageCaptchaTask;
-
-            task.Phrase = options.IsPhrase;
-            task.Case = options.CaseSensitive;
             
-            switch (options.CharacterSet)
-            {
-                case CharacterSet.OnlyNumbers:
-                    task.Numeric = 1;
-                    break;
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-                case CharacterSet.OnlyLetters:
-                    task.Numeric = 2;
-                    break;
-
-                default:
-                    task.Numeric = 0;
-                    break;
-            }
-
-            task.Math = options.RequiresCalculation;
-            task.MinLength = options.MinLength;
-            task.MaxLength = options.MaxLength;
-            task.Comment = options.TextInstructions;
-            
-            switch (options.CaptchaLanguage)
-            {
-                case CaptchaLanguage.NotSpecified:
-                case CaptchaLanguage.English:
-                    request.LanguagePool = "en";
-                    break;
-
-                case CaptchaLanguage.Russian:
-                case CaptchaLanguage.Ukrainian:
-                case CaptchaLanguage.Kazakh:
-                case CaptchaLanguage.Belorussian:
-                    request.LanguagePool = "rn";
-                    break;
-
-                default:
-                    throw new NotSupportedException($"The {options.CaptchaLanguage} language is not supported");
-            }
-
-            return request;
-        }
-        #endregion
+        return await GetResult<CloudflareTurnstileResponse>(response, CaptchaType.CloudflareTurnstile,
+            cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+            
+        if (sessionParams?.Proxy is not null)
+        {
+            content.Task = new GeeTestTask
+            {
+                Gt = captchaId,
+                WebsiteURL = siteUrl,
+                Version = 4
+            }.WithSessionParams(sessionParams);
+        }
+        else
+        {
+            content.Task = new GeeTestTaskProxyless
+            {
+                Gt = captchaId,
+                WebsiteURL = siteUrl,
+                Version = 4
+            };
+        }
+            
+        var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    #endregion
+
+    #region Getting the result
+    /// <summary>
+    /// Gets the result of a task.
+    /// </summary>
+    protected async Task<T> GetResult<T>(
+        TaskCreationAntiCaptchaResponse antiCaptchaResponse, CaptchaType type,
+        CancellationToken cancellationToken = default)
+        where T : CaptchaResponse
+    {
+        if (antiCaptchaResponse.IsError)
+        {
+            throw new TaskCreationException($"{antiCaptchaResponse.ErrorCode}: {antiCaptchaResponse.ErrorDescription}");
+        }
+
+        var task = new CaptchaTask(antiCaptchaResponse.TaskId.ToString(), type);
+
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task<T?> CheckResultAsync<T>(
+        CaptchaTask task, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        var response = await HttpClient.PostJsonToStringAsync(
+            "getTaskResult",
+            new GetTaskResultAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(task.Id) },
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        var result = response.Deserialize<GetTaskResultAntiCaptchaResponse>();
+
+        if (!result.IsReady)
+        {
+            return null;
+        }
+
+        task.Completed = true;
+
+        if (result.IsError)
+        {
+            throw new TaskSolutionException($"{result.ErrorCode}: {result.ErrorDescription}");
+        }
+
+        var jObject = JObject.Parse(response);
+        var solution = jObject["solution"];
+            
+        if (solution is null)
+        {
+            throw new TaskSolutionException(response);
+        }
+        
+        if (task.Type == CaptchaType.DataDome)
+        {
+            return ParseDataDomeSolution(task.Id, solution) as T;
+        }
+
+        result.AntiCaptchaTaskSolution = task.Type switch
+        {
+            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha or CaptchaType.ReCaptchaMobile => 
+                solution.ToObject<RecaptchaAntiCaptchaTaskSolution>()! as AntiCaptchaTaskSolution,
+            CaptchaType.FunCaptcha => solution.ToObject<FuncaptchaAntiCaptchaTaskSolution>()!,
+            CaptchaType.ImageCaptcha => solution.ToObject<ImageCaptchaAntiCaptchaTaskSolution>(),
+            CaptchaType.GeeTest => solution.ToObject<GeeTestAntiCaptchaTaskSolution>(),
+            CaptchaType.CloudflareTurnstile => solution.ToObject<TurnstileAntiCaptchaTaskSolution>(),
+            CaptchaType.GeeTestV4 => solution.ToObject<GeeTestV4AntiCaptchaTaskSolution>(),
+            _ => throw new NotSupportedException($"The {task.Type} captcha type is not supported")
+        } ?? throw new TaskSolutionException(response);
+
+        return result.AntiCaptchaTaskSolution.ToCaptchaResponse(task.Id) as T;
+    }
+
+    /// <summary>
+    /// Parses the solution of a DataDome captcha.
+    /// </summary>
+    protected virtual StringResponse ParseDataDomeSolution(string taskId, JToken? solution)
+    {
+        throw new NotImplementedException("DataDome captcha solving is not supported");
+    }
+    #endregion
+
+    #region Reporting the solution
+    /// <inheritdoc/>
+    public override async Task ReportSolutionAsync(
+        string id, CaptchaType type, bool correct = false,
+        CancellationToken cancellationToken = default)
+    {
+        if (correct)
+        {
+            if (type is not CaptchaType.ReCaptchaV2 && type is not CaptchaType.ReCaptchaV3)
+            {
+                throw new NotSupportedException(
+                    "Reporting correct solutions is only supported for ReCaptchaV2 and ReCaptchaV3");
+            }
+            
+            await HttpClient.PostJsonToStringAsync(
+                "reportCorrectRecaptcha",
+                new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+            
+            return;
+        }
+
+        var incAntiCaptchaResponse = type switch
+        {
+            CaptchaType.ImageCaptcha => await HttpClient.PostJsonAsync<ReportIncorrectCaptchaAntiCaptchaResponse>(
+                    "reportIncorrectImageCaptcha",
+                    new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false),
+            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 => await HttpClient
+                .PostJsonAsync<ReportIncorrectCaptchaAntiCaptchaResponse>("reportIncorrectRecaptcha",
+                    new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false),
+            CaptchaType.HCaptcha => await HttpClient.PostJsonAsync<ReportIncorrectCaptchaAntiCaptchaResponse>(
+                    "reportIncorrectHcaptcha",
+                    new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false),
+            _ => throw new NotSupportedException("Reporting is not supported for this captcha type")
+        };
+
+        if (incAntiCaptchaResponse.NotFoundOrExpired)
+        {
+            throw new TaskReportException("Captcha not found or expired");
+        }
+    }
+    #endregion
+
+    #region Private Methods
+    /// <summary>
+    /// Creates a new <see cref="CaptchaTaskAntiCaptchaRequest"/>.
+    /// </summary>
+    protected CaptchaTaskAntiCaptchaRequest CreateTaskRequest()
+    {
+        return new CaptchaTaskAntiCaptchaRequest
+        {
+            ClientKey = ApiKey,
+            SoftId = SoftId
+        };
+    }
+    #endregion
+
+    #region Capabilities
+    /// <inheritdoc/>
+    public override CaptchaServiceCapabilities Capabilities =>
+        CaptchaServiceCapabilities.Language |
+        CaptchaServiceCapabilities.Phrases |
+        CaptchaServiceCapabilities.CaseSensitivity |
+        CaptchaServiceCapabilities.CharacterSets |
+        CaptchaServiceCapabilities.Calculations |
+        CaptchaServiceCapabilities.MinLength |
+        CaptchaServiceCapabilities.MaxLength |
+        CaptchaServiceCapabilities.Instructions;
+
+    private static CaptchaTaskAntiCaptchaRequest AddImageCapabilities(CaptchaTaskAntiCaptchaRequest antiCaptchaRequest, ImageCaptchaOptions? options)
+    {
+        if (options == null)
+        {
+            return antiCaptchaRequest;
+        }
+
+        if (antiCaptchaRequest.Task is not ImageCaptchaTask task)
+        {
+            throw new NotSupportedException(
+                "Image options are only supported for image captchas");
+        }
+
+        task.Phrase = options.IsPhrase;
+        task.Case = options.CaseSensitive;
+
+        task.Numeric = options.CharacterSet switch
+        {
+            CharacterSet.OnlyNumbers => 1,
+            CharacterSet.OnlyLetters => 2,
+            _ => 0
+        };
+
+        task.Math = options.RequiresCalculation;
+        task.MinLength = options.MinLength;
+        task.MaxLength = options.MaxLength;
+        task.Comment = options.TextInstructions;
+
+        antiCaptchaRequest.LanguagePool = options.CaptchaLanguage switch
+        {
+            CaptchaLanguage.NotSpecified or CaptchaLanguage.English => "en",
+            CaptchaLanguage.Russian or CaptchaLanguage.Ukrainian or CaptchaLanguage.Kazakh
+                or CaptchaLanguage.Belorussian => "rn",
+            _ => throw new NotSupportedException($"The {options.CaptchaLanguage} language is not supported")
+        };
+
+        return antiCaptchaRequest;
+    }
+    #endregion
 }
