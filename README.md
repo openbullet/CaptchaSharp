@@ -37,7 +37,7 @@ This library supports the following captcha types
 - ReCaptcha v2 (incl. invisible, enterprise)
 - ReCaptcha v3 (incl. enterprise)
 - ArkoseLabs FunCaptcha
-- HCaptcha
+- HCaptcha (incl. invisible, enterprise)
 - KeyCaptcha
 - GeeTest v3
 - GeeTest v4
@@ -55,7 +55,10 @@ This library supports the following captcha types
 - Audio Captcha (with language options)
 - ReCaptcha Mobile
 
-Proxies are supported for services that accept them.
+Additional supported features:
+- Proxies
+- User-Agent
+- Cookies
 
 ## Availability Table
 
