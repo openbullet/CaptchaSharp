@@ -1,10 +1,17 @@
-﻿namespace CaptchaSharp.Models.CapSolver.Requests.Tasks;
+﻿using Newtonsoft.Json;
+
+namespace CaptchaSharp.Models.CapSolver.Requests.Tasks;
 
 internal class FunCaptchaTaskProxyless : CapSolverTaskProxyless
 {
-    public string? WebsiteURL { get; set; }
-    public string? WebsitePublicKey { get; set; }
-    public string? FuncaptchaApiJSSubdomain { get; set; }
+    [JsonProperty("websiteURL")]
+    public required string WebsiteUrl { get; set; }
+    
+    [JsonProperty("websitePublicKey")]
+    public required string WebsitePublicKey { get; set; }
+    
+    [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+    public string? Data { get; set; }
 
     public FunCaptchaTaskProxyless()
     {

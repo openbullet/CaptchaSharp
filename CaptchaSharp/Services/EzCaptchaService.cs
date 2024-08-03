@@ -171,8 +171,8 @@ public class EzCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
-        string publicKey, string serviceUrl, string siteUrl, bool noJs = false, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
+        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
         content.Task = new FuncaptchaTaskProxyless

@@ -208,22 +208,34 @@ public class TwoCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
-        string publicKey, string serviceUrl, string siteUrl, bool noJs = false, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
+        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
+        var pairs = new StringPairCollection()
+            .Add("key", ApiKey)
+            .Add("method", "funcaptcha")
+            .Add("publickey", publicKey)
+            .Add("surl", serviceUrl)
+            .Add("pageurl", siteUrl)
+            .Add("nojs", Convert.ToInt32(noJs).ToString())
+            .Add("soft_id", _softId)
+            .Add("json", "1", UseJsonFlag)
+            .Add("header_acao", "1", AddAcaoHeader)
+            .Add(ConvertProxy(proxy));
+        
+        // If data is not null and is a JSON object, set
+        // data[key] = value in the request for each key-value pair
+        if (!string.IsNullOrEmpty(data) && data.StartsWith('{') && data.EndsWith('}'))
+        {
+            var jObject = JObject.Parse(data);
+            foreach (var property in jObject.Properties())
+            {
+                pairs.Add($"data[{property.Name}]", property.Value.ToString());
+            }
+        }
+        
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
-            new StringPairCollection()
-                .Add("key", ApiKey)
-                .Add("method", "funcaptcha")
-                .Add("publickey", publicKey)
-                .Add("surl", serviceUrl)
-                .Add("pageurl", siteUrl)
-                .Add("nojs", Convert.ToInt32(noJs).ToString())
-                .Add("soft_id", _softId)
-                .Add("json", "1", UseJsonFlag)
-                .Add("header_acao", "1", AddAcaoHeader)
-                .Add(ConvertProxy(proxy))
-                .ToMultipartFormDataContent(),
+            pairs.ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
 
@@ -929,7 +941,8 @@ public class TwoCaptchaService : CaptchaService
     /// <summary>For non-json response.</summary>
     protected bool IsErrorCode(string response)
     {
-        return !response.StartsWith("OK");
+        return !response.StartsWith("OK") ||
+               response.Contains("ERROR", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>For non-json response.</summary>

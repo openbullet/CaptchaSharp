@@ -133,7 +133,7 @@ public class ImageTyperzService : CaptchaService
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        Proxy? proxy = null, CancellationToken cancellationToken = default)
+        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostToStringAsync(
             "captchaapi/UploadFunCaptcha.ashx",
@@ -143,6 +143,7 @@ public class ImageTyperzService : CaptchaService
                 .Add("pageurl", siteUrl)
                 .Add("sitekey", publicKey)
                 .Add("s_url", serviceUrl)
+                .Add("data", data!, !string.IsNullOrEmpty(data))
                 .Add(GetProxyParams(proxy)),
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);

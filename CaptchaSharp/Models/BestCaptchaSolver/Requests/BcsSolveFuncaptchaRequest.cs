@@ -12,4 +12,7 @@ internal class BcsSolveFuncaptchaRequest : BcsSolveRequest
     
     [JsonProperty("site_key")]
     public required string SiteKey { get; set; }
+    
+    [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+    public string? Data { get; set; }
 }

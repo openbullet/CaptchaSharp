@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -221,6 +221,7 @@ public class ServiceTests
             serviceUrl: "https://client-api.arkoselabs.com",
             siteUrl: "https://www.arkoselabs.com/arkose-matchkey/",
             noJs: false,
+            data: null,
             proxy);
 
         Assert.NotEqual(string.Empty, solution.Response);

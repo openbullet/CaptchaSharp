@@ -184,8 +184,8 @@ public class AntiCaptchaService : CaptchaService
 
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveFuncaptchaAsync(
-        string publicKey, string serviceUrl, string siteUrl, bool noJs = false, Proxy? proxy = null,
-        CancellationToken cancellationToken = default)
+        string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
+        string? data = null, Proxy? proxy = null, CancellationToken cancellationToken = default)
     {
         if (noJs)
         {
@@ -199,8 +199,9 @@ public class AntiCaptchaService : CaptchaService
             content.Task = new FunCaptchaTask
             {
                 WebsitePublicKey = publicKey,
-                WebsiteURL = siteUrl,
-                FuncaptchaApiJSSubdomain = serviceUrl
+                WebsiteUrl = siteUrl,
+                FuncaptchaApiJsSubdomain = serviceUrl,
+                Data = data
             }.SetProxy(proxy);
         }
         else
@@ -208,8 +209,9 @@ public class AntiCaptchaService : CaptchaService
             content.Task = new FunCaptchaTaskProxyless
             {
                 WebsitePublicKey = publicKey,
-                WebsiteURL = siteUrl,
-                FuncaptchaApiJSSubdomain = serviceUrl
+                WebsiteUrl = siteUrl,
+                FuncaptchaApiJsSubdomain = serviceUrl,
+                Data = data
             };
         }
 

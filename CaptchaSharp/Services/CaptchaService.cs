@@ -180,6 +180,10 @@ public abstract class CaptchaService : IDisposable
     /// Whether to solve the challenge without JavaScript enabled. This is not supported by every service and 
     /// it provides a partial token.
     /// </param>
+    ///
+    /// <param name="data">
+    /// Additional data in JSON format, for example { "blob": "blob_value" }
+    /// </param>
     /// 
     /// <param name="proxy">
     /// A proxy that can be used by the captcha service to fetch the captcha challenge from the same IP you are 
@@ -200,7 +204,7 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<StringResponse> SolveFuncaptchaAsync(
         string publicKey, string serviceUrl, string siteUrl,
-        bool noJs = false, Proxy? proxy = null,
+        bool noJs = false, string? data = null, Proxy? proxy = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
