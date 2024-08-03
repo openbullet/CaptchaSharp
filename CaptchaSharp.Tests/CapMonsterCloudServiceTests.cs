@@ -38,4 +38,6 @@ public class CapMonsterCloudServiceTests(CapMonsterCloudFixture fixture, ITestOu
     [Fact] public Task SolveDataDomeAsync_WithProxy_ValidSolution() => DataDomeTest_WithProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_NoProxy_ValidSolution() => CloudflareTurnstileTest_NoProxy();
     [Fact] public Task SolveCloudflareTurnstileAsync_WithProxy_ValidSolution() => CloudflareTurnstileTest_WithProxy();
+    [Fact] public Task SolveGeeTestV4Async_NoProxy_ValidSolution() => GeeTestV4Test_NoProxy();
+    [Fact] public Task SolveGeeTestV4Async_WithProxy_ValidSolution() => GeeTestV4Test_WithProxy();
 }

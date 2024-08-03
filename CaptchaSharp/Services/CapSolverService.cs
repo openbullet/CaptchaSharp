@@ -302,7 +302,6 @@ public class CapSolverService : CaptchaService
                 Gt = gt,
                 Challenge = challenge,
                 GeetestApiServerSubdomain = apiServer,
-                Version = 3
             };
         }
 
@@ -446,6 +445,40 @@ public class CapSolverService : CaptchaService
         return await GetResult<StringResponse>(response, CaptchaType.MtCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var content = CreateTaskRequest();
+
+        if (proxy is not null)
+        {
+            content.Task = new GeeTestTask
+            {
+                WebsiteURL = siteUrl,
+                CaptchaId = captchaId
+            }.SetProxy(proxy);
+        }
+        else
+        {
+            content.Task = new GeeTestTaskProxyless
+            {
+                WebsiteURL = siteUrl,
+                CaptchaId = captchaId
+            };
+        }
+
+        var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
+                "createTask",
+                content,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return await GetResult<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
+            cancellationToken).ConfigureAwait(false);
+    }
     #endregion
 
     #region Getting the result
@@ -507,6 +540,7 @@ public class CapSolverService : CaptchaService
             CaptchaType.CloudflareTurnstile => solution.ToObject<CloudflareTurnstileSolution>(),
             CaptchaType.AmazonWaf => solution.ToObject<AmazonWafSolution>(),
             CaptchaType.MtCaptcha => solution.ToObject<MtCaptchaSolution>(),
+            CaptchaType.GeeTestV4 => solution.ToObject<GeeTestV4Solution>(),
             _ => throw new NotSupportedException($"The captcha type {task.Type} is not supported")
         } ?? throw new TaskSolutionException("The solution is null");
 

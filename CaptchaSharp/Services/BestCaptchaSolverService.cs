@@ -287,6 +287,32 @@ public class BestCaptchaSolverService : CaptchaService
             cancellationToken: cancellationToken);
     }
 
+    /// <inheritdoc/>
+    public override async Task<GeeTestV4Response> SolveGeeTestV4Async(
+        string captchaId, string siteUrl, Proxy? proxy = null,
+        CancellationToken cancellationToken = default)
+    {
+        var payload = new BcsSolveGeeTestV4Request
+        {
+            AccessToken = ApiKey,
+            AffiliateId = _affiliateId,
+            CaptchaId = captchaId,
+            Domain = siteUrl
+        };
+        
+        payload.SetProxy(proxy);
+        
+        var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
+                "captcha/geetestv4",
+                payload,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        
+        return await GetResult<GeeTestV4Response>(
+            response, CaptchaType.GeeTestV4,
+            cancellationToken: cancellationToken);
+    }
+
     #endregion
     
     #region Getting the result
@@ -400,6 +426,20 @@ public class BestCaptchaSolverService : CaptchaService
                 Id = task.Id,
                 Response = cloudflareResponse.Solution!,
                 UserAgent = cloudflareResponse.UserAgent!
+            } as T;
+        }
+
+        if (task.Type is CaptchaType.GeeTestV4)
+        {
+            var geeTestV4Response = json.Deserialize<BcsSolveGeeTestV4Response>();
+            return new GeeTestV4Response
+            {
+                Id = task.Id,
+                CaptchaId = geeTestV4Response.Solution!.CaptchaId,
+                LotNumber = geeTestV4Response.Solution!.LotNumber,
+                PassToken = geeTestV4Response.Solution!.PassToken,
+                GenTime = geeTestV4Response.Solution!.GenTime,
+                CaptchaOutput = geeTestV4Response.Solution!.CaptchaOutput
             } as T;
         }
 

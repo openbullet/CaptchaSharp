@@ -1066,6 +1066,9 @@
         <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
@@ -1169,6 +1172,9 @@
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.CapSolverService.SolveMtCaptchaAsync(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapSolverService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.CapSolverService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">

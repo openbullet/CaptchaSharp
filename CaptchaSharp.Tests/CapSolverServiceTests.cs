@@ -40,4 +40,6 @@ public class CapSolverServiceTests(CapSolverFixture fixture, ITestOutputHelper o
     [Fact] public Task SolveAmazonWafAsync_WithProxy_ValidSolution() => AmazonWafTest_WithProxy();
     [Fact] public Task SolveMtCaptchaAsync_NoProxy_ValidSolution() => MtCaptchaTest_NoProxy();
     [Fact] public Task SolveMtCaptchaAsync_WithProxy_ValidSolution() => MtCaptchaTest_WithProxy();
+    [Fact] public Task SolveGeeTestV4Async_NoProxy_ValidSolution() => GeeTestV4Test_NoProxy();
+    [Fact] public Task SolveGeeTestV4Async_WithProxy_ValidSolution() => GeeTestV4Test_WithProxy();
 }
