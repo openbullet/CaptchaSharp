@@ -92,7 +92,7 @@ public class TrueCaptchaService : CaptchaService
     }
     
     /// <inheritdoc/>
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var content = new JObject

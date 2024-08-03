@@ -215,11 +215,11 @@ public class NopechaService : CaptchaService
         
         var task = new CaptchaTask(response.Data!.ToString(), captchaType);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
         var response = await HttpClient.GetJsonAsync<NopechaDataResponse>(

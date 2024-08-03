@@ -24,7 +24,8 @@ public static class HttpClientExtensions
         this HttpClient httpClient, string url, StringPairCollection pairs,
         CancellationToken cancellationToken = default)
     {
-        return await httpClient.GetAsync($"{url}?{pairs.ToHttpQueryString()}", cancellationToken);
+        return await httpClient.GetAsync($"{url}?{pairs.ToHttpQueryString()}", cancellationToken)
+            .ConfigureAwait(false);
     }
     
     /// <summary>

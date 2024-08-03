@@ -24,7 +24,7 @@ public class CaptchaAiService : CustomTwoCaptchaService
     
     #region Reporting the solution
     /// <inheritdoc/>
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var action = correct ? "reportgood" : "reportbad";
@@ -37,7 +37,8 @@ public class CaptchaAiService : CustomTwoCaptchaService
                 .Add("action", action)
                 .Add("id", id)
                 .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
-            cancellationToken);
+            cancellationToken)
+            .ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {

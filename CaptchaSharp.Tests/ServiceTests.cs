@@ -57,7 +57,7 @@ public class ServiceTests
             base64: _captchaImageBase64,
             options);
 
-        await Service.ReportSolution(
+        await Service.ReportSolutionAsync(
             solution.Id, CaptchaType.ImageCaptcha, correct);
             
         Assert.True(true);
@@ -72,7 +72,7 @@ public class ServiceTests
             enterprise: false,
             invisible: false);
 
-        await Service.ReportSolution(
+        await Service.ReportSolutionAsync(
             solution.Id, CaptchaType.ReCaptchaV2, correct);
             
         Assert.True(true);

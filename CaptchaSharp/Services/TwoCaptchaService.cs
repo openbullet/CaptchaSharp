@@ -744,7 +744,7 @@ public class TwoCaptchaService : CaptchaService
 
         var task = new CaptchaTask(twoCaptchaResponse.Request!, type);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
     internal async Task<T> GetResult<T>(
@@ -756,11 +756,11 @@ public class TwoCaptchaService : CaptchaService
 
         var task = new CaptchaTask(TakeSecondSlice(response), type);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary></summary>
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -874,7 +874,7 @@ public class TwoCaptchaService : CaptchaService
 
     #region Reporting the solution
     /// <inheritdoc/>
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var action = correct ? "reportgood" : "reportbad";
@@ -885,7 +885,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("action", action)
                 .Add("id", id)
                 .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
 
         if (UseJsonFlag)
         {

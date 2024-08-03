@@ -991,7 +991,7 @@
             Gets the result of a task.
             </summary>
         </member>
-        <member name="M:CaptchaSharp.Services.AntiCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.ParseDataDomeSolution(System.String,Newtonsoft.Json.Linq.JToken)">
@@ -999,7 +999,7 @@
             Parses the solution of a DataDome captcha.
             </summary>
         </member>
-        <member name="M:CaptchaSharp.Services.AntiCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.CreateTaskRequest">
@@ -1069,10 +1069,10 @@
         <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.BestCaptchaSolverService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.CapGuruService">
@@ -1177,10 +1177,10 @@
         <member name="M:CaptchaSharp.Services.CapSolverService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.CapSolverService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CapSolverService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.CapSolverService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CapSolverService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="P:CaptchaSharp.Services.CapSolverService.Capabilities">
@@ -1198,7 +1198,7 @@
             <param name="apiKey">The API key to use.</param>
             <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaAiService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaAiService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.CaptchaCoderService">
@@ -1228,7 +1228,7 @@
         <member name="M:CaptchaSharp.Services.CaptchaCoderService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaCoderService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaCoderService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.CaptchaService">
@@ -1273,7 +1273,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1295,7 +1295,7 @@
             
             /// <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1322,7 +1322,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1348,7 +1348,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1389,7 +1389,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1415,7 +1415,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1442,7 +1442,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1468,7 +1468,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.GeeTestResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and three solution parameters 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and three solution parameters 
             (Challenge, Validate and SecCode) that you will need to provide when you submit the form.
             </returns>
             
@@ -1492,7 +1492,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.CapyResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1517,7 +1517,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext (a.k.a. a valid datadome session cookie).
             </returns>
             
@@ -1544,7 +1544,7 @@
             
             <returns>
             A <see cref="T:CaptchaSharp.Models.CloudflareTurnstileResponse"/> containing the captcha id to be used with 
-            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
             captcha solution as plaintext.
             </returns>
             
@@ -1570,7 +1570,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.LeminCroppedResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1598,7 +1598,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1622,7 +1622,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1646,7 +1646,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1672,7 +1672,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1696,7 +1696,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1721,7 +1721,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1745,7 +1745,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.TencentCaptchaResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution.
              </returns>
              
@@ -1763,7 +1763,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1788,7 +1788,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.StringResponse"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution as plaintext.
              </returns>
              
@@ -1812,7 +1812,7 @@
              
              <returns>
              A <see cref="T:CaptchaSharp.Models.GeeTestV4Response"/> containing the captcha id to be used with 
-             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+             <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
              captcha solution.
              </returns>
              
@@ -1820,7 +1820,7 @@
              <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
              <exception cref="T:System.TimeoutException"></exception>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
             Mostly used for reporting bad solutions for image captchas and get the funds back.
@@ -1838,10 +1838,10 @@
             
             <exception cref="T:CaptchaSharp.Exceptions.TaskReportException"></exception>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaService.GetResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaService.GetResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <summary></summary>
         </member>
-        <member name="M:CaptchaSharp.Services.CaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.CaptchaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <summary></summary>
         </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.Dispose">
@@ -1980,10 +1980,10 @@
         <member name="M:CaptchaSharp.Services.DeathByCaptchaService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.DeathByCaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.EndCaptchaService">
@@ -2027,10 +2027,10 @@
         <member name="M:CaptchaSharp.Services.EndCaptchaService.SolveHCaptchaAsync(System.String,System.String,System.Boolean,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:CaptchaSharp.Services.EndCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:CaptchaSharp.Services.EndCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.EndCaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="T:CaptchaSharp.Services.EzCaptchaService">
@@ -2073,7 +2073,7 @@
             Gets the result of a task.
             </summary>
         </member>
-        <member name="M:CaptchaSharp.Services.EzCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.EzCaptchaService.ParseDataDomeSolution(System.String,Newtonsoft.Json.Linq.JToken)">
@@ -2148,10 +2148,10 @@
         <member name="M:CaptchaSharp.Services.ImageTyperzService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.ImageTyperzService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.ImageTyperzService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.ImageTyperzService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.ImageTyperzService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="P:CaptchaSharp.Services.ImageTyperzService.Capabilities">
@@ -2209,7 +2209,7 @@
         <member name="M:CaptchaSharp.Services.MetaBypassTechService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:CaptchaSharp.Services.MetaBypassTechService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.MetaBypassTechService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="T:CaptchaSharp.Services.NextCaptchaService">
@@ -2265,10 +2265,10 @@
         <member name="M:CaptchaSharp.Services.NineKwService.SolveHCaptchaAsync(System.String,System.String,System.Boolean,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.NineKwService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.NineKwService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.NineKwService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.NineKwService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.NineKwService.ConvertProxy(CaptchaSharp.Models.Proxy)">
@@ -2329,7 +2329,7 @@
         <member name="M:CaptchaSharp.Services.NopechaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:CaptchaSharp.Services.NopechaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.NopechaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="T:CaptchaSharp.Services.RuCaptchaService">
@@ -2392,7 +2392,7 @@
             Gets the result of a task.
             </summary>
         </member>
-        <member name="M:CaptchaSharp.Services.SolveCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.SolveCaptchaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.SolveCaptchaService.CreateTaskRequest">
@@ -2429,7 +2429,7 @@
         <member name="M:CaptchaSharp.Services.TrueCaptchaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.ImageCaptchaOptions,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TrueCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TrueCaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.TwoCaptchaService">
@@ -2528,10 +2528,10 @@
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.Proxy,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResult``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <summary></summary>
         </member>
-        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ReportSolution(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.TwoCaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.ConvertProxy(CaptchaSharp.Models.Proxy)">

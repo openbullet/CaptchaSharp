@@ -72,7 +72,8 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        var query = HttpUtility.ParseQueryString(await DecodeIsoResponse(response));
+        var query = HttpUtility.ParseQueryString(
+            await DecodeIsoResponseAsync(response).ConfigureAwait(false));
 
         if (IsError(query))
         {
@@ -101,10 +102,12 @@ public class DeathByCaptchaService : CaptchaService
             GetAuthPair()
                 .Add("captchafile", $"base64:{base64}")
                 .ToMultipartFormDataContent(),
-            cancellationToken);
+            cancellationToken)
+            .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.ImageCaptcha, cancellationToken);
+        return await GetResult<StringResponse>(HttpUtility.ParseQueryString(
+                await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -140,8 +143,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.ReCaptchaV2, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -181,8 +184,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.ReCaptchaV3, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -218,8 +221,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.FunCaptcha, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -255,8 +258,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.HCaptcha, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -298,8 +301,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.KeyCaptcha, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.KeyCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -337,8 +340,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<GeeTestResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.GeeTest, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false);
     }
     
     /// <inheritdoc/>
@@ -374,8 +377,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<CapyResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.Capy, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.Capy, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -408,8 +411,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.DataDome, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.DataDome, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -439,8 +442,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<CloudflareTurnstileResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.CloudflareTurnstile, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -476,8 +479,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<LeminCroppedResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.LeminCropped, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.LeminCropped, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -521,8 +524,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.AmazonWaf, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.AmazonWaf, cancellationToken).ConfigureAwait(false);
     }
     
     /// <inheritdoc/>
@@ -565,8 +568,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.CyberSiAra, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.CyberSiAra, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -602,8 +605,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.MtCaptcha, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.MtCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -641,8 +644,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.CutCaptcha, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.CutCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -678,8 +681,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.FriendlyCaptcha, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.FriendlyCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -705,8 +708,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return await GetResult<StringResponse>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.AudioCaptcha, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.AudioCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -742,8 +745,8 @@ public class DeathByCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return await GetResult<GeeTestV4Response>(
-            HttpUtility.ParseQueryString(await DecodeIsoResponse(response)),
-            CaptchaType.GeeTestV4, cancellationToken);
+            HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
+            CaptchaType.GeeTestV4, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
@@ -766,16 +769,16 @@ public class DeathByCaptchaService : CaptchaService
 
         var task = new CaptchaTask(captchaId, type);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var response = await HttpClient.GetAsync($"captcha/{task.Id}", cancellationToken);
-        var query = HttpUtility.ParseQueryString(await DecodeIsoResponse(response));
+        var response = await HttpClient.GetAsync($"captcha/{task.Id}", cancellationToken).ConfigureAwait(false);
+        var query = HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response));
 
         var text = query["text"];
         
@@ -860,7 +863,7 @@ public class DeathByCaptchaService : CaptchaService
 
     #region Reporting the solution
     /// <inheritdoc/>
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         if (correct)
@@ -874,18 +877,21 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        var query = HttpUtility.ParseQueryString(await DecodeIsoResponse(response));
+        var query = HttpUtility.ParseQueryString(
+            await DecodeIsoResponseAsync(response).ConfigureAwait(false));
 
         if (IsError(query))
+        {
             throw new TaskReportException(GetErrorMessage(query));
+        }
     }
     #endregion
 
     #region Private Methods
-    private async Task<string> DecodeIsoResponse(HttpResponseMessage response)
+    private static async Task<string> DecodeIsoResponseAsync(HttpResponseMessage response)
     {
         using var sr = new StreamReader(
-            await response.Content.ReadAsStreamAsync(),
+            await response.Content.ReadAsStreamAsync().ConfigureAwait(false),
             Encoding.GetEncoding("iso-8859-1"));
         
         return await sr.ReadToEndAsync();

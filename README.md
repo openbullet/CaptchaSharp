@@ -107,7 +107,7 @@ The returned solution will contain two fields:
 
 -   an `Id` which you can use for reporting a bad solution (if the service supports it) like this
     ```csharp
-    await service.ReportSolution(solution.Id, CaptchaType.ReCaptchaV2);
+    await service.ReportSolutionAsync(solution.Id, CaptchaType.ReCaptchaV2);
     ```
     if the report failed, the method above will throw a `TaskReportException`.
 

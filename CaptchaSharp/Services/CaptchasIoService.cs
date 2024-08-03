@@ -84,7 +84,7 @@ public class CaptchasIoService : CustomTwoCaptchaService
 
         var task = new CaptchaTask(twoCaptchaResponse.Request!, type);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 }

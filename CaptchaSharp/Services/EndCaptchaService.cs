@@ -220,7 +220,7 @@ public class EndCaptchaService : CaptchaService
         if (response.StartsWith("UNSOLVED_YET:"))
         {
             var task = new CaptchaTask(response.Split('/')[1], type);
-            return await GetResult<T>(task, cancellationToken)
+            return await GetResultAsync<T>(task, cancellationToken)
                 .ConfigureAwait(false);
         }
         
@@ -232,7 +232,7 @@ public class EndCaptchaService : CaptchaService
     }
     
     /// <inheritdoc />
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
         var response = await HttpClient.PostMultipartToStringAsync(
@@ -264,7 +264,7 @@ public class EndCaptchaService : CaptchaService
 
     #region Reporting the solution
     /// <inheritdoc />
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         // Since the service doesn't always return the captcha id,

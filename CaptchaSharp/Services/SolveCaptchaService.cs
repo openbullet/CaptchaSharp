@@ -327,11 +327,11 @@ public class SolveCaptchaService : CaptchaService
 
         var task = new CaptchaTask(antiCaptchaResponse.TaskId.ToString(), type);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {

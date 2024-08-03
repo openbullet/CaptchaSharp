@@ -59,7 +59,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -86,7 +86,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -118,7 +118,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -149,7 +149,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -195,7 +195,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -227,7 +227,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -259,7 +259,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -290,7 +290,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="GeeTestResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and three solution parameters 
+    /// <see cref="ReportSolutionAsync"/> and three solution parameters 
     /// (Challenge, Validate and SecCode) that you will need to provide when you submit the form.
     /// </returns>
     /// 
@@ -319,7 +319,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="CapyResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -349,7 +349,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext (a.k.a. a valid datadome session cookie).
     /// </returns>
     /// 
@@ -381,7 +381,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="CloudflareTurnstileResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -412,7 +412,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="LeminCroppedResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -445,7 +445,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -475,7 +475,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -504,7 +504,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -535,7 +535,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -564,7 +564,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -594,7 +594,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -623,7 +623,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="TencentCaptchaResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution.
     /// </returns>
     /// 
@@ -646,7 +646,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -676,7 +676,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="StringResponse"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution as plaintext.
     /// </returns>
     /// 
@@ -705,7 +705,7 @@ public abstract class CaptchaService : IDisposable
     /// 
     /// <returns>
     /// A <see cref="GeeTestV4Response"/> containing the captcha id to be used with 
-    /// <see cref="ReportSolution(string, CaptchaType, bool, CancellationToken)"/> and the 
+    /// <see cref="ReportSolutionAsync"/> and the 
     /// captcha solution.
     /// </returns>
     /// 
@@ -735,14 +735,14 @@ public abstract class CaptchaService : IDisposable
     /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
     /// 
     /// <exception cref="TaskReportException"></exception>
-    public virtual Task ReportSolution(
+    public virtual Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
 
     /// <summary></summary>
-    protected async Task<T> GetResult<T>(
+    protected async Task<T> GetResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
@@ -750,14 +750,14 @@ public abstract class CaptchaService : IDisposable
         T? result;
 
         // Initial delay
-        await Task.Delay(PollingInterval, cancellationToken);
+        await Task.Delay(PollingInterval, cancellationToken).ConfigureAwait(false);
 
         do
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            result = await CheckResult<T>(task, cancellationToken);
-            await Task.Delay(PollingInterval, cancellationToken);
+            result = await CheckResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
+            await Task.Delay(PollingInterval, cancellationToken).ConfigureAwait(false);
         }
         while (!task.Completed && DateTime.UtcNow - start < Timeout);
 
@@ -770,7 +770,7 @@ public abstract class CaptchaService : IDisposable
     }
 
     /// <summary></summary>
-    protected virtual Task<T?> CheckResult<T>(
+    protected virtual Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {

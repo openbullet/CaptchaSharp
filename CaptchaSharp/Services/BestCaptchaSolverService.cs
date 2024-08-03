@@ -313,7 +313,8 @@ public class BestCaptchaSolverService : CaptchaService
         
         return await GetResult<GeeTestV4Response>(
             response, CaptchaType.GeeTestV4,
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
     }
 
     #endregion
@@ -331,11 +332,11 @@ public class BestCaptchaSolverService : CaptchaService
 
         var task = new CaptchaTask(response.Id.ToString(), type);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
         var json = await HttpClient.GetStringAsync(
@@ -452,7 +453,7 @@ public class BestCaptchaSolverService : CaptchaService
     
     #region Reporting the solution
     /// <inheritdoc/>
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         if (correct)

@@ -205,11 +205,11 @@ public class NineKwService : CaptchaService
 
         var task = new CaptchaTask(response.CaptchaId, type);
 
-        return await GetResult<T>(task, cancellationToken).ConfigureAwait(false);
+        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -252,7 +252,7 @@ public class NineKwService : CaptchaService
 
     #region Reporting the solution
     /// <inheritdoc/>
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.GetJsonAsync<NineKwResponse>(

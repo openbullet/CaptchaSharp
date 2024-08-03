@@ -171,7 +171,7 @@ public class MetaBypassTechService : CaptchaService
 
         var captchaId = response.Data!["RecaptchaId"]!.ToString();
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             new CaptchaTask(captchaId, CaptchaType.ReCaptchaV2), 
             cancellationToken)
             .ConfigureAwait(false);
@@ -219,7 +219,7 @@ public class MetaBypassTechService : CaptchaService
     
     #region Getting the result
     /// <inheritdoc />
-    protected override async Task<T?> CheckResult<T>(
+    protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
         if (task.Type is not CaptchaType.ReCaptchaV2)

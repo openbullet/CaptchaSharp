@@ -151,7 +151,7 @@ public class CaptchaCoderService : CaptchaService
 
     #region Reporting the solution
     /// <inheritdoc/>
-    public override async Task ReportSolution(
+    public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartToStringAsync(
