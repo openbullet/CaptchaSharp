@@ -2,7 +2,6 @@
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.DeathByCaptcha.Tasks;
-using CaptchaSharp.Models.DeathByCaptcha.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;

@@ -616,11 +616,7 @@ public class ServiceTests
     protected Task RecaptchaMobileTest_WithProxy() => RecaptchaMobileTest(_fixture.Config.SessionParams);
 
     private async Task GeeTestV4Test(SessionParams? sessionParams)
-    {
-        using var httpClient = new HttpClient();
-        using var response = await httpClient.GetAsync("https://2captcha.com/demo/geetest-v4");
-        var pageSource = await response.Content.ReadAsStringAsync();
-        
+    {   
         var solution = await Service.SolveGeeTestV4Async(
             captchaId: "42977dc9-a215-4b09-aa14-945ef310d829",
             siteUrl: "https://2captcha.com/demo/geetest-v4",
