@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -741,7 +741,7 @@ public class TwoCaptchaService : CaptchaService
     {
         if (twoCaptchaResponse.IsErrorCode)
         {
-            throw new TaskCreationException(twoCaptchaResponse.Request!);
+            throw new TaskCreationException(twoCaptchaResponse.GetErrorMessage());
         }
 
         var task = new CaptchaTask(twoCaptchaResponse.Request!, type);
@@ -754,7 +754,9 @@ public class TwoCaptchaService : CaptchaService
         where T : CaptchaResponse
     {
         if (IsErrorCode(response))
+        {
             throw new TaskCreationException(response);
+        }
 
         var task = new CaptchaTask(TakeSecondSlice(response), type);
 
@@ -847,7 +849,7 @@ public class TwoCaptchaService : CaptchaService
 
                 if (tcResponse.IsErrorCode)
                 {
-                    throw new TaskSolutionException(tcResponse.ErrorText!);
+                    throw new TaskSolutionException(tcResponse.GetErrorMessage());
                 }
 
                 return new StringResponse { Id = task.Id, Response = tcResponse.Request! } as T;
