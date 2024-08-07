@@ -57,13 +57,12 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
                 nameof(sessionParams), "DataDome requires a user agent");
         }
         
-        // The cookie must contain datadome=... and nothing else
         sessionParams.Cookies.TryGetValue("datadome", out var datadomeCookie);
         
-        if (string.IsNullOrEmpty(datadomeCookie) || sessionParams.Cookies.Count > 1)
+        if (string.IsNullOrEmpty(datadomeCookie))
         {
             throw new ArgumentException(
-                "The cookie must contain a single datadome cookie", nameof(sessionParams));
+                "The cookie must contain a datadome cookie", nameof(sessionParams));
         }
 
         var content = CreateTaskRequest();
