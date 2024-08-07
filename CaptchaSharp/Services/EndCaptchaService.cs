@@ -70,6 +70,11 @@ public class EndCaptchaService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         // It doesn't work when using base64:... as per the docs
         var content = new StringPairCollection()
             .Add("username", Username)

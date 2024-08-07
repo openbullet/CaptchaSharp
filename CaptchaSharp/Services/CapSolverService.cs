@@ -68,6 +68,11 @@ public class CapSolverService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 new CaptchaTaskRequest
