@@ -111,7 +111,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2, cancellationToken)
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -134,7 +134,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
     }
 
@@ -156,7 +156,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
@@ -178,7 +178,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
@@ -199,7 +199,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestResponse>(
+        return await GetResultAsync<GeeTestResponse>(
             response, CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false);
     }
 
@@ -219,7 +219,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<CapyResponse>(
+        return await GetResultAsync<CapyResponse>(
             response, CaptchaType.Capy, cancellationToken).ConfigureAwait(false);
     }
 
@@ -240,7 +240,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<CloudflareTurnstileResponse>(
+        return await GetResultAsync<CloudflareTurnstileResponse>(
             response, CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false);
     }
 
@@ -259,13 +259,13 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<GeeTestV4Response>(
+        return await GetResultAsync<GeeTestV4Response>(
             response, CaptchaType.GeeTestV4, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         string response, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {

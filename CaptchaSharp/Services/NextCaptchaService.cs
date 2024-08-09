@@ -67,7 +67,7 @@ public class NextCaptchaService : CustomAntiCaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaMobile,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaMobile,
             cancellationToken).ConfigureAwait(false);
     }
     #endregion

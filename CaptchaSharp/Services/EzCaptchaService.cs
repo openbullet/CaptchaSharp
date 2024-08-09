@@ -118,7 +118,7 @@ public class EzCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -166,7 +166,7 @@ public class EzCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV3,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -189,7 +189,7 @@ public class EzCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(response, CaptchaType.FunCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -215,7 +215,7 @@ public class EzCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(response, CaptchaType.HCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
     #endregion
@@ -224,7 +224,7 @@ public class EzCaptchaService : CaptchaService
     /// <summary>
     /// Gets the result of a task.
     /// </summary>
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         TaskCreationEzCaptchaResponse ezCaptchaResponse, CaptchaType type,
         CancellationToken cancellationToken = default)
         where T : CaptchaResponse

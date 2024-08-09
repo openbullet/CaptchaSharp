@@ -99,7 +99,7 @@ public class MetaBypassTechService : CaptchaService
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
         
-        await EnsureAccessTokenAsync().ConfigureAwait(false);
+        await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
 
         var numeric = 0;
         
@@ -147,7 +147,7 @@ public class MetaBypassTechService : CaptchaService
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false,
         bool invisible = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {   
-        await EnsureAccessTokenAsync().ConfigureAwait(false);
+        await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
         
         // When using version "invisible", we get "Service Failed" as a response
         // so we're just going to ignore it and use version "2" instead
@@ -184,7 +184,7 @@ public class MetaBypassTechService : CaptchaService
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
         bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
-        await EnsureAccessTokenAsync().ConfigureAwait(false);
+        await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
         
         var payload = new MbtSolveRecaptchaRequest
         {
@@ -219,6 +219,8 @@ public class MetaBypassTechService : CaptchaService
     protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
+        await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
+        
         if (task.Type is not CaptchaType.ReCaptchaV2)
         {
             throw new NotSupportedException(
@@ -251,21 +253,21 @@ public class MetaBypassTechService : CaptchaService
     #endregion
     
     #region Private Methods
-    private async ValueTask EnsureAccessTokenAsync()
+    private async ValueTask EnsureAccessTokenAsync(CancellationToken cancellationToken = default)
     {
         if (_accessToken is null)
         {
-            await GetAccessTokenAsync().ConfigureAwait(false);
+            await GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
             return;
         }
 
         if (_accessToken.ExpirationDate < DateTime.Now)
         {
-            await RefreshAccessTokenAsync(_accessToken).ConfigureAwait(false);
+            await RefreshAccessTokenAsync(_accessToken, cancellationToken).ConfigureAwait(false);
         }
     }
 
-    private async Task GetAccessTokenAsync()
+    private async Task GetAccessTokenAsync(CancellationToken cancellationToken = default)
     {
         var payload = new MbtAccessTokenRequest
         {
@@ -279,10 +281,10 @@ public class MetaBypassTechService : CaptchaService
         using var response = await HttpClient.PostJsonAsync(
                 "oauth/token",
                 payload,
-                cancellationToken: default)
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -297,7 +299,8 @@ public class MetaBypassTechService : CaptchaService
             $"{_accessToken.TokenType} {_accessToken.AccessToken}");
     }
 
-    private async Task RefreshAccessTokenAsync(MbtAccessTokenResponse tokenResponse)
+    private async Task RefreshAccessTokenAsync(MbtAccessTokenResponse tokenResponse,
+        CancellationToken cancellationToken = default)
     {
         var payload = new MbtRefreshAccessTokenRequest
         {
@@ -310,10 +313,10 @@ public class MetaBypassTechService : CaptchaService
         using var response = await HttpClient.PostJsonAsync(
                 "oauth/token",
                 payload,
-                cancellationToken: default)
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         
         if (!response.IsSuccessStatusCode)
         {

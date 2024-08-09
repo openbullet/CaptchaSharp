@@ -84,7 +84,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(response, CaptchaType.DataDome,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.DataDome,
             cancellationToken).ConfigureAwait(false);
     }
 

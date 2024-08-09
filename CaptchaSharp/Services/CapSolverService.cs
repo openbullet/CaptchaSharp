@@ -165,7 +165,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -205,7 +205,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV3,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -246,7 +246,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.FunCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -288,7 +288,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.HCaptcha, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha, 
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -326,7 +326,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestResponse>(response, CaptchaType.GeeTest,
+        return await GetResultAsync<GeeTestResponse>(response, CaptchaType.GeeTest,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -354,7 +354,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.DataDome, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.DataDome, 
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -382,7 +382,7 @@ public class CapSolverService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<CloudflareTurnstileResponse>(
+        return await GetResultAsync<CloudflareTurnstileResponse>(
             response, CaptchaType.CloudflareTurnstile,
             cancellationToken).ConfigureAwait(false);
     }
@@ -422,7 +422,7 @@ public class CapSolverService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.AmazonWaf,
             cancellationToken).ConfigureAwait(false);
     }
@@ -457,7 +457,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.MtCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.MtCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -491,13 +491,13 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
+        return await GetResultAsync<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
             cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         TaskCreationResponse response, CaptchaType type,
         CancellationToken cancellationToken = default)
         where T : CaptchaResponse

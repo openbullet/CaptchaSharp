@@ -76,7 +76,7 @@ public class NineKwService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.TextCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
@@ -107,7 +107,7 @@ public class NineKwService : CaptchaService
             throw new TaskSolutionException(GetErrorMessage(response));
         }
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
@@ -129,7 +129,7 @@ public class NineKwService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
     }
 
@@ -151,7 +151,7 @@ public class NineKwService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false);
     }
 
@@ -173,7 +173,7 @@ public class NineKwService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
@@ -195,13 +195,13 @@ public class NineKwService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         NineKwSubmitResponse response, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {

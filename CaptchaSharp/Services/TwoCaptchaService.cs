@@ -111,10 +111,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TextCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.TextCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -142,10 +142,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ImageCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.ImageCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -173,10 +173,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ReCaptchaV2,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV2,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -205,10 +205,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ReCaptchaV3,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV3,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -247,10 +247,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.FunCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.FunCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -277,10 +277,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.HCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.HCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -308,10 +308,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.KeyCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.KeyCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -338,10 +338,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<GeeTestResponse>(
+            ? await GetResultAsync<GeeTestResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTest,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<GeeTestResponse>(
+            : await GetResultAsync<GeeTestResponse>(
                 response, CaptchaType.GeeTest,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -366,10 +366,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<CapyResponse>(
+            ? await GetResultAsync<CapyResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.Capy,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<CapyResponse>(
+            : await GetResultAsync<CapyResponse>(
                 response, CaptchaType.Capy,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -400,10 +400,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.DataDome,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.DataDome,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -438,10 +438,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<CloudflareTurnstileResponse>(
+            ? await GetResultAsync<CloudflareTurnstileResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CloudflareTurnstile,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<CloudflareTurnstileResponse>(
+            : await GetResultAsync<CloudflareTurnstileResponse>(
                 response, CaptchaType.CloudflareTurnstile,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -468,10 +468,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<LeminCroppedResponse>(
+            ? await GetResultAsync<LeminCroppedResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.LeminCropped,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<LeminCroppedResponse>(
+            : await GetResultAsync<LeminCroppedResponse>(
                 response, CaptchaType.LeminCropped,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -500,10 +500,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AmazonWaf,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AmazonWaf,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -533,10 +533,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CyberSiAra,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.CyberSiAra,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -561,10 +561,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.MtCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.MtCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -590,10 +590,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CutCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.CutCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -618,10 +618,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.FriendlyCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.FriendlyCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -647,10 +647,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AtbCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AtbCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -675,10 +675,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<TencentCaptchaResponse>(
+            ? await GetResultAsync<TencentCaptchaResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TencentCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<TencentCaptchaResponse>(
+            : await GetResultAsync<TencentCaptchaResponse>(
                 response, CaptchaType.TencentCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -702,10 +702,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -730,17 +730,17 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<GeeTestV4Response>(
+            ? await GetResultAsync<GeeTestV4Response>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTestV4,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<GeeTestV4Response>(
+            : await GetResultAsync<GeeTestV4Response>(
                 response, CaptchaType.GeeTestV4,
                 cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         TwoCaptchaResponse twoCaptchaResponse, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
@@ -754,7 +754,7 @@ public class TwoCaptchaService : CaptchaService
         return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
-    internal async Task<T> GetResult<T>(
+    internal async Task<T> GetResultAsync<T>(
         string response, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {

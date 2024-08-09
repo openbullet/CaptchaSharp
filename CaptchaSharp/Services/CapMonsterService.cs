@@ -44,7 +44,7 @@ public class CapMonsterService : CustomTwoCaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false);
     }
 }
