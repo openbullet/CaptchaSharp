@@ -36,7 +36,7 @@ public static class HttpClientExtensions
         this HttpClient httpClient, string url, StringPairCollection pairs,
         CancellationToken cancellationToken = default) where T : notnull
     {
-        var response = await httpClient.GetAsync(url, pairs, cancellationToken).ConfigureAwait(false);
+        using var response = await httpClient.GetAsync(url, pairs, cancellationToken).ConfigureAwait(false);
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         return json.Deserialize<T>();
     }
@@ -49,7 +49,7 @@ public static class HttpClientExtensions
         this HttpClient httpClient, string url, StringPairCollection pairs,
         CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.GetAsync(url, pairs, cancellationToken).ConfigureAwait(false);
+        using var response = await httpClient.GetAsync(url, pairs, cancellationToken).ConfigureAwait(false);
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -80,7 +80,7 @@ public static class HttpClientExtensions
         string mediaType = "application/x-www-form-urlencoded",
         CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PostAsync(url, pairs, mediaType, cancellationToken).ConfigureAwait(false);
+        using var response = await httpClient.PostAsync(url, pairs, mediaType, cancellationToken).ConfigureAwait(false);
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -92,7 +92,7 @@ public static class HttpClientExtensions
             this HttpClient httpClient, string url, MultipartFormDataContent content,
             CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
+        using var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
     
@@ -104,7 +104,7 @@ public static class HttpClientExtensions
         this HttpClient httpClient, string url, MultipartFormDataContent content,
         CancellationToken cancellationToken = default) where T : notnull
     {
-        var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
+        using var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         return json.Deserialize<T>();
     }
@@ -121,7 +121,7 @@ public static class HttpClientExtensions
             ? content.SerializeCamelCase()
             : JsonConvert.SerializeObject(content);
 
-        var response = await httpClient.PostAsync(url,
+        using var response = await httpClient.PostAsync(url,
             new StringContent(json, Encoding.UTF8, "application/json"),
             cancellationToken).ConfigureAwait(false);
         
@@ -156,7 +156,7 @@ public static class HttpClientExtensions
             ? content.SerializeCamelCase()
             : JsonConvert.SerializeObject(content);
 
-        var response = await httpClient.PostAsync(url,
+        using var response = await httpClient.PostAsync(url,
             new StringContent(json, Encoding.UTF8, "application/json"),
             cancellationToken).ConfigureAwait(false);
 

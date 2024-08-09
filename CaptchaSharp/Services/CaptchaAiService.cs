@@ -31,7 +31,7 @@ public class CaptchaAiService : CustomTwoCaptchaService
 
         // This service just replies with 200 OK without body
         // when reporting a solution, so we don't need to check the response
-        var response = await HttpClient.GetAsync("res.php",
+        using var response = await HttpClient.GetAsync("res.php",
             new StringPairCollection()
                 .Add("key", ApiKey)
                 .Add("action", action)

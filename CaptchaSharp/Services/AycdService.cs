@@ -73,7 +73,7 @@ public class AycdService : CaptchaService
             }
         };
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -103,7 +103,7 @@ public class AycdService : CaptchaService
             Version = version
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -128,7 +128,7 @@ public class AycdService : CaptchaService
             MinScore = minScore
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -151,7 +151,7 @@ public class AycdService : CaptchaService
             Version = 8,
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -174,7 +174,7 @@ public class AycdService : CaptchaService
             Version = invisible ? 4 : 3
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -202,7 +202,7 @@ public class AycdService : CaptchaService
             }
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -225,7 +225,7 @@ public class AycdService : CaptchaService
             Version = 11
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -248,7 +248,7 @@ public class AycdService : CaptchaService
             Version = 12,
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -271,7 +271,7 @@ public class AycdService : CaptchaService
             Version = 9
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostJsonAsync(
+        using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -307,7 +307,7 @@ public class AycdService : CaptchaService
         // returned again! So we need some kind of global state to store
         // the task solutions and return them when the task with that id
         // is fetched!
-        var response = await HttpClient.GetAsync(
+        using var response = await HttpClient.GetAsync(
             "tasks",
             cancellationToken).ConfigureAwait(false);
         
@@ -373,7 +373,7 @@ public class AycdService : CaptchaService
 
     private async Task GetAccessTokenAsync(CancellationToken cancellationToken = default)
     {
-        var response = await HttpClient.GetAsync(
+        using var response = await HttpClient.GetAsync(
             "https://autosolve-dashboard-api.aycd.io/api/v1/auth/generate-token",
             new StringPairCollection()
                 .Add("apiKey", ApiKey),
