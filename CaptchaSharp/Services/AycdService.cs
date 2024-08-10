@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -30,6 +31,8 @@ public class AycdService : CaptchaService
     /// The current access token.
     /// </summary>
     private AycdAccessToken? _accessToken;
+    
+    private static readonly ConcurrentDictionary<string, AycdTask> _tasksCache = new();
     
     /// <summary>
     /// Initializes a <see cref="AycdService"/>.
@@ -303,35 +306,38 @@ public class AycdService : CaptchaService
     {
         await EnsureAccessTokenAsync(cancellationToken);
 
-        // TODO: CARE! Once a task solution is returned once, it is never
-        // returned again! So we need some kind of global state to store
-        // the task solutions and return them when the task with that id
-        // is fetched!
+        // Once a task solution is returned once, it is never
+        // returned again! So we use a global static cache to store the
+        // solutions of other tasks and return them if they are requested again.
         using var response = await HttpClient.GetAsync(
             "tasks",
             cancellationToken).ConfigureAwait(false);
         
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var remoteTasks = json.Deserialize<List<AycdTask>>();
         
-        var remoteTasks = json.Deserialize<IEnumerable<AycdTask>>();
+        foreach (var remoteTask in remoteTasks)
+        {
+            _tasksCache.TryAdd(remoteTask.TaskId, remoteTask);
+        }
         
-        var remoteTask = remoteTasks.FirstOrDefault(t => t.TaskId == task.Id);
+        _tasksCache.TryRemove(task.Id, out var currentTask);
         
-        if (remoteTask is null)
+        if (currentTask is null)
         {
             return null;
         }
 
-        if (remoteTask.Status == "cancelled")
+        if (currentTask.Status == "cancelled")
         {
             throw new TaskSolutionException("Task was cancelled");
         }
         
-        if (remoteTask.Status == "success")
+        if (currentTask.Status == "success")
         {   
             task.Completed = true;
             
-            var token = remoteTask.Token;
+            var token = currentTask.Token;
 
             if (string.IsNullOrEmpty(token))
             {
