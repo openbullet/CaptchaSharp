@@ -97,7 +97,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
         var content = CreateTaskRequest();
         
         // Option 1 (Turnstile)
-        if (data is null)
+        if (!string.IsNullOrEmpty(data))
         {
             content.Task = new TurnstileTaskProxyless
             {
