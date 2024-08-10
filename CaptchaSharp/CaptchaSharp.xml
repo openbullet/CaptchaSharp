@@ -289,6 +289,9 @@
         <member name="F:CaptchaSharp.Enums.CaptchaType.GeeTestV4">
             <summary>GeeTest v4.</summary>
         </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.CloudflareChallengePage">
+            <summary>Cloudflare Challenge Page.</summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
         </member>
@@ -1252,7 +1255,16 @@
         <member name="M:CaptchaSharp.Services.CapMonsterCloudService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.SolveCloudflareChallengePageAsync(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
         <member name="M:CaptchaSharp.Services.CapMonsterCloudService.ParseDataDomeSolution(System.String,Newtonsoft.Json.Linq.JToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.ParseCloudflareChallengePageSolution(System.String,Newtonsoft.Json.Linq.JToken)">
             <inheritdoc />
         </member>
         <member name="T:CaptchaSharp.Services.CapMonsterService">
@@ -1950,6 +1962,29 @@
              <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
              <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
              <exception cref="T:System.TimeoutException"></exception>
+        </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveCloudflareChallengePageAsync(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <summary>Solves a Cloudflare Challenge page.</summary>
+            
+            <param name="siteUrl">The URL where the challenge appears.</param>
+            <param name="pageHtml">The HTML content of the page where the challenge appears.</param>
+            
+            <param name="sessionParams">
+            Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+            the target website. They can be useful to avoid detection and emulate your session on the solver's side.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution, that contains the value of the <c>cf_clearance</c> cookie.
+            </returns>
+            
+            <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+            <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+            <exception cref="T:System.TimeoutException"></exception>
         </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>

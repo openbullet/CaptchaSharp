@@ -71,4 +71,7 @@ public enum CaptchaType
     
     /// <summary>GeeTest v4.</summary>
     GeeTestV4 = 1 << 21,
+    
+    /// <summary>Cloudflare Challenge Page.</summary>
+    CloudflareChallengePage = 1 << 22,
 }

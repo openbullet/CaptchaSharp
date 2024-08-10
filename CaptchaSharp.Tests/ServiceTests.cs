@@ -639,4 +639,51 @@ public class ServiceTests
     protected Task GeeTestV4Test_NoProxy() => GeeTestV4Test(null);
     
     protected Task GeeTestV4Test_WithProxy() => GeeTestV4Test(_fixture.Config.SessionParams);
+
+    private async Task CloudflareChallengePageTest(SessionParams sessionParams)
+    {
+        var pageUrl = "https://2captcha.com/demo/cloudflare-turnstile-challenge";
+        var proxy = sessionParams.Proxy;
+        
+        if (string.IsNullOrEmpty(sessionParams.UserAgent))
+        {
+            throw new ArgumentNullException(
+                nameof(sessionParams), "Solving Cloudflare challenges requires a User-Agent");
+        }
+        
+        if (string.IsNullOrEmpty(proxy?.Host))
+        {
+            throw new ArgumentNullException(
+                nameof(sessionParams), "Solving Cloudflare challenges requires a proxy");
+        }
+        
+        var webProxy = new WebProxy($"{proxy.Type.ToString().ToLower()}://{proxy.Host}:{proxy.Port}");
+        
+        if (proxy.RequiresAuthentication)
+        {
+            webProxy.Credentials = new NetworkCredential(proxy.Username, proxy.Password);
+        }
+        
+        using var httpClientHandler = new HttpClientHandler();
+        httpClientHandler.Proxy = webProxy;
+        httpClientHandler.UseProxy = true;
+
+        using var httpClient = new HttpClient(httpClientHandler);
+        httpClient.DefaultRequestHeaders.Add("User-Agent", sessionParams.UserAgent);
+        
+        var response = await httpClient.GetAsync(pageUrl);
+        var pageHtml = await response.Content.ReadAsStringAsync();
+        
+        var solution = await Service.SolveCloudflareChallengePageAsync(
+            siteUrl: pageUrl,
+            pageHtml: pageHtml,
+            sessionParams: sessionParams);
+        
+        Assert.NotEqual(string.Empty, solution.Response);
+        
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+    }
+    
+    protected Task CloudflareChallengePageTest_WithProxy() => CloudflareChallengePageTest(_fixture.Config.SessionParams);
 }

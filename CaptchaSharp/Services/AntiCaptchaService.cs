@@ -441,6 +441,11 @@ public class AntiCaptchaService : CaptchaService
         {
             return ParseDataDomeSolution(task.Id, solution) as T;
         }
+        
+        if (task.Type == CaptchaType.CloudflareChallengePage)
+        {
+            return ParseCloudflareChallengePageSolution(task.Id, solution) as T;
+        }
 
         result.AntiCaptchaTaskSolution = task.Type switch
         {
@@ -463,6 +468,11 @@ public class AntiCaptchaService : CaptchaService
     protected virtual StringResponse ParseDataDomeSolution(string taskId, JToken? solution)
     {
         throw new NotImplementedException("DataDome captcha solving is not supported");
+    }
+    
+    protected virtual StringResponse ParseCloudflareChallengePageSolution(string taskId, JToken? solution)
+    {
+        throw new NotImplementedException("Cloudflare challenge page solving is not supported");
     }
     #endregion
 
