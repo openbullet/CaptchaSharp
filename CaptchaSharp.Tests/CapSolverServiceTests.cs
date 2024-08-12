@@ -11,10 +11,6 @@ public class CapSolverFixture : ServiceFixture
     public CapSolverFixture()
     {
         Service = new CapSolverService(Config.Credentials.CapSolverApiKey);
-        
-        Service.GetType().GetProperty("AppId",
-                BindingFlags.NonPublic | BindingFlags.Instance)?
-            .SetValue(Service, "123");
     }
 }
 
