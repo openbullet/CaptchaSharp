@@ -11,7 +11,6 @@ This library supports the following captcha solving services
 - [deathbycaptcha.com](https://deathbycaptcha.com/)
 - [imagetyperz.com](https://www.imagetyperz.com/)
 - [capmonster.cloud](https://capmonster.cloud/)
-- [capsolver.com](https://capsolver.com/)
 - [captchacoder.com](https://captchacoder.com/)
 - [humancoder.com](https://humancoder.com/)
 - [azcaptcha.com](https://azcaptcha.com/)
@@ -30,6 +29,7 @@ This library supports the following captcha solving services
 - [solvecaptcha.net](https://solvecaptcha.net/)
 - [cap.guru](https://cap.guru/)
 - [aycd.io](https://aycd.io/)
+- [capsolver.com](https://capsolver.com/)
 
 ## Supported Captcha Types
 This library supports the following captcha types

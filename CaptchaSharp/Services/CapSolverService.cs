@@ -28,11 +28,6 @@ public class CapSolverService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The ID of the app.
-    /// </summary>
-    private string AppId { get; set; } = "FE552FC0-8A06-4B44-BD30-5B9DDA2A4194";
-
-    /// <summary>
     /// Initializes a <see cref="CapSolverService"/>.
     /// </summary>
     /// <param name="apiKey">Your secret api key.</param>
@@ -78,7 +73,6 @@ public class CapSolverService : CaptchaService
                 new CaptchaTaskRequest
                 {
                     ClientKey = ApiKey,
-                    AppId = AppId,
                     Task = new ImageCaptchaTask
                     {
                         Body = base64
@@ -572,7 +566,6 @@ public class CapSolverService : CaptchaService
                 new CaptchaTaskFeedbackRequest
                 {
                     ClientKey = ApiKey,
-                    AppId = AppId,
                     TaskId = id,
                     Result = new TaskResultFeedback
                     {
@@ -595,7 +588,6 @@ public class CapSolverService : CaptchaService
         return new CaptchaTaskRequest
         {
             ClientKey = ApiKey,
-            AppId = AppId
         };
     }
     #endregion
