@@ -702,6 +702,34 @@ public abstract class CaptchaService : IDisposable
         throw new NotSupportedException();
     }
     
+    /// <summary>Solves a Cloudflare Challenge page.</summary>
+    /// 
+    /// <param name="siteUrl">The URL where the challenge appears.</param>
+    /// <param name="pageHtml">The HTML content of the page where the challenge appears.</param>
+    /// 
+    /// <param name="sessionParams">
+    /// Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+    /// the target website. They can be useful to avoid detection and emulate your session on the solver's side.
+    /// </param>
+    /// 
+    /// <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+    /// 
+    /// <returns>
+    /// A <see cref="StringResponse"/> containing the captcha id to be used with 
+    /// <see cref="ReportSolutionAsync"/> and the 
+    /// captcha solution, that contains the value of the <c>cf_clearance</c> cookie.
+    /// </returns>
+    /// 
+    /// <exception cref="TaskCreationException"></exception>
+    /// <exception cref="TaskSolutionException"></exception>
+    /// <exception cref="TimeoutException"></exception>
+    public virtual Task<StringResponse> SolveCloudflareChallengePageAsync(
+        string siteUrl, string pageHtml, SessionParams? sessionParams = null,
+        CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+    
     /// <summary>
     /// Reports a captcha solution as good or bad to the service.
     /// Mostly used for reporting bad solutions for image captchas and get the funds back.

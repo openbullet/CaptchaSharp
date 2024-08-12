@@ -289,6 +289,9 @@
         <member name="F:CaptchaSharp.Enums.CaptchaType.GeeTestV4">
             <summary>GeeTest v4.</summary>
         </member>
+        <member name="F:CaptchaSharp.Enums.CaptchaType.CloudflareChallengePage">
+            <summary>Cloudflare Challenge Page.</summary>
+        </member>
         <member name="T:CaptchaSharp.Enums.CharacterSet">
             <summary></summary>
         </member>
@@ -546,6 +549,41 @@
         <member name="P:CaptchaSharp.Models.AntiCaptcha.Responses.TaskCreationAntiCaptchaResponse.TaskId">
             <summary>
             The ID of the created task.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.Aycd.Requests.AycdTaskRequest.Url">
+            <summary>
+            Always required, even when it doesn't make sense.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.Aycd.Requests.AycdTaskRequest.SiteKey">
+            <summary>
+            Always required, even when it doesn't make sense.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.Aycd.Requests.AycdTaskRequest.Action">
+            <summary>
+            Only for reCAPTCHA v3.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.Aycd.Requests.AycdTaskRequest.MinScore">
+            <summary>
+            Only for reCAPTCHA v3.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.Aycd.Requests.AycdTaskRequest.Proxy">
+            <summary>
+            Format = IP:PORT:USERNAME:PASSWORD
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.Aycd.Requests.AycdTaskRequest.Cookies">
+            <summary>
+            Format = key1=value1;key2=value2
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Models.Aycd.Requests.RenderParameters.AycdImageCaptchaRenderParameters.CaseSensitive">
+            <summary>
+            This is a boolean... because this API is inconsistent as hell!
             </summary>
         </member>
         <member name="T:CaptchaSharp.Models.CaptchaOptions.AudioCaptchaOptions">
@@ -1046,7 +1084,7 @@
         <member name="M:CaptchaSharp.Services.AntiCaptchaService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.AntiCaptchaService.GetResult``1(CaptchaSharp.Models.AntiCaptcha.Responses.TaskCreationAntiCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.AntiCaptchaService.GetResultAsync``1(CaptchaSharp.Models.AntiCaptcha.Responses.TaskCreationAntiCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
             <summary>
             Gets the result of a task.
             </summary>
@@ -1068,6 +1106,61 @@
             </summary>
         </member>
         <member name="P:CaptchaSharp.Services.AntiCaptchaService.Capabilities">
+            <inheritdoc/>
+        </member>
+        <member name="T:CaptchaSharp.Services.AycdService">
+            <summary>
+            The service provided by https://aycd.io/
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.AycdService.ApiKey">
+            <summary>
+            Your secret api key.
+            </summary>
+        </member>
+        <member name="F:CaptchaSharp.Services.AycdService._accessToken">
+            <summary>
+            The current access token.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.AycdService"/>.
+            </summary>
+            <param name="apiKey">Your secret api key.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveRecaptchaV2Async(System.String,System.String,System.String,System.Boolean,System.Boolean,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveRecaptchaV3Async(System.String,System.String,System.String,System.Single,System.Boolean,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveFuncaptchaAsync(System.String,System.String,System.String,System.Boolean,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveHCaptchaAsync(System.String,System.String,System.Boolean,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveGeeTestAsync(System.String,System.String,System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.SolveGeeTestV4Async(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.AycdService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="T:CaptchaSharp.Services.AzCaptchaService">
@@ -1162,7 +1255,16 @@
         <member name="M:CaptchaSharp.Services.CapMonsterCloudService.SolveDataDomeAsync(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.SolveCloudflareChallengePageAsync(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
         <member name="M:CaptchaSharp.Services.CapMonsterCloudService.ParseDataDomeSolution(System.String,Newtonsoft.Json.Linq.JToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:CaptchaSharp.Services.CapMonsterCloudService.ParseCloudflareChallengePageSolution(System.String,Newtonsoft.Json.Linq.JToken)">
             <inheritdoc />
         </member>
         <member name="T:CaptchaSharp.Services.CapMonsterService">
@@ -1187,11 +1289,6 @@
         <member name="P:CaptchaSharp.Services.CapSolverService.ApiKey">
             <summary>
             Your secret api key.
-            </summary>
-        </member>
-        <member name="F:CaptchaSharp.Services.CapSolverService._appId">
-            <summary>
-            The ID of the app.
             </summary>
         </member>
         <member name="M:CaptchaSharp.Services.CapSolverService.#ctor(System.String,System.Net.Http.HttpClient)">
@@ -1861,6 +1958,29 @@
              <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
              <exception cref="T:System.TimeoutException"></exception>
         </member>
+        <member name="M:CaptchaSharp.Services.CaptchaService.SolveCloudflareChallengePageAsync(System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
+            <summary>Solves a Cloudflare Challenge page.</summary>
+            
+            <param name="siteUrl">The URL where the challenge appears.</param>
+            <param name="pageHtml">The HTML content of the page where the challenge appears.</param>
+            
+            <param name="sessionParams">
+            Additional session parameters (proxy, user agent, cookies) that the service can use when making requests to
+            the target website. They can be useful to avoid detection and emulate your session on the solver's side.
+            </param>
+            
+            <param name="cancellationToken">A token that can be used to cancel the async task.</param>
+            
+            <returns>
+            A <see cref="T:CaptchaSharp.Models.CaptchaResponses.StringResponse"/> containing the captcha id to be used with 
+            <see cref="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)"/> and the 
+            captcha solution, that contains the value of the <c>cf_clearance</c> cookie.
+            </returns>
+            
+            <exception cref="T:CaptchaSharp.Exceptions.TaskCreationException"></exception>
+            <exception cref="T:CaptchaSharp.Exceptions.TaskSolutionException"></exception>
+            <exception cref="T:System.TimeoutException"></exception>
+        </member>
         <member name="M:CaptchaSharp.Services.CaptchaService.ReportSolutionAsync(System.String,CaptchaSharp.Enums.CaptchaType,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Reports a captcha solution as good or bad to the service.
@@ -2109,7 +2229,7 @@
         <member name="M:CaptchaSharp.Services.EzCaptchaService.SolveHCaptchaAsync(System.String,System.String,System.Boolean,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.EzCaptchaService.GetResult``1(CaptchaSharp.Models.EzCaptcha.Responses.TaskCreationEzCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.EzCaptchaService.GetResultAsync``1(CaptchaSharp.Models.EzCaptcha.Responses.TaskCreationEzCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
             <summary>
             Gets the result of a task.
             </summary>
@@ -2147,7 +2267,7 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.ImageTyperzService._affiliateId">
+        <member name="P:CaptchaSharp.Services.ImageTyperzService.AffiliateId">
             <summary>
             The ID of the software developer.
             </summary>
@@ -2395,7 +2515,7 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.SolveCaptchaService._affiliateId">
+        <member name="P:CaptchaSharp.Services.SolveCaptchaService.AffiliateId">
             <summary>
             The ID of the software developer.
             </summary>
@@ -2428,7 +2548,7 @@
         <member name="M:CaptchaSharp.Services.SolveCaptchaService.SolveCloudflareTurnstileAsync(System.String,System.String,System.String,System.String,System.String,CaptchaSharp.Models.SessionParams,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:CaptchaSharp.Services.SolveCaptchaService.GetResult``1(CaptchaSharp.Models.SolveCaptcha.Responses.TaskCreationSolveCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
+        <member name="M:CaptchaSharp.Services.SolveCaptchaService.GetResultAsync``1(CaptchaSharp.Models.SolveCaptcha.Responses.TaskCreationSolveCaptchaResponse,CaptchaSharp.Enums.CaptchaType,System.Threading.CancellationToken)">
             <summary>
             Gets the result of a task.
             </summary>
@@ -2494,7 +2614,7 @@
             cross-domain AJAX requests in web applications.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.TwoCaptchaService._softId">
+        <member name="P:CaptchaSharp.Services.TwoCaptchaService.SoftId">
             <summary>The ID of the software developer.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">

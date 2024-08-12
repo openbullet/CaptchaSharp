@@ -70,6 +70,11 @@ public class EndCaptchaService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         // It doesn't work when using base64:... as per the docs
         var content = new StringPairCollection()
             .Add("username", Username)
@@ -85,7 +90,7 @@ public class EndCaptchaService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ImageCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -112,7 +117,7 @@ public class EndCaptchaService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV2, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -141,7 +146,7 @@ public class EndCaptchaService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV3, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -168,7 +173,7 @@ public class EndCaptchaService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.FunCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -195,14 +200,14 @@ public class EndCaptchaService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.HCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
     #endregion
     
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         string response, CaptchaType type, 
         CancellationToken cancellationToken = default) where T : CaptchaResponse
     {

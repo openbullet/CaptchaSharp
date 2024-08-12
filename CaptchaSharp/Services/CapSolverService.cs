@@ -28,11 +28,6 @@ public class CapSolverService : CaptchaService
     public string ApiKey { get; set; }
 
     /// <summary>
-    /// The ID of the app.
-    /// </summary>
-    private const string _appId = "FE552FC0-8A06-4B44-BD30-5B9DDA2A4194";
-
-    /// <summary>
     /// Initializes a <see cref="CapSolverService"/>.
     /// </summary>
     /// <param name="apiKey">Your secret api key.</param>
@@ -68,12 +63,16 @@ public class CapSolverService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 new CaptchaTaskRequest
                 {
                     ClientKey = ApiKey,
-                    AppId = _appId,
                     Task = new ImageCaptchaTask
                     {
                         Body = base64
@@ -160,7 +159,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -200,7 +199,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV3,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -241,7 +240,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.FunCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -283,7 +282,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.HCaptcha, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha, 
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -321,7 +320,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestResponse>(response, CaptchaType.GeeTest,
+        return await GetResultAsync<GeeTestResponse>(response, CaptchaType.GeeTest,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -349,7 +348,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.DataDome, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.DataDome, 
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -377,7 +376,7 @@ public class CapSolverService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<CloudflareTurnstileResponse>(
+        return await GetResultAsync<CloudflareTurnstileResponse>(
             response, CaptchaType.CloudflareTurnstile,
             cancellationToken).ConfigureAwait(false);
     }
@@ -417,7 +416,7 @@ public class CapSolverService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.AmazonWaf,
             cancellationToken).ConfigureAwait(false);
     }
@@ -452,7 +451,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.MtCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.MtCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -486,13 +485,13 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
+        return await GetResultAsync<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
             cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         TaskCreationResponse response, CaptchaType type,
         CancellationToken cancellationToken = default)
         where T : CaptchaResponse
@@ -567,7 +566,6 @@ public class CapSolverService : CaptchaService
                 new CaptchaTaskFeedbackRequest
                 {
                     ClientKey = ApiKey,
-                    AppId = _appId,
                     TaskId = id,
                     Result = new TaskResultFeedback
                     {
@@ -590,7 +588,6 @@ public class CapSolverService : CaptchaService
         return new CaptchaTaskRequest
         {
             ClientKey = ApiKey,
-            AppId = _appId
         };
     }
     #endregion

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +38,7 @@ public class TwoCaptchaService : CaptchaService
     public bool AddAcaoHeader { get; set; } = false;
 
     /// <summary>The ID of the software developer.</summary>
-    private const int _softId = 2658;
+    private int SoftId { get; set; } = 2658;
     
     private readonly ImmutableList<CaptchaLanguage> _supportedAudioLanguages = new List<CaptchaLanguage>()
     {
@@ -102,7 +102,7 @@ public class TwoCaptchaService : CaptchaService
             new StringPairCollection()
                 .Add("key", ApiKey)
                 .Add("textcaptcha", text)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertCapabilities(options))
@@ -111,10 +111,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TextCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.TextCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -123,12 +123,17 @@ public class TwoCaptchaService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync(
         string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
                 .Add("key", ApiKey)
                 .Add("method", "base64")
                 .Add("body", base64)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertCapabilities(options))
@@ -137,10 +142,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ImageCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.ImageCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -159,7 +164,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("data-s", dataS)
                 .Add("enterprise", Convert.ToInt32(enterprise).ToString())
                 .Add("invisible", Convert.ToInt32(invisible).ToString())
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -168,10 +173,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ReCaptchaV2,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV2,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -191,7 +196,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("action", action)
                 .Add("enterprise", Convert.ToInt32(enterprise).ToString())
                 .Add("min_score", minScore.ToString("0.0", CultureInfo.InvariantCulture))
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -200,10 +205,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.ReCaptchaV3,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV3,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -220,7 +225,7 @@ public class TwoCaptchaService : CaptchaService
             .Add("surl", serviceUrl)
             .Add("pageurl", siteUrl)
             .Add("nojs", Convert.ToInt32(noJs).ToString())
-            .Add("soft_id", _softId)
+            .Add("soft_id", SoftId)
             .Add("json", "1", UseJsonFlag)
             .Add("header_acao", "1", AddAcaoHeader)
             .Add(ConvertSessionParams(sessionParams));
@@ -242,10 +247,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.FunCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.FunCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -263,7 +268,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("pageurl", siteUrl)
                 .Add("invisible", Convert.ToInt32(invisible).ToString())
                 .Add("data", enterprisePayload)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -272,10 +277,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.HCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.HCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -294,7 +299,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("s_s_c_web_server_sign", webServerSign1)
                 .Add("s_s_c_web_server_sign2", webServerSign2)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -303,10 +308,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.KeyCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.KeyCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -324,7 +329,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("challenge", challenge)
                 .Add("api_server", apiServer)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -333,10 +338,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<GeeTestResponse>(
+            ? await GetResultAsync<GeeTestResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTest,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<GeeTestResponse>(
+            : await GetResultAsync<GeeTestResponse>(
                 response, CaptchaType.GeeTest,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -352,7 +357,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "capy")
                 .Add("captchakey", siteKey)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -361,10 +366,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<CapyResponse>(
+            ? await GetResultAsync<CapyResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.Capy,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<CapyResponse>(
+            : await GetResultAsync<CapyResponse>(
                 response, CaptchaType.Capy,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -386,7 +391,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "datadome")
                 .Add("captcha_url", captchaUrl)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -395,10 +400,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.DataDome,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.DataDome,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -424,7 +429,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("action", action)
                 .Add("data", data)
                 .Add("pagedata", pageData)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -433,10 +438,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<CloudflareTurnstileResponse>(
+            ? await GetResultAsync<CloudflareTurnstileResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CloudflareTurnstile,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<CloudflareTurnstileResponse>(
+            : await GetResultAsync<CloudflareTurnstileResponse>(
                 response, CaptchaType.CloudflareTurnstile,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -454,7 +459,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("pageurl", siteUrl)
                 .Add("api_server", apiServer)
                 .Add("div_id", divId)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -463,10 +468,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<LeminCroppedResponse>(
+            ? await GetResultAsync<LeminCroppedResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.LeminCropped,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<LeminCroppedResponse>(
+            : await GetResultAsync<LeminCroppedResponse>(
                 response, CaptchaType.LeminCropped,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -486,7 +491,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("pageurl", siteUrl)
                 .Add("challenge_script", challengeScript)
                 .Add("captcha_script", captchaScript)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -495,10 +500,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AmazonWaf,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AmazonWaf,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -519,7 +524,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "cybersiara")
                 .Add("master_url_id", masterUrlId)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -528,10 +533,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
 
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CyberSiAra,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.CyberSiAra,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -547,7 +552,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "mt_captcha")
                 .Add("sitekey", siteKey)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -556,10 +561,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.MtCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.MtCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -576,7 +581,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("misery_key", miseryKey)
                 .Add("api_key", apiKey)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -585,10 +590,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CutCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.CutCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -604,7 +609,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "friendly_captcha")
                 .Add("sitekey", siteKey)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -613,10 +618,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.FriendlyCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.FriendlyCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -633,7 +638,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("app_id", appId)
                 .Add("api_server", apiServer)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -642,10 +647,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AtbCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AtbCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -661,7 +666,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "tencent")
                 .Add("app_id", appId)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -670,10 +675,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<TencentCaptchaResponse>(
+            ? await GetResultAsync<TencentCaptchaResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TencentCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<TencentCaptchaResponse>(
+            : await GetResultAsync<TencentCaptchaResponse>(
                 response, CaptchaType.TencentCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -688,7 +693,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("key", ApiKey)
                 .Add("method", "audio")
                 .Add("body", base64)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertCapabilities(options))
@@ -697,10 +702,10 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false);
     }
@@ -716,7 +721,7 @@ public class TwoCaptchaService : CaptchaService
                 .Add("method", "geetest_v4")
                 .Add("captcha_id", captchaId)
                 .Add("pageurl", siteUrl)
-                .Add("soft_id", _softId)
+                .Add("soft_id", SoftId)
                 .Add("json", "1", UseJsonFlag)
                 .Add("header_acao", "1", AddAcaoHeader)
                 .Add(ConvertSessionParams(sessionParams))
@@ -725,23 +730,23 @@ public class TwoCaptchaService : CaptchaService
             .ConfigureAwait(false);
         
         return UseJsonFlag
-            ? await GetResult<GeeTestV4Response>(
+            ? await GetResultAsync<GeeTestV4Response>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTestV4,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<GeeTestV4Response>(
+            : await GetResultAsync<GeeTestV4Response>(
                 response, CaptchaType.GeeTestV4,
                 cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         TwoCaptchaResponse twoCaptchaResponse, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
         if (twoCaptchaResponse.IsErrorCode)
         {
-            throw new TaskCreationException(twoCaptchaResponse.Request!);
+            throw new TaskCreationException(twoCaptchaResponse.GetErrorMessage());
         }
 
         var task = new CaptchaTask(twoCaptchaResponse.Request!, type);
@@ -749,12 +754,14 @@ public class TwoCaptchaService : CaptchaService
         return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
 
-    internal async Task<T> GetResult<T>(
+    internal async Task<T> GetResultAsync<T>(
         string response, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
         if (IsErrorCode(response))
+        {
             throw new TaskCreationException(response);
+        }
 
         var task = new CaptchaTask(TakeSecondSlice(response), type);
 
@@ -847,7 +854,7 @@ public class TwoCaptchaService : CaptchaService
 
                 if (tcResponse.IsErrorCode)
                 {
-                    throw new TaskSolutionException(tcResponse.ErrorText!);
+                    throw new TaskSolutionException(tcResponse.GetErrorMessage());
                 }
 
                 return new StringResponse { Id = task.Id, Response = tcResponse.Request! } as T;

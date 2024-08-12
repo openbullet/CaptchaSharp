@@ -28,7 +28,7 @@ public class ImageTyperzService : CaptchaService
     /// <summary>
     /// The ID of the software developer.
     /// </summary>
-    private const int _affiliateId = 109;
+    private int AffiliateId { get; set; } = 109;
 
     /// <summary>
     /// Initializes a <see cref="ImageTyperzService"/>.
@@ -70,6 +70,11 @@ public class ImageTyperzService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync(
         string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         var response = await HttpClient.PostToStringAsync(
             "Forms/UploadFileAndGetTextNEWToken.ashx",
             GetAuthAffiliatePair()
@@ -106,7 +111,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2, cancellationToken)
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -129,7 +134,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
     }
 
@@ -151,7 +156,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
@@ -173,7 +178,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             response, CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false);
     }
 
@@ -194,7 +199,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestResponse>(
+        return await GetResultAsync<GeeTestResponse>(
             response, CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false);
     }
 
@@ -214,7 +219,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<CapyResponse>(
+        return await GetResultAsync<CapyResponse>(
             response, CaptchaType.Capy, cancellationToken).ConfigureAwait(false);
     }
 
@@ -235,7 +240,7 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<CloudflareTurnstileResponse>(
+        return await GetResultAsync<CloudflareTurnstileResponse>(
             response, CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false);
     }
 
@@ -254,13 +259,13 @@ public class ImageTyperzService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<GeeTestV4Response>(
+        return await GetResultAsync<GeeTestV4Response>(
             response, CaptchaType.GeeTestV4, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         string response, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
@@ -408,7 +413,7 @@ public class ImageTyperzService : CaptchaService
         => new StringPairCollection().Add("token", ApiKey);
 
     private StringPairCollection GetAuthAffiliatePair()
-        => GetAuthPair().Add("affiliateid", _affiliateId);
+        => GetAuthPair().Add("affiliateid", AffiliateId);
 
     private static bool IsError(string response)
         => response.StartsWith("ERROR:");

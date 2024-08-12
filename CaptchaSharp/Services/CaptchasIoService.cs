@@ -58,10 +58,10 @@ public class CaptchasIoService : CustomTwoCaptchaService
             .ConfigureAwait(false);
         
         var captchaResponse = UseJsonFlag
-            ? await GetResult<StringResponse>(
+            ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false)
-            : await GetResult<StringResponse>(
+            : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false);
         
@@ -75,7 +75,7 @@ public class CaptchasIoService : CustomTwoCaptchaService
     #endregion
     
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         TwoCaptchaResponse twoCaptchaResponse, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {

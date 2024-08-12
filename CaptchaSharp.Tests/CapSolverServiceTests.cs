@@ -1,4 +1,5 @@
-﻿using CaptchaSharp.Services;
+﻿using System.Reflection;
+using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;

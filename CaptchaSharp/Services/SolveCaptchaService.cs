@@ -30,7 +30,7 @@ public class SolveCaptchaService : CaptchaService
     /// <summary>
     /// The ID of the software developer.
     /// </summary>
-    private const string _affiliateId = "1f9531ae-f170-4beb-9148-09da563df4bd";
+    private string AffiliateId { get; set; } = "1f9531ae-f170-4beb-9148-09da563df4bd";
     
     /// <summary>
     /// Initializes a <see cref="SolveCaptchaService"/>.
@@ -125,7 +125,7 @@ public class SolveCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -151,7 +151,7 @@ public class SolveCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV3,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -191,7 +191,7 @@ public class SolveCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(response, CaptchaType.FunCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -231,7 +231,7 @@ public class SolveCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(response, CaptchaType.HCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -271,7 +271,7 @@ public class SolveCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<GeeTestResponse>(response, CaptchaType.GeeTest,
+        return await GetResultAsync<GeeTestResponse>(response, CaptchaType.GeeTest,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -307,7 +307,7 @@ public class SolveCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<CloudflareTurnstileResponse>(response, CaptchaType.CloudflareTurnstile,
+        return await GetResultAsync<CloudflareTurnstileResponse>(response, CaptchaType.CloudflareTurnstile,
             cancellationToken).ConfigureAwait(false);
     }
     #endregion
@@ -316,7 +316,7 @@ public class SolveCaptchaService : CaptchaService
     /// <summary>
     /// Gets the result of a task.
     /// </summary>
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         TaskCreationSolveCaptchaResponse antiCaptchaResponse, CaptchaType type,
         CancellationToken cancellationToken = default)
         where T : CaptchaResponse
@@ -401,7 +401,7 @@ public class SolveCaptchaService : CaptchaService
     {
         return new CaptchaTaskSolveCaptchaRequest
         {
-            AffiliateId = _affiliateId
+            AffiliateId = AffiliateId
         };
     }
     #endregion

@@ -67,7 +67,7 @@ public class DeathByCaptchaService : CaptchaService
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "user",
                 GetAuthPair(),
                 cancellationToken: cancellationToken)
@@ -98,7 +98,12 @@ public class DeathByCaptchaService : CaptchaService
     public override async Task<StringResponse> SolveImageCaptchaAsync(
         string base64, ImageCaptchaOptions? options = null, CancellationToken cancellationToken = default)
     {
-        var response = await HttpClient.PostAsync(
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
+        using var response = await HttpClient.PostAsync(
             "captcha",
             GetAuthPair()
                 .Add("captchafile", $"base64:{base64}")
@@ -106,7 +111,7 @@ public class DeathByCaptchaService : CaptchaService
             cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(HttpUtility.ParseQueryString(
+        return await GetResultAsync<StringResponse>(HttpUtility.ParseQueryString(
                 await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.ImageCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -122,7 +127,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
 
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 4)
@@ -130,7 +135,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.ReCaptchaV2, cancellationToken).ConfigureAwait(false);
     }
@@ -148,7 +153,7 @@ public class DeathByCaptchaService : CaptchaService
             MinScore = minScore
         }.WithSessionParams(sessionParams);
 
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 5)
@@ -156,7 +161,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false);
     }
@@ -172,7 +177,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
 
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 6)
@@ -180,7 +185,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -196,7 +201,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
 
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 7)
@@ -204,7 +209,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -223,7 +228,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
 
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 10)
@@ -231,7 +236,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.KeyCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -248,7 +253,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl,
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 8)
@@ -256,7 +261,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<GeeTestResponse>(
+        return await GetResultAsync<GeeTestResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false);
     }
@@ -272,7 +277,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 15)
@@ -280,7 +285,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<CapyResponse>(
+        return await GetResultAsync<CapyResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.Capy, cancellationToken).ConfigureAwait(false);
     }
@@ -306,7 +311,7 @@ public class DeathByCaptchaService : CaptchaService
             CaptchaUrl = captchaUrl
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 21)
@@ -314,7 +319,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.DataDome, cancellationToken).ConfigureAwait(false);
     }
@@ -337,7 +342,7 @@ public class DeathByCaptchaService : CaptchaService
             Action = action,
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 12)
@@ -345,7 +350,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<CloudflareTurnstileResponse>(
+        return await GetResultAsync<CloudflareTurnstileResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false);
     }
@@ -361,7 +366,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 14)
@@ -369,7 +374,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<LeminCroppedResponse>(
+        return await GetResultAsync<LeminCroppedResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.LeminCropped, cancellationToken).ConfigureAwait(false);
     }
@@ -389,7 +394,7 @@ public class DeathByCaptchaService : CaptchaService
             CaptchaJs = captchaScript
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 16)
@@ -397,7 +402,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.AmazonWaf, cancellationToken).ConfigureAwait(false);
     }
@@ -419,7 +424,7 @@ public class DeathByCaptchaService : CaptchaService
             UserAgent = sessionParams.UserAgent
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 17)
@@ -427,7 +432,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.CyberSiAra, cancellationToken).ConfigureAwait(false);
     }
@@ -443,7 +448,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 18)
@@ -451,7 +456,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.MtCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -468,7 +473,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 19)
@@ -476,7 +481,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.CutCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -492,7 +497,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 20)
@@ -500,7 +505,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.FriendlyCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -517,7 +522,7 @@ public class DeathByCaptchaService : CaptchaService
             throw new ArgumentException("The language is not supported by the service.");
         }
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 13)
@@ -527,7 +532,7 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.AudioCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -543,7 +548,7 @@ public class DeathByCaptchaService : CaptchaService
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
         
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
                     .Add("type", 9)
@@ -551,14 +556,14 @@ public class DeathByCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<GeeTestV4Response>(
+        return await GetResultAsync<GeeTestV4Response>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.GeeTestV4, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         NameValueCollection response, CaptchaType type, CancellationToken cancellationToken = default)
         where T : CaptchaResponse
     {
@@ -584,7 +589,7 @@ public class DeathByCaptchaService : CaptchaService
         CaptchaTask task, CancellationToken cancellationToken = default)
         where T : class
     {
-        var response = await HttpClient.GetAsync($"captcha/{task.Id}", cancellationToken).ConfigureAwait(false);
+        using var response = await HttpClient.GetAsync($"captcha/{task.Id}", cancellationToken).ConfigureAwait(false);
         var query = HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response));
 
         var text = query["text"];
@@ -678,7 +683,7 @@ public class DeathByCaptchaService : CaptchaService
             throw new NotSupportedException("This service doesn't allow reporting of good solutions");
         }
 
-        var response = await HttpClient.PostAsync(
+        using var response = await HttpClient.PostAsync(
                 $"captcha/{id}/report",
                 GetAuthPair(),
                 cancellationToken: cancellationToken)

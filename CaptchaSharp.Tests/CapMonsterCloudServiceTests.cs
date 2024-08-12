@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Threading.Tasks;
 using CaptchaSharp.Services;
 using Xunit;
@@ -11,6 +12,10 @@ public class CapMonsterCloudFixture : ServiceFixture
     {
         Service = new CapMonsterCloudService(
             Config.Credentials.CapMonsterCloudApiKey);
+        
+        Service.GetType().GetProperty("SoftId",
+            BindingFlags.NonPublic | BindingFlags.Instance)?
+            .SetValue(Service, null);
     }
 }
 
@@ -42,4 +47,5 @@ public class CapMonsterCloudServiceTests(CapMonsterCloudFixture fixture, ITestOu
     [Fact] public Task SolveCloudflareTurnstileAsync_WithProxy_ValidSolution() => CloudflareTurnstileTest_WithProxy();
     [Fact] public Task SolveGeeTestV4Async_NoProxy_ValidSolution() => GeeTestV4Test_NoProxy();
     [Fact] public Task SolveGeeTestV4Async_WithProxy_ValidSolution() => GeeTestV4Test_WithProxy();
+    [Fact] public Task SolveCloudflareChallengePageAsync_WithProxy_ValidSolution() => CloudflareChallengePageTest_WithProxy();
 }

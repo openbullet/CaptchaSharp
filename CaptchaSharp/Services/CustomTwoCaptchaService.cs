@@ -23,7 +23,7 @@ public class CustomTwoCaptchaService : TwoCaptchaService
         SetupHttpClient(baseUri, overrideHostHeader);
 
         // Services that implement the 2captcha API don't always support
-        // JSON responses so we will not set the json=1 flag
+        // JSON responses, so we will not set the json=1 flag
         UseJsonFlag = false;
     }
 

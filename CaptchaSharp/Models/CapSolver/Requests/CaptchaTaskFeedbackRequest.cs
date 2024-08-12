@@ -4,8 +4,6 @@ namespace CaptchaSharp.Models.CapSolver.Requests;
 
 internal class CaptchaTaskFeedbackRequest : Request
 {
-    public required string AppId { get; set; }
-    
     public required string TaskId { get; set; }
     
     public required TaskResultFeedback Result { get; set; }

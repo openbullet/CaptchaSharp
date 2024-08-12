@@ -67,6 +67,11 @@ public class AntiCaptchaService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 AddImageCapabilities(
@@ -82,7 +87,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ImageCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ImageCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -152,7 +157,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV2,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -180,7 +185,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.ReCaptchaV3,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -223,7 +228,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.FunCaptcha, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha, 
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -263,7 +268,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(response, CaptchaType.HCaptcha,
+        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -301,7 +306,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestResponse>(response, CaptchaType.GeeTest,
+        return await GetResultAsync<GeeTestResponse>(response, CaptchaType.GeeTest,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -339,7 +344,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<CloudflareTurnstileResponse>(response, CaptchaType.CloudflareTurnstile,
+        return await GetResultAsync<CloudflareTurnstileResponse>(response, CaptchaType.CloudflareTurnstile,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -375,7 +380,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
+        return await GetResultAsync<GeeTestV4Response>(response, CaptchaType.GeeTestV4,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -385,7 +390,7 @@ public class AntiCaptchaService : CaptchaService
     /// <summary>
     /// Gets the result of a task.
     /// </summary>
-    protected async Task<T> GetResult<T>(
+    protected async Task<T> GetResultAsync<T>(
         TaskCreationAntiCaptchaResponse antiCaptchaResponse, CaptchaType type,
         CancellationToken cancellationToken = default)
         where T : CaptchaResponse
@@ -436,6 +441,11 @@ public class AntiCaptchaService : CaptchaService
         {
             return ParseDataDomeSolution(task.Id, solution) as T;
         }
+        
+        if (task.Type == CaptchaType.CloudflareChallengePage)
+        {
+            return ParseCloudflareChallengePageSolution(task.Id, solution) as T;
+        }
 
         result.AntiCaptchaTaskSolution = task.Type switch
         {
@@ -458,6 +468,11 @@ public class AntiCaptchaService : CaptchaService
     protected virtual StringResponse ParseDataDomeSolution(string taskId, JToken? solution)
     {
         throw new NotImplementedException("DataDome captcha solving is not supported");
+    }
+    
+    protected virtual StringResponse ParseCloudflareChallengePageSolution(string taskId, JToken? solution)
+    {
+        throw new NotImplementedException("Cloudflare challenge page solving is not supported");
     }
     #endregion
 

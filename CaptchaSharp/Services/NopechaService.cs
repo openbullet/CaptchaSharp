@@ -62,6 +62,11 @@ public class NopechaService : CaptchaService
         string base64, ImageCaptchaOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(base64))
+        {
+            throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
+        }
+        
         var payload = new NopechaSolveImageRequest
         {
             ApiKey = ApiKey,
@@ -74,7 +79,7 @@ public class NopechaService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
                 response, CaptchaType.ImageCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -101,7 +106,7 @@ public class NopechaService : CaptchaService
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV2, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -129,7 +134,7 @@ public class NopechaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV3, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -155,7 +160,7 @@ public class NopechaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<StringResponse>(
+        return await GetResultAsync<StringResponse>(
                 response, CaptchaType.HCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
@@ -191,14 +196,14 @@ public class NopechaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         
-        return await GetResult<CloudflareTurnstileResponse>(
+        return await GetResultAsync<CloudflareTurnstileResponse>(
                 response, CaptchaType.CloudflareTurnstile, cancellationToken)
             .ConfigureAwait(false);
     }
     #endregion
     
     #region Getting the result
-    private async Task<T> GetResult<T>(
+    private async Task<T> GetResultAsync<T>(
         NopechaDataResponse response, CaptchaType captchaType, CancellationToken cancellationToken)
         where T : CaptchaResponse
     {
