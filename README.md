@@ -29,6 +29,7 @@ This library supports the following captcha solving services
 - [bestcaptchasolver.com](https://bestcaptchasolver.com/)
 - [solvecaptcha.net](https://solvecaptcha.net/)
 - [cap.guru](https://cap.guru/)
+- [aycd.io](https://aycd.io/)
 
 ## Supported Captcha Types
 This library supports the following captcha types
@@ -44,6 +45,7 @@ This library supports the following captcha types
 - Capy
 - DataDome
 - Cloudflare Turnstile
+- Cloudflare Challenge page
 - Lemin Cropped
 - Amazon WAF
 - Cyber SiARA
