@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Threading.Tasks;
 using CaptchaSharp.Services;
 using Xunit;
@@ -11,6 +12,10 @@ public class CapMonsterCloudFixture : ServiceFixture
     {
         Service = new CapMonsterCloudService(
             Config.Credentials.CapMonsterCloudApiKey);
+        
+        Service.GetType().GetProperty("SoftId",
+            BindingFlags.NonPublic | BindingFlags.Instance)?
+            .SetValue(Service, null);
     }
 }
 

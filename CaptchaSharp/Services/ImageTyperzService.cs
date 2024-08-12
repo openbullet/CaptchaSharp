@@ -28,7 +28,7 @@ public class ImageTyperzService : CaptchaService
     /// <summary>
     /// The ID of the software developer.
     /// </summary>
-    private const int _affiliateId = 109;
+    private int AffiliateId { get; set; } = 109;
 
     /// <summary>
     /// Initializes a <see cref="ImageTyperzService"/>.
@@ -413,7 +413,7 @@ public class ImageTyperzService : CaptchaService
         => new StringPairCollection().Add("token", ApiKey);
 
     private StringPairCollection GetAuthAffiliatePair()
-        => GetAuthPair().Add("affiliateid", _affiliateId);
+        => GetAuthPair().Add("affiliateid", AffiliateId);
 
     private static bool IsError(string response)
         => response.StartsWith("ERROR:");

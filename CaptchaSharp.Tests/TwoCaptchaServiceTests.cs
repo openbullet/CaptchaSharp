@@ -1,3 +1,4 @@
+using System.Reflection;
 using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
@@ -10,6 +11,10 @@ public class TwoCaptchaFixture : ServiceFixture
     public TwoCaptchaFixture()
     {
         Service = new TwoCaptchaService(Config.Credentials.TwoCaptchaApiKey);
+        
+        Service.GetType().GetProperty("SoftId",
+                BindingFlags.NonPublic | BindingFlags.Instance)?
+            .SetValue(Service, 0);
     }
 }
 

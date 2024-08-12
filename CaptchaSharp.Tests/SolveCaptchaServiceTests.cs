@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Threading.Tasks;
 using CaptchaSharp.Services;
 using Xunit;
@@ -11,6 +12,10 @@ public class SolveCaptchaFixture : ServiceFixture
     {
         Service = new SolveCaptchaService(
             Config.Credentials.SolveCaptchaApiKey);
+        
+        Service.GetType().GetProperty("AffiliateId",
+                BindingFlags.NonPublic | BindingFlags.Instance)?
+            .SetValue(Service, "123");
     }
 }
 

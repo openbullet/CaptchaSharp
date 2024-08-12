@@ -1,4 +1,5 @@
-﻿using CaptchaSharp.Services;
+﻿using System.Reflection;
+using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -10,6 +11,10 @@ public class AntiCaptchaFixture : ServiceFixture
     public AntiCaptchaFixture()
     {
         Service = new AntiCaptchaService(Config.Credentials.AntiCaptchaApiKey);
+        
+        Service.GetType().GetProperty("SoftId", 
+                BindingFlags.NonPublic | BindingFlags.Instance)?
+            .SetValue(Service, null);
     }
 }
 

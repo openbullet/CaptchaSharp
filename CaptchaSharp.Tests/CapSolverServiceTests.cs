@@ -1,4 +1,5 @@
-﻿using CaptchaSharp.Services;
+﻿using System.Reflection;
+using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -10,6 +11,10 @@ public class CapSolverFixture : ServiceFixture
     public CapSolverFixture()
     {
         Service = new CapSolverService(Config.Credentials.CapSolverApiKey);
+        
+        Service.GetType().GetProperty("AppId",
+                BindingFlags.NonPublic | BindingFlags.Instance)?
+            .SetValue(Service, "123");
     }
 }
 

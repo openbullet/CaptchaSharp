@@ -30,7 +30,7 @@ public class SolveCaptchaService : CaptchaService
     /// <summary>
     /// The ID of the software developer.
     /// </summary>
-    private const string _affiliateId = "1f9531ae-f170-4beb-9148-09da563df4bd";
+    private string AffiliateId { get; set; } = "1f9531ae-f170-4beb-9148-09da563df4bd";
     
     /// <summary>
     /// Initializes a <see cref="SolveCaptchaService"/>.
@@ -401,7 +401,7 @@ public class SolveCaptchaService : CaptchaService
     {
         return new CaptchaTaskSolveCaptchaRequest
         {
-            AffiliateId = _affiliateId
+            AffiliateId = AffiliateId
         };
     }
     #endregion

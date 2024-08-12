@@ -30,7 +30,7 @@ public class CapSolverService : CaptchaService
     /// <summary>
     /// The ID of the app.
     /// </summary>
-    private const string _appId = "FE552FC0-8A06-4B44-BD30-5B9DDA2A4194";
+    private string AppId { get; set; } = "FE552FC0-8A06-4B44-BD30-5B9DDA2A4194";
 
     /// <summary>
     /// Initializes a <see cref="CapSolverService"/>.
@@ -78,7 +78,7 @@ public class CapSolverService : CaptchaService
                 new CaptchaTaskRequest
                 {
                     ClientKey = ApiKey,
-                    AppId = _appId,
+                    AppId = AppId,
                     Task = new ImageCaptchaTask
                     {
                         Body = base64
@@ -572,7 +572,7 @@ public class CapSolverService : CaptchaService
                 new CaptchaTaskFeedbackRequest
                 {
                     ClientKey = ApiKey,
-                    AppId = _appId,
+                    AppId = AppId,
                     TaskId = id,
                     Result = new TaskResultFeedback
                     {
@@ -595,7 +595,7 @@ public class CapSolverService : CaptchaService
         return new CaptchaTaskRequest
         {
             ClientKey = ApiKey,
-            AppId = _appId
+            AppId = AppId
         };
     }
     #endregion

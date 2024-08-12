@@ -1291,7 +1291,7 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.CapSolverService._appId">
+        <member name="P:CaptchaSharp.Services.CapSolverService.AppId">
             <summary>
             The ID of the app.
             </summary>
@@ -2272,7 +2272,7 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.ImageTyperzService._affiliateId">
+        <member name="P:CaptchaSharp.Services.ImageTyperzService.AffiliateId">
             <summary>
             The ID of the software developer.
             </summary>
@@ -2520,7 +2520,7 @@
             Your secret api key.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.SolveCaptchaService._affiliateId">
+        <member name="P:CaptchaSharp.Services.SolveCaptchaService.AffiliateId">
             <summary>
             The ID of the software developer.
             </summary>
@@ -2619,7 +2619,7 @@
             cross-domain AJAX requests in web applications.
             </summary>
         </member>
-        <member name="F:CaptchaSharp.Services.TwoCaptchaService._softId">
+        <member name="P:CaptchaSharp.Services.TwoCaptchaService.SoftId">
             <summary>The ID of the software developer.</summary>
         </member>
         <member name="M:CaptchaSharp.Services.TwoCaptchaService.#ctor(System.String,System.Net.Http.HttpClient)">

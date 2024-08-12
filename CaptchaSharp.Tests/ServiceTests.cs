@@ -92,6 +92,9 @@ public class ServiceTests
             text: "What is 2+2?",
             options);
 
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+        
         Assert.Equal("4", solution.Response);
     }
 
@@ -114,6 +117,9 @@ public class ServiceTests
             base64: _captchaImageBase64,
             options);
 
+        _output.WriteLine($"Captcha ID: {solution.Id}");
+        _output.WriteLine($"Response: {solution.Response}");
+        
         Assert.Equal("w68hp", solution.Response.Replace(" ", "").ToLower());
     }
 
