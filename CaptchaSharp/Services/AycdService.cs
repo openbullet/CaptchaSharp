@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Enums;
@@ -391,8 +392,8 @@ public class AycdService : CaptchaService
 
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         _accessToken = json.Deserialize<AycdAccessToken>();
-        HttpClient.DefaultRequestHeaders.Add("Authorization",
-            $"Token {_accessToken.Token}");
+        HttpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Token", _accessToken.Token);
     }
     #endregion
 }
