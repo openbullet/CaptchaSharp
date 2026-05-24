@@ -9,16 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.0.x
 
     # Don't override the version of the package, trust the version in the project file
     - name: Create Nuget Package
-      run: dotnet pack --output nupkgs --configuration Release
+      run: dotnet pack CaptchaSharp/CaptchaSharp.csproj --output nupkgs --configuration Release
 
     - name: Upload Nuget Package
       run: dotnet nuget push nupkgs/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
