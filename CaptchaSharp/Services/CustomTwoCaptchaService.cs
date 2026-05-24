@@ -17,7 +17,7 @@ public class CustomTwoCaptchaService : TwoCaptchaService
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
     /// <param name="overrideHostHeader">Whether to override the Host header to 2captcha.com.</param>
     public CustomTwoCaptchaService(
-        string apiKey, Uri baseUri, HttpClient? httpClient = null, bool overrideHostHeader = true)
+        string apiKey, Uri baseUri, HttpClient? httpClient = null, bool overrideHostHeader = false)
         : base(apiKey, httpClient)
     {
         SetupHttpClient(baseUri, overrideHostHeader);
@@ -27,7 +27,7 @@ public class CustomTwoCaptchaService : TwoCaptchaService
         UseJsonFlag = false;
     }
 
-    private void SetupHttpClient(Uri baseUri, bool overrideHostHeader = true)
+    private void SetupHttpClient(Uri baseUri, bool overrideHostHeader = false)
     {
         if (overrideHostHeader)
         {
