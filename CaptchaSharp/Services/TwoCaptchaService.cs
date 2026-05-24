@@ -57,7 +57,7 @@ public class TwoCaptchaService : CaptchaService
     public TwoCaptchaService(string apiKey, HttpClient? httpClient = null) : base(httpClient)
     {
         ApiKey = apiKey;
-        HttpClient.BaseAddress = new Uri("http://2captcha.com");
+        HttpClient.BaseAddress = new Uri("https://2captcha.com");
     }
 
     #region Getting the Balance

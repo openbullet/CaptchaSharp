@@ -20,7 +20,7 @@ public class CaptchaAiService : CustomTwoCaptchaService
     /// <param name="apiKey">The API key to use.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
     public CaptchaAiService(string apiKey, HttpClient? httpClient = null)
-        : base(apiKey, new Uri("http://ocr.captchaai.com"), httpClient) { }
+        : base(apiKey, new Uri("https://ocr.captchaai.com"), httpClient) { }
 
     #region Reporting the solution
     /// <inheritdoc/>
