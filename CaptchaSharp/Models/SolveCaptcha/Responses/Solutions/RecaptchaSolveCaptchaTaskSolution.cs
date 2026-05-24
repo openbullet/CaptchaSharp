@@ -7,7 +7,7 @@ internal class RecaptchaSolveCaptchaTaskSolution : SolveCaptchaTaskSolution
 {
     [JsonProperty("gRecaptchaResponse")]
     public string? GRecaptchaResponse { get; set; }
-    
+
     public override CaptchaResponse ToCaptchaResponse(string id)
     {
         return new StringResponse

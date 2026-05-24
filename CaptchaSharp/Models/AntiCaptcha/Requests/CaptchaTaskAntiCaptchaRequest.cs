@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
+using CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.AntiCaptcha.Requests;
@@ -12,7 +12,7 @@ public class CaptchaTaskAntiCaptchaRequest : AntiCaptchaRequest
     /// The task to solve.
     /// </summary>
     public AntiCaptchaTaskProxyless Task { get; set; } = null!;
-    
+
     /// <summary>
     /// The soft ID to use. Default is 0.
     /// </summary>

@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.CapSolver.Responses;
+namespace CaptchaSharp.Models.CapSolver.Responses;
 
 internal class TaskCreationResponse : Response
 {

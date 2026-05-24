@@ -7,10 +7,10 @@ internal class NopechaSolveCloudflareTurnstileRequest : NopechaSolveTokenRequest
 {
     [JsonProperty("sitekey")]
     public required string SiteKey { get; set; }
-    
+
     [JsonProperty("url")]
     public required string Url { get; set; }
-    
+
     [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
     public Dictionary<string, object>? Data { get; set; } = new();
 

@@ -21,12 +21,12 @@ public class EndCaptchaService : CaptchaService
     /// Your username.
     /// </summary>
     public string Username { get; set; }
-    
+
     /// <summary>
     /// Your password.
     /// </summary>
     public string Password { get; set; }
-    
+
     /// <summary>
     /// Initializes a <see cref="EndCaptchaService"/>.
     /// </summary>
@@ -40,7 +40,7 @@ public class EndCaptchaService : CaptchaService
         Password = password;
         HttpClient.BaseAddress = new Uri("http://api.endcaptcha.com");
     }
-    
+
     #region Getting the Balance
     /// <inheritdoc />
     public override async Task<decimal> GetBalanceAsync(
@@ -63,7 +63,7 @@ public class EndCaptchaService : CaptchaService
         return decimal.Parse(response);
     }
     #endregion
-    
+
     #region Solve Methods
     /// <inheritdoc />
     public override async Task<StringResponse> SolveImageCaptchaAsync(
@@ -74,16 +74,16 @@ public class EndCaptchaService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         // It doesn't work when using base64:... as per the docs
         var content = new StringPairCollection()
             .Add("username", Username)
             .Add("password", Password)
             .ToMultipartFormDataContent();
-        
+
         var bytes = Convert.FromBase64String(base64);
         content.Add(new ByteArrayContent(bytes), "image", "image.jpg");
-        
+
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
             content,
@@ -105,7 +105,7 @@ public class EndCaptchaService : CaptchaService
             GoogleKey = siteKey,
             PageUrl = siteUrl,
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
             new StringPairCollection()
@@ -134,7 +134,7 @@ public class EndCaptchaService : CaptchaService
             Action = action,
             MinScore = minScore
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
             new StringPairCollection()
@@ -145,7 +145,7 @@ public class EndCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV3, cancellationToken)
             .ConfigureAwait(false);
@@ -161,7 +161,7 @@ public class EndCaptchaService : CaptchaService
             PublicKey = publicKey,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
             new StringPairCollection()
@@ -172,7 +172,7 @@ public class EndCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.FunCaptcha, cancellationToken)
             .ConfigureAwait(false);
@@ -188,7 +188,7 @@ public class EndCaptchaService : CaptchaService
             SiteKey = siteKey,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostMultipartToStringAsync(
             "upload",
             new StringPairCollection()
@@ -199,37 +199,37 @@ public class EndCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.HCaptcha, cancellationToken)
             .ConfigureAwait(false);
     }
     #endregion
-    
+
     #region Getting the result
     private async Task<T> GetResultAsync<T>(
-        string response, CaptchaType type, 
+        string response, CaptchaType type,
         CancellationToken cancellationToken = default) where T : CaptchaResponse
     {
         if (response.StartsWith("ERROR:"))
         {
             throw new TaskSolutionException(response);
         }
-        
+
         if (response.StartsWith("UNSOLVED_YET:"))
         {
             var task = new CaptchaTask(response.Split('/')[1], type);
             return await GetResultAsync<T>(task, cancellationToken)
                 .ConfigureAwait(false);
         }
-        
+
         return (new StringResponse
         {
             Id = "0",
             Response = response
         } as T)!;
     }
-    
+
     /// <inheritdoc />
     protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
@@ -242,17 +242,17 @@ public class EndCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (response.StartsWith("ERROR:"))
         {
             throw new TaskSolutionException(response);
         }
-        
+
         if (response.StartsWith("UNSOLVED_YET"))
         {
             return null;
         }
-        
+
         return new StringResponse
         {
             Id = task.Id,

@@ -9,7 +9,7 @@ public class LeminCroppedResponse : CaptchaResponse
     /// The answer to the challenge.
     /// </summary>
     public required string Answer { get; set; }
-    
+
     /// <summary>
     /// The challenge ID.
     /// </summary>

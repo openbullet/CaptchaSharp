@@ -12,7 +12,7 @@ public class CapMonsterCloudFixture : ServiceFixture
     {
         Service = new CapMonsterCloudService(
             Config.Credentials.CapMonsterCloudApiKey);
-        
+
         Service.GetType().GetProperty("SoftId",
             BindingFlags.NonPublic | BindingFlags.Instance)?
             .SetValue(Service, null);
@@ -23,10 +23,10 @@ public class CapMonsterCloudServiceTests(CapMonsterCloudFixture fixture, ITestOu
     : ServiceTests(fixture, output), IClassFixture<CapMonsterCloudFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
-    
+
     // Do not overuse this method, as it will get your account banned.
     [Fact] public Task ReportSolutionAsync_ValidCaptcha_Reported() => ReportImageSolutionTest(correct: false);
-    
+
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
     [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
     [Fact] public Task SolveRecaptchaV2Async_WithProxy_ValidSolution() => RecaptchaV2Test_WithProxy();

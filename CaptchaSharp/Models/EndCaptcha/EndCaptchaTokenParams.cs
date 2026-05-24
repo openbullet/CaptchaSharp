@@ -6,7 +6,7 @@ internal class EndCaptchaTokenParams
 {
     [JsonProperty("proxy", NullValueHandling = NullValueHandling.Ignore)]
     public string? Proxy { get; set; }
-    
+
     [JsonProperty("proxytype", NullValueHandling = NullValueHandling.Ignore)]
     public string? ProxyType { get; set; }
 
@@ -16,12 +16,12 @@ internal class EndCaptchaTokenParams
         {
             return this;
         }
-        
+
         var proxy = sessionParams.Proxy;
-        
+
         Proxy = $"{proxy.Type.ToString().ToLower()}://{proxy.Host}:{proxy.Port}";
         ProxyType = proxy.Type.ToString().ToUpper();
-        
+
         return this;
     }
 }

@@ -21,7 +21,7 @@ public class MetaBypassTechFixture : ServiceFixture
     }
 }
 
-public class MetaBypassTechServiceTests(MetaBypassTechFixture fixture, ITestOutputHelper output) 
+public class MetaBypassTechServiceTests(MetaBypassTechFixture fixture, ITestOutputHelper output)
     : ServiceTests(fixture, output), IClassFixture<MetaBypassTechFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();

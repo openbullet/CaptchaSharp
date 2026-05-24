@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using System;
 using System.Net.Http;
@@ -32,7 +32,7 @@ public class CapMonsterService : CustomTwoCaptchaService
         if (!base64.StartsWith("base64,"))
         {
             base64 = "base64," + base64;
-        }   
+        }
 
         var response = await HttpClient.PostToStringAsync(
                 "in.php",

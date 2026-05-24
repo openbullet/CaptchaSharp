@@ -27,7 +27,7 @@ public static class HttpClientExtensions
         return await httpClient.GetAsync($"{url}?{pairs.ToHttpQueryString()}", cancellationToken)
             .ConfigureAwait(false);
     }
-    
+
     /// <summary>
     /// Automatically builds a GET query string from a <see cref="StringPairCollection"/>
     /// and appends it to the provided URL. The response is then deserialized to the provided type.
@@ -95,7 +95,7 @@ public static class HttpClientExtensions
         using var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <summary>
     /// Sends a POST request with the desired <see cref="MultipartFormDataContent"/> and reads the
     /// response as a <see cref="string"/>. The response is then deserialized to the provided type.
@@ -117,17 +117,17 @@ public static class HttpClientExtensions
         this HttpClient httpClient, string url, object content, bool camelizeKeys = true,
         CancellationToken cancellationToken = default)
     {
-        var json = camelizeKeys 
+        var json = camelizeKeys
             ? content.SerializeCamelCase()
             : JsonConvert.SerializeObject(content);
 
         using var response = await httpClient.PostAsync(url,
             new StringContent(json, Encoding.UTF8, "application/json"),
             cancellationToken).ConfigureAwait(false);
-        
+
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <summary>
     /// Automatically builds a POST json string from a given object using <see cref="Encoding.UTF8"/> encoding
     /// </summary>
@@ -143,7 +143,7 @@ public static class HttpClientExtensions
             new StringContent(json, Encoding.UTF8, "application/json"),
             cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <summary>
     /// Automatically builds a POST json string from a given object using <see cref="Encoding.UTF8"/> encoding
     /// and application/json Content-Type. The response is then deserialized to the provided type.

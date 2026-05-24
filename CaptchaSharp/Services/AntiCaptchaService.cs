@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.AntiCaptcha.Requests;
@@ -71,7 +71,7 @@ public class AntiCaptchaService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 AddImageCapabilities(
@@ -150,7 +150,7 @@ public class AntiCaptchaService : CaptchaService
                 };
             }
         }
-            
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 content,
@@ -228,7 +228,7 @@ public class AntiCaptchaService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -238,7 +238,7 @@ public class AntiCaptchaService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-            
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new HCaptchaTask
@@ -261,7 +261,7 @@ public class AntiCaptchaService : CaptchaService
                 EnterprisePayload = enterprisePayload is null ? null : JObject.Parse(enterprisePayload)
             };
         }
-            
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 content,
@@ -278,7 +278,7 @@ public class AntiCaptchaService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-            
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new GeeTestTask
@@ -316,7 +316,7 @@ public class AntiCaptchaService : CaptchaService
         string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-            
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new TurnstileTask
@@ -337,7 +337,7 @@ public class AntiCaptchaService : CaptchaService
                 TurnstileCData = data
             };
         }
-            
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 content,
@@ -354,7 +354,7 @@ public class AntiCaptchaService : CaptchaService
         CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-            
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new GeeTestTask
@@ -373,7 +373,7 @@ public class AntiCaptchaService : CaptchaService
                 Version = 4
             };
         }
-            
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 content,
@@ -431,17 +431,17 @@ public class AntiCaptchaService : CaptchaService
 
         var jObject = JObject.Parse(response);
         var solution = jObject["solution"];
-            
+
         if (solution is null)
         {
             throw new TaskSolutionException(response);
         }
-        
+
         if (task.Type == CaptchaType.DataDome)
         {
             return ParseDataDomeSolution(task.Id, solution) as T;
         }
-        
+
         if (task.Type == CaptchaType.CloudflareChallengePage)
         {
             return ParseCloudflareChallengePageSolution(task.Id, solution) as T;
@@ -449,7 +449,7 @@ public class AntiCaptchaService : CaptchaService
 
         result.AntiCaptchaTaskSolution = task.Type switch
         {
-            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha or CaptchaType.ReCaptchaMobile => 
+            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha or CaptchaType.ReCaptchaMobile =>
                 solution.ToObject<RecaptchaAntiCaptchaTaskSolution>()! as AntiCaptchaTaskSolution,
             CaptchaType.FunCaptcha => solution.ToObject<FuncaptchaAntiCaptchaTaskSolution>()!,
             CaptchaType.ImageCaptcha => solution.ToObject<ImageCaptchaAntiCaptchaTaskSolution>(),
@@ -469,7 +469,7 @@ public class AntiCaptchaService : CaptchaService
     {
         throw new NotImplementedException("DataDome captcha solving is not supported");
     }
-    
+
     protected virtual StringResponse ParseCloudflareChallengePageSolution(string taskId, JToken? solution)
     {
         throw new NotImplementedException("Cloudflare challenge page solving is not supported");
@@ -489,12 +489,12 @@ public class AntiCaptchaService : CaptchaService
                 throw new NotSupportedException(
                     "Reporting correct solutions is only supported for ReCaptchaV2 and ReCaptchaV3");
             }
-            
+
             await HttpClient.PostJsonToStringAsync(
                 "reportCorrectRecaptcha",
                 new ReportIncorrectAntiCaptchaRequest { ClientKey = ApiKey, TaskId = int.Parse(id) },
                 cancellationToken: cancellationToken).ConfigureAwait(false);
-            
+
             return;
         }
 

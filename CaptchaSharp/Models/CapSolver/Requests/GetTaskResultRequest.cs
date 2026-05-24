@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.CapSolver.Requests;
+namespace CaptchaSharp.Models.CapSolver.Requests;
 
 internal class GetTaskResultRequest : Request
 {

@@ -39,7 +39,7 @@ public class TwoCaptchaService : CaptchaService
 
     /// <summary>The ID of the software developer.</summary>
     private int SoftId { get; set; } = 2658;
-    
+
     private readonly ImmutableList<CaptchaLanguage> _supportedAudioLanguages = new List<CaptchaLanguage>()
     {
         CaptchaLanguage.English,
@@ -65,7 +65,7 @@ public class TwoCaptchaService : CaptchaService
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.GetStringAsync("res.php",
-            new StringPairCollection() 
+            new StringPairCollection()
                 .Add("key", ApiKey)
                 .Add("action", "getbalance")
                 .Add("json", Convert.ToInt32(UseJsonFlag).ToString()),
@@ -127,7 +127,7 @@ public class TwoCaptchaService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -229,7 +229,7 @@ public class TwoCaptchaService : CaptchaService
             .Add("json", "1", UseJsonFlag)
             .Add("header_acao", "1", AddAcaoHeader)
             .Add(ConvertSessionParams(sessionParams));
-        
+
         // If data is not null and is a JSON object, set
         // data[key] = value in the request for each key-value pair
         if (!string.IsNullOrEmpty(data) && data.StartsWith('{') && data.EndsWith('}'))
@@ -240,7 +240,7 @@ public class TwoCaptchaService : CaptchaService
                 pairs.Add($"data[{property.Name}]", property.Value.ToString());
             }
         }
-        
+
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             pairs.ToMultipartFormDataContent(),
             cancellationToken)
@@ -384,7 +384,7 @@ public class TwoCaptchaService : CaptchaService
         {
             throw new ArgumentException("A proxy with a User-Agent is required for DataDome captchas.");
         }
-            
+
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -419,7 +419,7 @@ public class TwoCaptchaService : CaptchaService
         {
             throw new ArgumentException("A User-Agent is required for Cloudflare Turnstile captchas.");
         }
-            
+
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -517,7 +517,7 @@ public class TwoCaptchaService : CaptchaService
         {
             throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
         }
-        
+
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
             new StringPairCollection()
                 .Add("key", ApiKey)
@@ -559,7 +559,7 @@ public class TwoCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return UseJsonFlag
             ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.MtCaptcha,
@@ -588,7 +588,7 @@ public class TwoCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return UseJsonFlag
             ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.CutCaptcha,
@@ -616,7 +616,7 @@ public class TwoCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return UseJsonFlag
             ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.FriendlyCaptcha,
@@ -645,7 +645,7 @@ public class TwoCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return UseJsonFlag
             ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AtbCaptcha,
@@ -673,7 +673,7 @@ public class TwoCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return UseJsonFlag
             ? await GetResultAsync<TencentCaptchaResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.TencentCaptcha,
@@ -700,7 +700,7 @@ public class TwoCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return UseJsonFlag
             ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AudioCaptcha,
@@ -728,7 +728,7 @@ public class TwoCaptchaService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return UseJsonFlag
             ? await GetResultAsync<GeeTestV4Response>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.GeeTestV4,
@@ -817,7 +817,7 @@ public class TwoCaptchaService : CaptchaService
                     {
                         throw new TaskSolutionException("No solution found");
                     }
-                    
+
                     if (solution.Type == JTokenType.Object)
                     {
                         return response.Deserialize<TwoCaptchaCapyResponse>()
@@ -839,7 +839,7 @@ public class TwoCaptchaService : CaptchaService
                     return response.Deserialize<TwoCaptchaAmazonWafResponse>()
                         .Request!.ToStringResponse(task.Id) as T;
                 }
-                else if (task.Type == CaptchaType.TencentCaptcha) 
+                else if (task.Type == CaptchaType.TencentCaptcha)
                 {
                     return response.Deserialize<TwoCaptchaTencentCaptchaResponse>()
                         .Request!.ToTencentCaptchaResponse(task.Id) as T;
@@ -872,7 +872,7 @@ public class TwoCaptchaService : CaptchaService
                 CaptchaType.GeeTest => response.Deserialize<GeeTestSolution>().ToGeeTestResponse(task.Id) as T,
                 CaptchaType.Capy => response.Deserialize<CapySolution>().ToCapyResponse(task.Id) as T,
                 _ => new StringResponse { Id = task.Id, Response = response } as T
-            };   
+            };
         }
         catch (Exception ex)
         {
@@ -924,14 +924,14 @@ public class TwoCaptchaService : CaptchaService
         {
             return [];
         }
-            
+
         var pairs = new List<(string, string)>();
-            
+
         if (sessionParams.UserAgent is not null)
         {
             pairs.Add(("userAgent", sessionParams.UserAgent));
         }
-        
+
         var proxy = sessionParams.Proxy;
 
         if (proxy is null)
@@ -1065,17 +1065,17 @@ public class TwoCaptchaService : CaptchaService
 
         return capabilities;
     }
-    
+
     /// <summary></summary>
     protected List<(string, string)> ConvertCapabilities(AudioCaptchaOptions? options)
     {
         var language = options?.CaptchaLanguage ?? CaptchaLanguage.English;
-        
+
         if (!_supportedAudioLanguages.Contains(language))
         {
             throw new ArgumentException("The language is not supported by the service.");
         }
-        
+
         return [("lang", language.ToIso6391Code())];
     }
     #endregion

@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Models.CaptchaResponses;
+using CaptchaSharp.Models.CaptchaResponses;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.TwoCaptcha;
@@ -12,10 +12,10 @@ internal class CapySolution
 {
     [JsonProperty("captchakey")]
     public required string CaptchaKey { get; set; }
-    
+
     [JsonProperty("challengekey")]
     public required string ChallengeKey { get; set; }
-    
+
     [JsonProperty("answer")]
     public required string Answer { get; set; }
 

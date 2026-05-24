@@ -31,7 +31,7 @@ public class SolveCaptchaService : CaptchaService
     /// The ID of the software developer.
     /// </summary>
     private string AffiliateId { get; set; } = "1f9531ae-f170-4beb-9148-09da563df4bd";
-    
+
     /// <summary>
     /// Initializes a <see cref="SolveCaptchaService"/>.
     /// </summary>
@@ -44,7 +44,7 @@ public class SolveCaptchaService : CaptchaService
         HttpClient.DefaultRequestHeaders.Authorization
             = new AuthenticationHeaderValue("Bearer", apiKey);
     }
-    
+
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
@@ -61,7 +61,7 @@ public class SolveCaptchaService : CaptchaService
         return response.Balance;
     }
     #endregion
-    
+
     #region Solve Methods
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
@@ -71,7 +71,7 @@ public class SolveCaptchaService : CaptchaService
         var content = CreateTaskRequest();
 
         if (enterprise)
-        {   
+        {
             if (sessionParams?.Proxy is not null)
             {
                 content.Task = new RecaptchaV2EnterpriseTask
@@ -116,9 +116,9 @@ public class SolveCaptchaService : CaptchaService
                 };
             }
         }
-            
+
         content.Task.SetSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
                 content,
@@ -142,15 +142,15 @@ public class SolveCaptchaService : CaptchaService
             PageAction = string.IsNullOrEmpty(action) ? null : action,
             MinScore = minScore
         };
-        
+
         content.Task.SetSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
             cancellationToken).ConfigureAwait(false);
     }
@@ -182,15 +182,15 @@ public class SolveCaptchaService : CaptchaService
                 Data = data
             };
         }
-        
+
         content.Task.SetSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
@@ -201,7 +201,7 @@ public class SolveCaptchaService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-        
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new HCaptchaTask
@@ -222,15 +222,15 @@ public class SolveCaptchaService : CaptchaService
                 DataS = enterprisePayload
             };
         }
-        
+
         content.Task.SetSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
@@ -241,7 +241,7 @@ public class SolveCaptchaService : CaptchaService
         CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-        
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new GeeTestTask
@@ -262,15 +262,15 @@ public class SolveCaptchaService : CaptchaService
                 GeeTestApiServerSubdomain = apiServer
             };
         }
-        
+
         content.Task.SetSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestResponse>(response, CaptchaType.GeeTest,
             cancellationToken).ConfigureAwait(false);
     }
@@ -281,7 +281,7 @@ public class SolveCaptchaService : CaptchaService
         string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-        
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new TurnstileTask
@@ -298,20 +298,20 @@ public class SolveCaptchaService : CaptchaService
                 PageUrl = siteUrl,
             };
         }
-        
+
         content.Task.SetSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationSolveCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<CloudflareTurnstileResponse>(response, CaptchaType.CloudflareTurnstile,
             cancellationToken).ConfigureAwait(false);
     }
     #endregion
-    
+
     #region Getting the result
     /// <summary>
     /// Gets the result of a task.
@@ -372,7 +372,7 @@ public class SolveCaptchaService : CaptchaService
 
         var jObject = JObject.Parse(response);
         var solution = jObject["solution"];
-            
+
         if (solution is null)
         {
             throw new TaskSolutionException(response);
@@ -380,9 +380,9 @@ public class SolveCaptchaService : CaptchaService
 
         result.SolveCaptchaTaskSolution = task.Type switch
         {
-            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 => 
+            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 =>
                 solution.ToObject<RecaptchaSolveCaptchaTaskSolution>()! as SolveCaptchaTaskSolution,
-            CaptchaType.FunCaptcha or CaptchaType.CloudflareTurnstile => 
+            CaptchaType.FunCaptcha or CaptchaType.CloudflareTurnstile =>
                 solution.ToObject<FuncaptchaSolveCaptchaTaskSolution>()!,
             CaptchaType.GeeTest => solution.ToObject<GeeTestSolveCaptchaTaskSolution>(),
             CaptchaType.HCaptcha => solution.ToObject<HCaptchaSolveCaptchaTaskSolution>(),
@@ -392,7 +392,7 @@ public class SolveCaptchaService : CaptchaService
         return result.SolveCaptchaTaskSolution.ToCaptchaResponse(task.Id) as T;
     }
     #endregion
-    
+
     #region Private Methods
     /// <summary>
     /// Creates a new <see cref="CaptchaTaskSolveCaptchaRequest"/>.

@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.CapSolver.Requests;
@@ -67,7 +67,7 @@ public class CapSolverService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var response = await HttpClient.PostJsonToStringAsync(
                 "createTask",
                 new CaptchaTaskRequest
@@ -104,12 +104,12 @@ public class CapSolverService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-        
+
         // If dataS is not null or empty, the enterprise payload is { "s": dataS }
         var enterprisePayload = string.IsNullOrEmpty(dataS)
             ? null
             : JObject.Parse($"{{ \"s\": \"{dataS}\" }}");
-        
+
         if (enterprise)
         {
             if (sessionParams?.Proxy is not null)
@@ -282,7 +282,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -348,7 +348,7 @@ public class CapSolverService : CaptchaService
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return await GetResultAsync<StringResponse>(response, CaptchaType.DataDome, 
+        return await GetResultAsync<StringResponse>(response, CaptchaType.DataDome,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -369,13 +369,13 @@ public class CapSolverService : CaptchaService
                 CData = string.IsNullOrEmpty(data) ? null : data
             }
         };
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
             "createTask",
             content,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<CloudflareTurnstileResponse>(
             response, CaptchaType.CloudflareTurnstile,
             cancellationToken).ConfigureAwait(false);
@@ -386,7 +386,7 @@ public class CapSolverService : CaptchaService
         string? captchaScript = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-        
+
         if (sessionParams?.Proxy is not null)
         {
             content.Task = new AntiAwsWafTask
@@ -409,13 +409,13 @@ public class CapSolverService : CaptchaService
                 AwsChallengeJs = challengeScript
             };
         }
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationResponse>(
             "createTask",
             content,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.AmazonWaf,
             cancellationToken).ConfigureAwait(false);
@@ -532,7 +532,7 @@ public class CapSolverService : CaptchaService
 
         var jObject = JObject.Parse(response);
         var solution = jObject["solution"];
-            
+
         if (solution is null)
         {
             throw new TaskSolutionException("The solution is null");
@@ -540,7 +540,7 @@ public class CapSolverService : CaptchaService
 
         result.Solution = task.Type switch
         {
-            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha => 
+            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha =>
                 (Solution)solution.ToObject<RecaptchaSolution>()!,
             CaptchaType.FunCaptcha => solution.ToObject<FuncaptchaSolution>(),
             CaptchaType.ImageCaptcha => solution.ToObject<ImageCaptchaSolution>(),
@@ -556,7 +556,7 @@ public class CapSolverService : CaptchaService
         return result.Solution.ToCaptchaResponse(task.Id) as T;
     }
     #endregion
-    
+
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolutionAsync(string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)

@@ -14,7 +14,7 @@ public class CapGuruService : CustomTwoCaptchaService
     /// </summary>
     /// <param name="apiKey">The API key to use.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
-    public CapGuruService(string apiKey, HttpClient? httpClient = null) 
+    public CapGuruService(string apiKey, HttpClient? httpClient = null)
         : base(apiKey, new Uri("http://api.cap.guru"), httpClient)
     {
         SupportedCaptchaTypes =

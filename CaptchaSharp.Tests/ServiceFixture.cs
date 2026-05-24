@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Services;
+using CaptchaSharp.Services;
 
 namespace CaptchaSharp.Tests;
 

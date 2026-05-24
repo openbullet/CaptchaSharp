@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.CapSolver.Requests.Tasks.Proxied;
+namespace CaptchaSharp.Models.CapSolver.Requests.Tasks.Proxied;
 
 internal class DataDomeTask : CapSolverTask
 {

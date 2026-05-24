@@ -21,7 +21,7 @@ public class CaptchaAiService : CustomTwoCaptchaService
     /// <param name="httpClient">The <see cref="HttpClient"/> to use for requests. If null, a default one will be created.</param>
     public CaptchaAiService(string apiKey, HttpClient? httpClient = null)
         : base(apiKey, new Uri("http://ocr.captchaai.com"), httpClient) { }
-    
+
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolutionAsync(

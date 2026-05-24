@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 
 namespace CaptchaSharp.Models.CaptchaOptions;
 

@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
+namespace CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
 
 internal class RecaptchaV2TaskProxyless : AntiCaptchaTaskProxyless
 {

@@ -18,7 +18,7 @@ internal class TurnstileMetadata
 {
     [JsonProperty("action", NullValueHandling = NullValueHandling.Ignore)]
     public string? Action { get; set; }
-    
+
     [JsonProperty("cdata", NullValueHandling = NullValueHandling.Ignore)]
     public string? CData { get; set; }
 }

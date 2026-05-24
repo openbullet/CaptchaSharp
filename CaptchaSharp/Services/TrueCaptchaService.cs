@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Exceptions;
+using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -87,12 +87,12 @@ public class TrueCaptchaService : CaptchaService
         {
             throw new TaskSolutionException(response);
         }
-        
+
         var requestId = jObject["requestId"]!.Value<string>()!;
-            
+
         return new StringResponse { Id = requestId, Response = result.ToString() };
     }
-    
+
     /// <inheritdoc/>
     public override async Task ReportSolutionAsync(
         string id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)

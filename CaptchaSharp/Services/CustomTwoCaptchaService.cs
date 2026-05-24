@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using System;
 using System.Net.Http;
 
@@ -34,7 +34,7 @@ public class CustomTwoCaptchaService : TwoCaptchaService
             // Use 2captcha.com as host header to simulate an entry in the hosts file
             HttpClient.DefaultRequestHeaders.Host = "2captcha.com";
         }
-            
+
         HttpClient.BaseAddress = baseUri;
     }
 

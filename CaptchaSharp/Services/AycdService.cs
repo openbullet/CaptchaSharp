@@ -30,9 +30,9 @@ public class AycdService : CaptchaService
     /// The current access token.
     /// </summary>
     private AycdAccessToken? _accessToken;
-    
+
     private static readonly ConcurrentDictionary<string, AycdTask> _tasksCache = new();
-    
+
     /// <summary>
     /// Initializes a <see cref="AycdService"/>.
     /// </summary>
@@ -43,7 +43,7 @@ public class AycdService : CaptchaService
         ApiKey = apiKey;
         HttpClient.BaseAddress = new Uri("https://autosolve-api.aycd.io/api/v1/");
     }
-    
+
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
@@ -54,7 +54,7 @@ public class AycdService : CaptchaService
         return 999;
     }
     #endregion
-    
+
     #region Solve Methods
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveImageCaptchaAsync(
@@ -62,7 +62,7 @@ public class AycdService : CaptchaService
         CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = "https://example.com", // Required regardless...
@@ -74,7 +74,7 @@ public class AycdService : CaptchaService
                 CaseSensitive = options?.CaseSensitive ?? false ? "true" : "false",
             }
         };
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
@@ -92,19 +92,19 @@ public class AycdService : CaptchaService
         await EnsureAccessTokenAsync(cancellationToken);
 
         var version = invisible ? 1 : 0;
-        
+
         if (enterprise)
         {
             version = 7;
         }
-        
+
         var payload = new AycdTaskRequest
         {
             Url = siteUrl,
             SiteKey = siteKey,
             Version = version
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
@@ -120,7 +120,7 @@ public class AycdService : CaptchaService
         bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = siteUrl,
@@ -129,12 +129,12 @@ public class AycdService : CaptchaService
             Action = action,
             MinScore = minScore
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, payload, CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false);
     }
@@ -145,19 +145,19 @@ public class AycdService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = siteUrl,
             SiteKey = publicKey,
             Version = 8,
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, payload, CaptchaType.FunCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -168,19 +168,19 @@ public class AycdService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = siteUrl,
             SiteKey = siteKey,
             Version = invisible ? 4 : 3
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, payload, CaptchaType.HCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -191,7 +191,7 @@ public class AycdService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = siteUrl,
@@ -203,12 +203,12 @@ public class AycdService : CaptchaService
                 ApiServer = apiServer ?? "api.geetest.com"
             }
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestResponse>(
             response, payload, CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false);
     }
@@ -219,19 +219,19 @@ public class AycdService : CaptchaService
         CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = captchaUrl,
             SiteKey = "none",
             Version = 11
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, payload, CaptchaType.DataDome, cancellationToken).ConfigureAwait(false);
     }
@@ -242,19 +242,19 @@ public class AycdService : CaptchaService
         string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = siteUrl,
             SiteKey = siteKey,
             Version = 12,
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        
+
         return await GetResultAsync<CloudflareTurnstileResponse>(
             response, payload, CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false);
     }
@@ -265,24 +265,24 @@ public class AycdService : CaptchaService
         CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken);
-        
+
         var payload = new AycdTaskRequest
         {
             Url = siteUrl,
             SiteKey = captchaId,
             Version = 9
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostJsonAsync(
             "tasks/create",
             payload,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestV4Response>(
             response, payload, CaptchaType.GeeTestV4, cancellationToken).ConfigureAwait(false);
     }
     #endregion
-    
+
     #region Getting the result
     private async Task<T> GetResultAsync<T>(
         HttpResponseMessage response, AycdTaskRequest request, CaptchaType type,
@@ -293,12 +293,12 @@ public class AycdService : CaptchaService
             var message = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             throw new TaskCreationException($"{response.StatusCode} - {message}");
         }
-        
+
         var task = new CaptchaTask(request.TaskId, type);
 
         return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <inheritdoc/>
     protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
@@ -311,17 +311,17 @@ public class AycdService : CaptchaService
         using var response = await HttpClient.GetAsync(
             "tasks",
             cancellationToken).ConfigureAwait(false);
-        
+
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var remoteTasks = json.Deserialize<List<AycdTask>>();
-        
+
         foreach (var remoteTask in remoteTasks)
         {
             _tasksCache.TryAdd(remoteTask.TaskId, remoteTask);
         }
-        
+
         _tasksCache.TryRemove(task.Id, out var currentTask);
-        
+
         if (currentTask is null)
         {
             return null;
@@ -331,11 +331,11 @@ public class AycdService : CaptchaService
         {
             throw new TaskSolutionException("Task was cancelled");
         }
-        
+
         if (currentTask.Status == "success")
-        {   
+        {
             task.Completed = true;
-            
+
             var token = currentTask.Token;
 
             if (string.IsNullOrEmpty(token))
@@ -348,13 +348,13 @@ public class AycdService : CaptchaService
                 return token.Deserialize<AycdGeeTestSolution>()
                     .ToGeeTestResponse(task.Id) as T;
             }
-            
+
             if (task.Type == CaptchaType.GeeTestV4)
             {
                 return token.Deserialize<AycdGeeTestV4Solution>()
                     .ToGeeTestV4Response(task.Id) as T;
             }
-            
+
             return new StringResponse
             {
                 Id = task.Id,
@@ -366,7 +366,7 @@ public class AycdService : CaptchaService
     }
 
     #endregion
-    
+
     #region Private Methods
     private async ValueTask EnsureAccessTokenAsync(CancellationToken cancellationToken = default)
     {
@@ -383,12 +383,12 @@ public class AycdService : CaptchaService
             new StringPairCollection()
                 .Add("apiKey", ApiKey),
             cancellationToken).ConfigureAwait(false);
-            
+
         if (!response.IsSuccessStatusCode)
         {
             throw new BadAuthenticationException("Invalid API key");
         }
-            
+
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         _accessToken = json.Deserialize<AycdAccessToken>();
         HttpClient.DefaultRequestHeaders.Add("Authorization",

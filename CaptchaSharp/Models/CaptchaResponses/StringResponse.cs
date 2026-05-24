@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.CaptchaResponses;
+namespace CaptchaSharp.Models.CaptchaResponses;
 
 /// <summary>A captcha response with a string solution.</summary>
 public class StringResponse : CaptchaResponse

@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Models;
+using CaptchaSharp.Models;
 using Newtonsoft.Json;
 using System.IO;
 

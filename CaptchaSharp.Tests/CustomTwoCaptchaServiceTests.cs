@@ -17,7 +17,7 @@ public class CustomTwoCaptchaFixture : ServiceFixture
             overrideHostHeader: Config.Credentials.CustomTwoCaptchaOverrideHostHeader
             );
     }
-    
+
     private static Uri GetUri(string host, int port)
     {
         // If there is no http(s) then add http by default

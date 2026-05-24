@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;

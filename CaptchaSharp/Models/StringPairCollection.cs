@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
@@ -19,7 +19,7 @@ public class StringPairCollection
     {
         ValueHandling = valueHandling;
     }
-    
+
     /// <summary>
     /// Adds a new pair to the collection. The <paramref name="second"/> value is converted
     /// to string and handled according to the <see cref="ValueHandling"/> property.
@@ -27,22 +27,22 @@ public class StringPairCollection
     public StringPairCollection Add<TValue>(string first, TValue second)
     {
         var secondString = second?.ToString();
-        
+
         switch (ValueHandling)
         {
             case StringPairValueHandling.AddIfNotNullOrEmpty when string.IsNullOrEmpty(secondString):
                 return this;
-            
+
             case StringPairValueHandling.AddIfNotNull when secondString is null:
                 return this;
-            
+
             default:
                 _pairs.Add((first, secondString ?? string.Empty));
 
                 return this;
         }
     }
-    
+
     /// <summary>
     /// Adds a new pair to the collection only if the <paramref name="condition"/> is true.
     /// The <paramref name="second"/> value is converted

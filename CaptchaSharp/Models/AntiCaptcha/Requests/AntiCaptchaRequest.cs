@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Requests;
+namespace CaptchaSharp.Models.AntiCaptcha.Requests;
 
 /// <summary>
 /// Represents a request to the AntiCaptcha API.

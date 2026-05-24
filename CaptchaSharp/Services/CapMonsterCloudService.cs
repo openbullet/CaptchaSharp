@@ -45,21 +45,21 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
     {
         // CapMonsterCloud will always use the current Windows OS User-Agent
         // to solve captchas.
-        
+
         if (sessionParams?.Cookies is null)
         {
             throw new ArgumentNullException(
                 nameof(sessionParams), "DataDome requires cookies");
         }
-        
+
         if (string.IsNullOrEmpty(sessionParams.UserAgent))
         {
             throw new ArgumentNullException(
                 nameof(sessionParams), "DataDome requires a user agent");
         }
-        
+
         sessionParams.Cookies.TryGetValue("datadome", out var datadomeCookie);
-        
+
         if (string.IsNullOrEmpty(datadomeCookie))
         {
             throw new ArgumentException(
@@ -78,24 +78,24 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
                 DataDomeCookie = $"datadome={datadomeCookie}"
             }
         };
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
-                "createTask", 
+                "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.DataDome,
             cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <inheritdoc/>
     public override async Task<CloudflareTurnstileResponse> SolveCloudflareTurnstileAsync(
         string siteKey, string siteUrl, string? action = null, string? data = null,
         string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var content = CreateTaskRequest();
-        
+
         // Option 1 (Turnstile)
         if (!string.IsNullOrEmpty(data))
         {
@@ -106,7 +106,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
                 PageAction = action,
             };
         }
-        
+
         // Option 2 (CloudFlare token)
         else
         {
@@ -116,7 +116,7 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
                 throw new ArgumentNullException(
                     nameof(sessionParams), "User-Agent is required for Cloudflare challenges");
             }
-            
+
             content.Task = new TurnstileTaskProxyless
             {
                 WebsiteKey = siteKey,
@@ -125,9 +125,9 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
                 PageAction = action,
                 CData = data,
                 PageData = pageData
-            };            
+            };
         }
-            
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 content,
@@ -155,22 +155,22 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
             throw new ArgumentNullException(
                 nameof(sessionParams), "Solving Cloudflare challenges requires a proxy");
         }
-        
+
         var content = CreateTaskRequest();
-        
+
         content.Task = new TurnstileTask
         {
             WebsiteUrl = siteUrl,
             WebsiteKey = "n/a", // Not used
             HtmlPageBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(pageHtml)),
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.CloudflareChallengePage,
             cancellationToken).ConfigureAwait(false);
     }
@@ -186,16 +186,16 @@ public class CapMonsterCloudService : CustomAntiCaptchaService
             ?.First?.First
             ?.SelectToken("cookies.datadome")
             ?.Value<string>() ?? "";
-        
+
         return new StringResponse { Id = taskId, Response = cookie };
     }
-    
+
     /// <inheritdoc />
     protected override StringResponse ParseCloudflareChallengePageSolution(string taskId, JToken? solution)
     {
         // Get the cf_clearance field from the solution
         var cfClearance = solution?.SelectToken("cf_clearance")?.Value<string>() ?? "";
-        
+
         return new StringResponse { Id = taskId, Response = cfClearance };
     }
 }

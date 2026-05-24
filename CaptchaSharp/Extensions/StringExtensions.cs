@@ -12,7 +12,7 @@ public static class StringExtensions
         return JsonConvert.DeserializeObject<T>(json)
             ?? throw new JsonSerializationException("Failed to deserialize json string.");
     }
-    
+
     /// <summary>Serializes an object to a json string.</summary>
     public static string Serialize<T>(this T obj)
     {

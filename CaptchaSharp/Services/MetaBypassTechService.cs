@@ -36,7 +36,7 @@ public class MetaBypassTechService : CaptchaService
     /// The password.
     /// </summary>
     public string Password { get; set; }
-    
+
     /// <summary>
     /// The current access token.
     /// </summary>
@@ -57,27 +57,27 @@ public class MetaBypassTechService : CaptchaService
         ClientSecret = clientSecret;
         Username = username;
         Password = password;
-        
+
         HttpClient.BaseAddress = new Uri("https://app.metabypass.tech/CaptchaSolver/");
 
         // Since some captchas are returned directly in the response body,
         // we need to set a high timeout to account for those requests
         HttpClient.Timeout = Timeout;
     }
-    
+
     #region Getting the Balance
     /// <inheritdoc />
     public override async Task<decimal> GetBalanceAsync(
         CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync().ConfigureAwait(false);
-        
+
         var response = await HttpClient.GetJsonAsync<MbtResponse>(
                 "api/v1/me",
                 new StringPairCollection(),
                 cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (!response.Ok)
         {
             throw new BadAuthenticationException(
@@ -87,7 +87,7 @@ public class MetaBypassTechService : CaptchaService
         return decimal.Parse(response.Data!["total_balance"]!.ToString());
     }
     #endregion
-    
+
     #region Solve Methods
     /// <inheritdoc />
     public override async Task<StringResponse> SolveImageCaptchaAsync(
@@ -98,11 +98,11 @@ public class MetaBypassTechService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
 
         var numeric = 0;
-        
+
         if (options is not null)
         {
             numeric = options.CharacterSet switch
@@ -114,7 +114,7 @@ public class MetaBypassTechService : CaptchaService
                 _ => 0
             };
         }
-        
+
         var payload = new MbtSolveImageCaptchaRequest
         {
             Base64Image = base64,
@@ -122,19 +122,19 @@ public class MetaBypassTechService : CaptchaService
             MinLength = options?.MinLength ?? 0,
             MaxLength = options?.MaxLength ?? 0
         };
-        
+
         var response = await HttpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/captchaSolver",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (!response.Ok)
         {
             throw new TaskSolutionException(
                 response.Message ?? "Unknown error");
         }
-        
+
         return new StringResponse
         {
             Id = "0",
@@ -146,25 +146,25 @@ public class MetaBypassTechService : CaptchaService
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false,
         bool invisible = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
-    {   
+    {
         await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
-        
+
         // When using version "invisible", we get "Service Failed" as a response
         // so we're just going to ignore it and use version "2" instead
-        
+
         var payload = new MbtSolveRecaptchaRequest
         {
             SiteKey = siteKey,
             Url = siteUrl,
             Version = "2"
         };
-        
+
         var response = await HttpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/bypassReCaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (!response.Ok)
         {
             throw new TaskSolutionException(
@@ -174,7 +174,7 @@ public class MetaBypassTechService : CaptchaService
         var captchaId = response.Data!["RecaptchaId"]!.ToString();
 
         return await GetResultAsync<StringResponse>(
-            new CaptchaTask(captchaId, CaptchaType.ReCaptchaV2), 
+            new CaptchaTask(captchaId, CaptchaType.ReCaptchaV2),
             cancellationToken)
             .ConfigureAwait(false);
     }
@@ -185,26 +185,26 @@ public class MetaBypassTechService : CaptchaService
         bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
-        
+
         var payload = new MbtSolveRecaptchaRequest
         {
             SiteKey = siteKey,
             Url = siteUrl,
             Version = "3"
         };
-        
+
         var response = await HttpClient.PostJsonAsync<MbtResponse>(
                 "api/v1/services/bypassReCaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (!response.Ok)
         {
             throw new TaskSolutionException(
                 response.Message ?? "Unknown error");
         }
-        
+
         return new StringResponse
         {
             Id = "0",
@@ -213,32 +213,32 @@ public class MetaBypassTechService : CaptchaService
     }
 
     #endregion
-    
+
     #region Getting the result
     /// <inheritdoc />
     protected override async Task<T?> CheckResultAsync<T>(
         CaptchaTask task, CancellationToken cancellationToken = default) where T : class
     {
         await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
-        
+
         if (task.Type is not CaptchaType.ReCaptchaV2)
         {
             throw new NotSupportedException(
                 "The getCaptchaResult method is only supported for ReCaptchaV2 tasks");
         }
-        
+
         var response = await HttpClient.GetJsonAsync<MbtResponse>(
             "api/v1/services/getCaptchaResult",
             new StringPairCollection()
                 .Add("recaptcha_id", task.Id),
             cancellationToken).ConfigureAwait(false);
-        
+
         if (!response.Ok)
         {
             throw new TaskSolutionException(
                 response.Message ?? "Unknown error");
         }
-        
+
         if (response.Data!["step"]!.ToString() == "pending")
         {
             return null;
@@ -251,7 +251,7 @@ public class MetaBypassTechService : CaptchaService
         } as T;
     }
     #endregion
-    
+
     #region Private Methods
     private async ValueTask EnsureAccessTokenAsync(CancellationToken cancellationToken = default)
     {
@@ -277,23 +277,23 @@ public class MetaBypassTechService : CaptchaService
             Username = Username,
             Password = Password
         };
-        
+
         using var response = await HttpClient.PostJsonAsync(
                 "oauth/token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
             var serviceResponse = json.Deserialize<MbtResponse>();
-            
+
             throw new BadAuthenticationException(
                 serviceResponse.Message ?? "Unknown error");
         }
-        
+
         _accessToken = json.Deserialize<MbtAccessTokenResponse>();
         HttpClient.DefaultRequestHeaders.Add("Authorization",
             $"{_accessToken.TokenType} {_accessToken.AccessToken}");
@@ -309,23 +309,23 @@ public class MetaBypassTechService : CaptchaService
             ClientSecret = ClientSecret,
             RefreshToken = tokenResponse.RefreshToken
         };
-        
+
         using var response = await HttpClient.PostJsonAsync(
                 "oauth/token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        
+
         if (!response.IsSuccessStatusCode)
         {
             var serviceResponse = json.Deserialize<MbtResponse>();
-            
+
             throw new BadAuthenticationException(
                 serviceResponse.Message ?? "Unknown error");
         }
-        
+
         _accessToken = json.Deserialize<MbtAccessTokenResponse>();
         HttpClient.DefaultRequestHeaders.Add("Authorization",
             $"{_accessToken.TokenType} {_accessToken.AccessToken}");

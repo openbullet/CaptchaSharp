@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
@@ -23,12 +23,12 @@ public abstract class CaptchaService : IDisposable
     /// <summary>Returns a list of flags that denote the capabilities of the service in terms of additional 
     /// parameters to provide when solving text or image based captchas.</summary>
     public virtual CaptchaServiceCapabilities Capabilities => CaptchaServiceCapabilities.None;
-    
+
     /// <summary>
     /// The default <see cref="HttpClient"/> used for requests.
     /// </summary>
     protected readonly HttpClient HttpClient;
-    
+
     private readonly bool _disposeHttpClient;
 
     /// <summary>
@@ -132,7 +132,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves a Google ReCaptcha V3.</summary>
     /// 
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
@@ -356,7 +356,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-        
+
     /// <summary>Solves a Cloudflare Turnstile captcha.</summary>
     /// 
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
@@ -478,7 +478,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves an MT captcha.</summary>
     ///
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
@@ -506,7 +506,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves a CutCaptcha.</summary>
     ///
     /// <param name="miseryKey">The value of <c>CUTCAPTCHA_MISERY_KEY</c> variable defined on page.</param>
@@ -536,7 +536,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves a Friendly Captcha.</summary>
     ///
     /// <param name="siteKey">The site key, can be found in the webpage source or by sniffing requests.</param>
@@ -564,7 +564,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves an atbCaptcha.</summary>
     ///
     /// <param name="appId">The value of <c>appId</c> parameter in the website source code.</param>
@@ -593,7 +593,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves a Tencent Captcha.</summary>
     ///
     /// <param name="appId">The value of <c>appId</c> parameter in the website source code.</param>
@@ -616,12 +616,12 @@ public abstract class CaptchaService : IDisposable
     /// <exception cref="TaskSolutionException"></exception>
     /// <exception cref="TimeoutException"></exception>
     public virtual Task<TencentCaptchaResponse> SolveTencentCaptchaAsync(
-        string appId, string siteUrl, SessionParams? sessionParams = null, 
+        string appId, string siteUrl, SessionParams? sessionParams = null,
         CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves an audio captcha.</summary>
     ///
     /// <param name="base64">The captcha audio encoded as a base64 string.</param>
@@ -644,7 +644,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves a Google ReCaptcha for mobile apps.</summary>
     ///
     /// <param name="appPackageName">The package name of the app.</param>
@@ -673,7 +673,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves a GeeTest V4 captcha.</summary>
     ///
     /// <param name="captchaId">The value of the captcha_id parameter on the page.</param>
@@ -701,7 +701,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>Solves a Cloudflare Challenge page.</summary>
     /// 
     /// <param name="siteUrl">The URL where the challenge appears.</param>
@@ -729,7 +729,7 @@ public abstract class CaptchaService : IDisposable
     {
         throw new NotSupportedException();
     }
-    
+
     /// <summary>
     /// Reports a captcha solution as good or bad to the service.
     /// Mostly used for reporting bad solutions for image captchas and get the funds back.
@@ -794,7 +794,7 @@ public abstract class CaptchaService : IDisposable
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-    
+
     /// <summary>
     /// Disposes the <see cref="HttpClient"/> if it was created by this instance.
     /// </summary>
