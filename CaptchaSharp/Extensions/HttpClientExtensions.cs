@@ -37,7 +37,7 @@ public static class HttpClientExtensions
         CancellationToken cancellationToken = default) where T : notnull
     {
         using var response = await httpClient.GetAsync(url, pairs, cancellationToken).ConfigureAwait(false);
-        var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var json = await ReadSuccessContentAsync(response, cancellationToken).ConfigureAwait(false);
         return json.Deserialize<T>();
     }
 
@@ -105,7 +105,7 @@ public static class HttpClientExtensions
         CancellationToken cancellationToken = default) where T : notnull
     {
         using var response = await httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
-        var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var json = await ReadSuccessContentAsync(response, cancellationToken).ConfigureAwait(false);
         return json.Deserialize<T>();
     }
 
@@ -160,7 +160,23 @@ public static class HttpClientExtensions
             new StringContent(json, Encoding.UTF8, "application/json"),
             cancellationToken).ConfigureAwait(false);
 
-        var responseJson = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var responseJson = await ReadSuccessContentAsync(response, cancellationToken).ConfigureAwait(false);
         return responseJson.Deserialize<T>();
+    }
+
+    private static async Task<string> ReadSuccessContentAsync(
+        HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException(
+                $"Request failed with status code {(int)response.StatusCode} ({response.StatusCode}). Response body: {content}",
+                null,
+                response.StatusCode);
+        }
+
+        return content;
     }
 }
