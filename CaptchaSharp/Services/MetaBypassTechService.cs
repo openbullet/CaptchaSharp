@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using CaptchaSharp.Enums;
@@ -70,7 +71,7 @@ public class MetaBypassTechService : CaptchaService
     public override async Task<decimal> GetBalanceAsync(
         CancellationToken cancellationToken = default)
     {
-        await EnsureAccessTokenAsync().ConfigureAwait(false);
+        await EnsureAccessTokenAsync(cancellationToken).ConfigureAwait(false);
 
         var response = await HttpClient.GetJsonAsync<MbtResponse>(
                 "api/v1/me",
@@ -261,7 +262,7 @@ public class MetaBypassTechService : CaptchaService
             return;
         }
 
-        if (_accessToken.ExpirationDate < DateTime.Now)
+        if (_accessToken.ExpirationDate < DateTime.UtcNow)
         {
             await RefreshAccessTokenAsync(_accessToken, cancellationToken).ConfigureAwait(false);
         }
@@ -295,8 +296,8 @@ public class MetaBypassTechService : CaptchaService
         }
 
         _accessToken = json.Deserialize<MbtAccessTokenResponse>();
-        HttpClient.DefaultRequestHeaders.Add("Authorization",
-            $"{_accessToken.TokenType} {_accessToken.AccessToken}");
+        HttpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(_accessToken.TokenType, _accessToken.AccessToken);
     }
 
     private async Task RefreshAccessTokenAsync(MbtAccessTokenResponse tokenResponse,
@@ -327,8 +328,8 @@ public class MetaBypassTechService : CaptchaService
         }
 
         _accessToken = json.Deserialize<MbtAccessTokenResponse>();
-        HttpClient.DefaultRequestHeaders.Add("Authorization",
-            $"{_accessToken.TokenType} {_accessToken.AccessToken}");
+        HttpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(_accessToken.TokenType, _accessToken.AccessToken);
     }
     #endregion
 }
