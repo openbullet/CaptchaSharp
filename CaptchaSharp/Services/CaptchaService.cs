@@ -758,26 +758,30 @@ public abstract class CaptchaService : IDisposable
         where T : CaptchaResponse
     {
         var start = DateTime.UtcNow;
-        T? result;
 
         // Initial delay
         await Task.Delay(PollingInterval, cancellationToken).ConfigureAwait(false);
 
-        do
+        while (DateTime.UtcNow - start < Timeout)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            result = await CheckResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
+            var result = await CheckResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
+
+            if (task.Completed && result is not null)
+            {
+                return result;
+            }
+
+            if (DateTime.UtcNow - start >= Timeout)
+            {
+                break;
+            }
+
             await Task.Delay(PollingInterval, cancellationToken).ConfigureAwait(false);
         }
-        while (!task.Completed && DateTime.UtcNow - start < Timeout);
 
-        if (!task.Completed || result is null)
-        {
-            throw new TimeoutException();
-        }
-
-        return result;
+        throw new TimeoutException();
     }
 
     /// <summary></summary>
