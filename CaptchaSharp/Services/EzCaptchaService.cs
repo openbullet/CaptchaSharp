@@ -1,311 +1,142 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using CaptchaSharp.Enums;
-using CaptchaSharp.Exceptions;
-using CaptchaSharp.Extensions;
-using CaptchaSharp.Models;
-using CaptchaSharp.Models.CaptchaResponses;
-using CaptchaSharp.Models.EzCaptcha.Responses;
-using CaptchaSharp.Models.EzCaptcha.Responses.Solutions;
-using CaptchaSharp.Models.EzCaptcha.Requests;
-using CaptchaSharp.Models.EzCaptcha.Requests.Tasks;
-using Newtonsoft.Json.Linq;
 
-namespace CaptchaSharp.Services;
-
-/// <summary>
-/// The service offered by https://www.ez-captcha.com/
-/// </summary>
-public class EzCaptchaService : CaptchaService
+namespace YourNamespace.Services
 {
-    /// <summary>
-    /// Your secret api key.
-    /// </summary>
-    public string ApiKey { get; set; }
-
-    /// <summary>
-    /// The ID of the software developer.
-    /// </summary>
-    private const int _softId = 82832;
-
-    /// <summary>
-    /// Initializes a <see cref="EzCaptchaService"/>.
-    /// </summary>
-    public EzCaptchaService(string apiKey, HttpClient? httpClient = null)
-        : base(httpClient)
+    public class NoCaptchaAiService
     {
-        ApiKey = apiKey;
-        HttpClient.BaseAddress = new Uri("https://api.ez-captcha.com");
-    }
-    
-    #region Getting the Balance
-    /// <inheritdoc/>
-    public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
-    {
-        var response = await HttpClient.PostJsonAsync<GetBalanceEzCaptchaResponse>(
-            "getBalance", new EzCaptchaRequest { ClientKey = ApiKey },
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+        private readonly HttpClient _httpClient;
+        private const string BaseUrl = "https://api.nocaptchaai.com";
 
-        if (response.IsError)
+        /// <summary>
+        /// Initializes the NoCaptchaAI service with your unique client Key.
+        /// </summary>
+        /// <param name="clientKey">Your NoCaptchaAI dashboard clientKey</param>
+        public NoCaptchaAiService(string clientKey)
         {
-            throw new BadAuthenticationException($"{response.ErrorCode}: {response.ErrorDescription}");
-        }
+            if (string.IsNullOrWhiteSpace(clientKey))
+                throw new ArgumentException("API clientKey cannot be empty.", nameof(clientKey));
 
-        return response.Balance;
-    }
-    #endregion
-    
-    #region Solve Methods
-    /// <inheritdoc/>
-    public override async Task<StringResponse> SolveRecaptchaV2Async(
-        string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
-        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
-    {
-        // All recaptcha tasks are proxyless, so the proxy is disregarded
-        
-        var content = CreateTaskRequest();
-
-        if (enterprise)
-        {
-            if (!string.IsNullOrEmpty(dataS))
-            {
-                content.Task = new ReCaptchaV2SEnterpriseTaskProxyless()
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    IsInvisible = invisible,
-                    DataS = dataS,
-                };
-            }
-            else
-            {
-                content.Task = new ReCaptchaV2EnterpriseTaskProxyless()
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    IsInvisible = invisible,
-                };
-            }
-        }
-        else
-        {
-            if (!string.IsNullOrEmpty(dataS))
-            {
-                content.Task = new ReCaptchaV2STaskProxyless
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    IsInvisible = invisible,
-                    DataS = dataS
-                };
-            }
-            else
-            {
-                content.Task = new ReCaptchaV2TaskProxyless
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    IsInvisible = invisible
-                };
-            }
-        }
+            _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             
-        var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
-                "createTask",
-                content,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+            // Authentication requires the key inside the headers
+            _httpClient.DefaultRequestHeaders.Add("clientKey", clientKey);
+        }
 
-        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV2,
-            cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <inheritdoc/>
-    public override async Task<StringResponse> SolveRecaptchaV3Async(
-        string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
-        bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
-    {
-        var content = CreateTaskRequest();
-
-        if (enterprise)
+        /// <summary>
+        /// Submits a CAPTCHA challenge and polls until the token solution is ready.
+        /// </summary>
+        public async Task<string> SolveCaptchaAsync(string captchaType, string siteKey, string pageUrl, CancellationToken cancellationToken = default)
         {
-            content.Task = new ReCaptchaV3EnterpriseTaskProxyless()
+            // 1. Create the task
+            var taskPayload = new CaptchaTaskRequest
             {
-                WebsiteKey = siteKey,
-                WebsiteURL = siteUrl,
-                PageAction = string.IsNullOrEmpty(action) ? null : action,
+                Type = captchaType,
+                SiteKey = siteKey,
+                PageUrl = pageUrl
             };
-        }
-        else
-        {
-            if (Math.Abs(minScore - 0.9f) < 0.000001)
+
+            string jsonPayload = JsonSerializer.Serialize(taskPayload);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage createResponse = await _httpClient.PostAsync("/createTask", content, cancellationToken);
+            createResponse.EnsureSuccessStatusCode();
+
+            string createResultJson = await createResponse.Content.ReadAsStringAsync(cancellationToken);
+            var taskResponse = JsonSerializer.Deserialize<CaptchaTaskResponse>(createResultJson);
+
+            if (taskResponse == null || string.IsNullOrEmpty(taskResponse.TaskId))
             {
-                content.Task = new ReCaptchaV3TaskProxylessS9()
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    PageAction = string.IsNullOrEmpty(action) ? null : action,
-                };
+                throw new Exception($"Failed to create task. API Response: {createResultJson}");
             }
-            else
+
+            // If the sync resolver immediately outputs a token, use it
+            if (taskResponse.Status == "solved" && !string.IsNullOrEmpty(taskResponse.Solution?.Token))
             {
-                content.Task = new ReCaptchaV3TaskProxyless()
-                {
-                    WebsiteKey = siteKey,
-                    WebsiteURL = siteUrl,
-                    PageAction = string.IsNullOrEmpty(action) ? null : action,
-                };
+                return taskResponse.Solution.Token;
             }
-        }
-        
-        var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
-                "createTask",
-                content,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        
-        return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
-            cancellationToken).ConfigureAwait(false);
-    }
 
-    /// <inheritdoc/>
-    public override async Task<StringResponse> SolveFuncaptchaAsync(
-        string publicKey, string serviceUrl, string siteUrl, bool noJs = false,
-        string? data = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
-    {
-        var content = CreateTaskRequest();
-        content.Task = new FuncaptchaTaskProxyless
-        {
-            WebsiteKey = publicKey,
-            WebsiteURL = siteUrl,
-            FuncaptchaApiJSSubdomain = serviceUrl
-        };
-        
-        var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
-                "createTask",
-                content,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        
-        return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
-            cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <inheritdoc/>
-    public override async Task<StringResponse> SolveHCaptchaAsync(
-        string siteKey, string siteUrl, bool invisible = false, string? enterprisePayload = null,
-        SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
-    {
-        var content = CreateTaskRequest();
-        content.Task = new HcaptchaTaskProxyless
-        {
-            WebsiteKey = siteKey,
-            WebsiteUrl = siteUrl,
-            IsInvisible = invisible,
-            EnterprisePayload = string.IsNullOrEmpty(enterprisePayload) 
-                ? null
-                : JObject.Parse(enterprisePayload)
-        };
-        
-        var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
-                "createTask",
-                content,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        
-        return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha,
-            cancellationToken).ConfigureAwait(false);
-    }
-    #endregion
-    
-    #region Getting the result
-    /// <summary>
-    /// Gets the result of a task.
-    /// </summary>
-    private async Task<T> GetResultAsync<T>(
-        TaskCreationEzCaptchaResponse ezCaptchaResponse, CaptchaType type,
-        CancellationToken cancellationToken = default)
-        where T : CaptchaResponse
-    {
-        if (ezCaptchaResponse.IsError)
-        {
-            throw new TaskCreationException($"{ezCaptchaResponse.ErrorCode}: {ezCaptchaResponse.ErrorDescription}");
+            // 2. Poll for the result
+            return await PollForResultAsync(taskResponse.TaskId, cancellationToken);
         }
 
-        var task = new CaptchaTask(ezCaptchaResponse.TaskId!, type);
-
-        return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <inheritdoc/>
-    protected override async Task<T?> CheckResultAsync<T>(
-        CaptchaTask task, CancellationToken cancellationToken = default)
-        where T : class
-    {
-        var response = await HttpClient.PostJsonToStringAsync(
-            "getTaskResult",
-            new GetTaskResultEzCaptchaRequest { ClientKey = ApiKey, TaskId = task.Id },
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        var result = response.Deserialize<GetTaskResultEzCaptchaResponse>();
-
-        if (!result.IsReady)
+        private async Task<string> PollForResultAsync(string taskId, CancellationToken cancellationToken)
         {
-            return null;
+            var resultPayload = new { taskId = taskId };
+            string jsonPayload = JsonSerializer.Serialize(resultPayload);
+
+            // Poll maximum of 30 times (approx 30-45 seconds)
+            for (int i = 0; i < 30; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                HttpResponseMessage resultResponse = await _httpClient.PostAsync("/getTaskResult", content, cancellationToken);
+                
+                if (resultResponse.IsSuccessStatusCode)
+                {
+                    string resultJson = await resultResponse.Content.ReadAsStringAsync(cancellationToken);
+                    var taskResult = JsonSerializer.Deserialize<CaptchaTaskResponse>(resultJson);
+
+                    if (taskResult != null)
+                    {
+                        if (taskResult.Status == "solved" && taskResult.Solution?.Token != null)
+                        {
+                            return taskResult.Solution.Token;
+                        }
+                        
+                        if (taskResult.Status == "failed")
+                        {
+                            throw new Exception($"NoCaptchaAI processing failed: {resultJson}");
+                        }
+                    }
+                }
+
+                // Wait 1.5 seconds before checking again
+                await Task.Delay(1500, cancellationToken);
+            }
+
+            throw new TimeoutException("The CAPTCHA solving operation timed out.");
         }
 
-        task.Completed = true;
-
-        if (result.IsError)
+        #region DTO Models
+        private class CaptchaTaskRequest
         {
-            throw new TaskSolutionException($"{result.ErrorCode}: {result.ErrorDescription}");
+            [JsonPropertyName("type")]
+            public string Type { get; set; } = string.Empty;
+
+            [JsonPropertyName("sitekey")]
+            public string SiteKey { get; set; } = string.Empty;
+
+            [JsonPropertyName("url")]
+            public string PageUrl { get; set; } = string.Empty;
         }
 
-        var jObject = JObject.Parse(response);
-        var solution = jObject["solution"];
-            
-        if (solution is null)
+        private class CaptchaTaskResponse
         {
-            throw new TaskSolutionException(response);
+            [JsonPropertyName("status")]
+            public string Status { get; set; } = string.Empty;
+
+            [JsonPropertyName("taskId")]
+            public string TaskId { get; set; } = string.Empty;
+
+            [JsonPropertyName("solution")]
+            public SolutionData Solution { get; set; }
         }
-        
-        if (task.Type == CaptchaType.DataDome)
+
+        private class SolutionData
         {
-            return ParseDataDomeSolution(task.Id, solution) as T;
+            [JsonPropertyName("gRecaptchaResponse")]
+            [JsonPropertyName("token")] // Handles variations across specific endpoint responses
+            public string Token { get; set; } = string.Empty;
         }
-
-        result.EzCaptchaTaskSolution = task.Type switch
-        {
-            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha => 
-                solution.ToObject<RecaptchaEzCaptchaTaskSolution>()! as EzCaptchaTaskSolution,
-            _ => throw new NotSupportedException($"The {task.Type} captcha type is not supported")
-        } ?? throw new TaskSolutionException(response);
-
-        return result.EzCaptchaTaskSolution.ToCaptchaResponse(task.Id) as T;
+        #endregion
     }
-
-    /// <summary>
-    /// Parses the solution of a DataDome captcha.
-    /// </summary>
-    protected virtual StringResponse ParseDataDomeSolution(string taskId, JToken? solution)
-    {
-        throw new NotImplementedException("DataDome captcha solving is not supported");
-    }
-    #endregion
-    
-    #region Private Methods
-    /// <summary>
-    /// Creates a new <see cref="CaptchaTaskEzCaptchaRequest"/>.
-    /// </summary>
-    private CaptchaTaskEzCaptchaRequest CreateTaskRequest()
-    {
-        return new CaptchaTaskEzCaptchaRequest
-        {
-            ClientKey = ApiKey,
-            SoftId = _softId
-        };
-    }
-    #endregion
 }
