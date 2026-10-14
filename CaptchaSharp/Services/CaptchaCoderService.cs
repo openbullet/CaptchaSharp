@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
@@ -29,7 +29,7 @@ public class CaptchaCoderService : CaptchaService
     {
         ApiKey = apiKey;
         this.HttpClient.BaseAddress = new Uri("http://api.captchacoder.com/");
-            
+
         // Since this service replies directly with the solution to the task creation request
         // we need to set a high timeout here, or it will not finish in time
         this.HttpClient.Timeout = Timeout;
@@ -65,9 +65,9 @@ public class CaptchaCoderService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var captchaId = Guid.NewGuid().ToString();
-        
+
         var response = await HttpClient.PostMultipartToStringAsync(
             "Imagepost.ashx",
             new StringPairCollection()
@@ -78,7 +78,7 @@ public class CaptchaCoderService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (response.Contains("Error"))
         {
             throw new TaskSolutionException(response);
@@ -91,7 +91,7 @@ public class CaptchaCoderService : CaptchaService
     public override async Task<StringResponse> SolveRecaptchaV2Async(
         string siteKey, string siteUrl, string dataS = "", bool enterprise = false, bool invisible = false,
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
-    {   
+    {
         var captchaId = Guid.NewGuid().ToString();
 
         var response = await HttpClient.PostMultipartToStringAsync(
@@ -111,7 +111,7 @@ public class CaptchaCoderService : CaptchaService
         {
             throw new TaskSolutionException(response);
         }
-        
+
         return new StringResponse { Id = captchaId, Response = response };
     }
 
@@ -119,9 +119,9 @@ public class CaptchaCoderService : CaptchaService
     public override async Task<StringResponse> SolveRecaptchaV3Async(
         string siteKey, string siteUrl, string action = "verify", float minScore = 0.4f,
         bool enterprise = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
-    {   
+    {
         var captchaId = Guid.NewGuid().ToString();
-        
+
         var response = await HttpClient.PostMultipartToStringAsync(
             "Imagepost.ashx",
             new StringPairCollection()
@@ -140,7 +140,7 @@ public class CaptchaCoderService : CaptchaService
         {
             throw new TaskSolutionException(response);
         }
-        
+
         return new StringResponse { Id = captchaId, Response = response };
     }
 

@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.CapSolver.Requests.Tasks;
+namespace CaptchaSharp.Models.CapSolver.Requests.Tasks;
 
 internal class ImageCaptchaTask : CapSolverTaskProxyless
 {

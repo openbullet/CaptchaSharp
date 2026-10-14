@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -35,7 +35,7 @@ public class CaptchasIoService : CustomTwoCaptchaService
             CaptchaType.GeeTest |
             CaptchaType.CloudflareTurnstile;
     }
-    
+
     #region Solve Methods
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveAudioCaptchaAsync(
@@ -48,15 +48,15 @@ public class CaptchasIoService : CustomTwoCaptchaService
             .Add("json", UseJsonFlag ? "1" : null)
             .Add("header_acao", AddAcaoHeader ? "1" : null)
             .ToMultipartFormDataContent();
-        
+
         // Add the "file" as a multipart file from base64 (convert to byte array)
         multipartData.Add(new ByteArrayContent(Convert.FromBase64String(base64), 0, 0), "file", "audio.mp3");
-        
+
         var response = await HttpClient.PostMultipartToStringAsync("in.php",
                 multipartData,
                 cancellationToken)
             .ConfigureAwait(false);
-        
+
         var captchaResponse = UseJsonFlag
             ? await GetResultAsync<StringResponse>(
                 response.Deserialize<TwoCaptchaResponse>(), CaptchaType.AudioCaptcha,
@@ -64,16 +64,16 @@ public class CaptchasIoService : CustomTwoCaptchaService
             : await GetResultAsync<StringResponse>(
                 response, CaptchaType.AudioCaptcha,
                 cancellationToken).ConfigureAwait(false);
-        
+
         if (captchaResponse.Response.StartsWith("error_", StringComparison.InvariantCultureIgnoreCase))
         {
             throw new TaskSolutionException(captchaResponse.Response);
         }
-        
+
         return captchaResponse;
     }
     #endregion
-    
+
     #region Getting the result
     private async Task<T> GetResultAsync<T>(
         TwoCaptchaResponse twoCaptchaResponse, CaptchaType type, CancellationToken cancellationToken = default)

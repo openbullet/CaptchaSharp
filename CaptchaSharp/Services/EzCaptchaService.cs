@@ -39,7 +39,7 @@ public class EzCaptchaService : CaptchaService
         ApiKey = apiKey;
         HttpClient.BaseAddress = new Uri("https://api.ez-captcha.com");
     }
-    
+
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
@@ -56,7 +56,7 @@ public class EzCaptchaService : CaptchaService
         return response.Balance;
     }
     #endregion
-    
+
     #region Solve Methods
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveRecaptchaV2Async(
@@ -64,7 +64,7 @@ public class EzCaptchaService : CaptchaService
         SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         // All recaptcha tasks are proxyless, so the proxy is disregarded
-        
+
         var content = CreateTaskRequest();
 
         if (enterprise)
@@ -111,7 +111,7 @@ public class EzCaptchaService : CaptchaService
                 };
             }
         }
-            
+
         var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
                 "createTask",
                 content,
@@ -159,13 +159,13 @@ public class EzCaptchaService : CaptchaService
                 };
             }
         }
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.ReCaptchaV3,
             cancellationToken).ConfigureAwait(false);
     }
@@ -182,13 +182,13 @@ public class EzCaptchaService : CaptchaService
             WebsiteURL = siteUrl,
             FuncaptchaApiJSSubdomain = serviceUrl
         };
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.FunCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
@@ -204,22 +204,22 @@ public class EzCaptchaService : CaptchaService
             WebsiteKey = siteKey,
             WebsiteUrl = siteUrl,
             IsInvisible = invisible,
-            EnterprisePayload = string.IsNullOrEmpty(enterprisePayload) 
+            EnterprisePayload = string.IsNullOrEmpty(enterprisePayload)
                 ? null
                 : JObject.Parse(enterprisePayload)
         };
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationEzCaptchaResponse>(
                 "createTask",
                 content,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(response, CaptchaType.HCaptcha,
             cancellationToken).ConfigureAwait(false);
     }
     #endregion
-    
+
     #region Getting the result
     /// <summary>
     /// Gets the result of a task.
@@ -265,12 +265,12 @@ public class EzCaptchaService : CaptchaService
 
         var jObject = JObject.Parse(response);
         var solution = jObject["solution"];
-            
+
         if (solution is null)
         {
             throw new TaskSolutionException(response);
         }
-        
+
         if (task.Type == CaptchaType.DataDome)
         {
             return ParseDataDomeSolution(task.Id, solution) as T;
@@ -278,7 +278,7 @@ public class EzCaptchaService : CaptchaService
 
         result.EzCaptchaTaskSolution = task.Type switch
         {
-            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha => 
+            CaptchaType.ReCaptchaV2 or CaptchaType.ReCaptchaV3 or CaptchaType.HCaptcha =>
                 solution.ToObject<RecaptchaEzCaptchaTaskSolution>()! as EzCaptchaTaskSolution,
             _ => throw new NotSupportedException($"The {task.Type} captcha type is not supported")
         } ?? throw new TaskSolutionException(response);
@@ -294,7 +294,7 @@ public class EzCaptchaService : CaptchaService
         throw new NotImplementedException("DataDome captcha solving is not supported");
     }
     #endregion
-    
+
     #region Private Methods
     /// <summary>
     /// Creates a new <see cref="CaptchaTaskEzCaptchaRequest"/>.

@@ -7,4 +7,4 @@ internal class BcsSolveRecaptchaResponse : BcsResponse
     [JsonProperty("gresponse")]
     public string? GResponse { get; set; }
 }
-    
+

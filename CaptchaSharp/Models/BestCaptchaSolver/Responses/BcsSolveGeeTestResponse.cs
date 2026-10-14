@@ -12,10 +12,10 @@ internal class GeeTestSolution
 {
     [JsonProperty("challenge")]
     public required string Challenge { get; set; }
-    
+
     [JsonProperty("validate")]
     public required string Validate { get; set; }
-    
+
     [JsonProperty("seccode")]
     public required string SecCode { get; set; }
 }

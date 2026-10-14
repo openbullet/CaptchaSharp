@@ -9,10 +9,10 @@ internal class NopechaSolveTokenRequest : NopechaSolveRequest
 {
     [JsonProperty("proxy", NullValueHandling = NullValueHandling.Ignore)]
     public NopechaProxy? Proxy { get; set; }
-    
+
     [JsonProperty("cookie", NullValueHandling = NullValueHandling.Ignore)]
     public NopechaCookie[]? Cookies { get; set; }
-    
+
     [JsonProperty("useragent", NullValueHandling = NullValueHandling.Ignore)]
     public string? UserAgent { get; set; }
 
@@ -25,9 +25,9 @@ internal class NopechaSolveTokenRequest : NopechaSolveRequest
         }
 
         UserAgent = sessionParams.UserAgent;
-        
+
         var proxy = sessionParams.Proxy;
-        
+
         if (proxy is null)
         {
             return this;
@@ -49,9 +49,9 @@ internal class NopechaSolveTokenRequest : NopechaSolveRequest
         {
             return this;
         }
-        
+
         var uri = new Uri(url);
-            
+
         Cookies = sessionParams.Cookies.Select(c => new NopechaCookie
         {
             Name = c.Key,
@@ -59,7 +59,7 @@ internal class NopechaSolveTokenRequest : NopechaSolveRequest
             Domain = uri.Host,
             Path = uri.AbsolutePath,
             Secure = uri.Scheme == "https",
-                
+
             // Hardcoded since we don't have access to these values
             HostOnly = true,
             HttpOnly = true,

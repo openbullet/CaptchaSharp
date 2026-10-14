@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using CaptchaSharp.Services;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,7 +11,7 @@ public class ImageTyperzFixture : ServiceFixture
     public ImageTyperzFixture()
     {
         Service = new ImageTyperzService(Config.Credentials.ImageTyperzApiKey);
-        
+
         Service.GetType().GetProperty("AffiliateId",
                 BindingFlags.NonPublic | BindingFlags.Instance)?
             .SetValue(Service, 0);

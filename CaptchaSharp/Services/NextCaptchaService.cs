@@ -60,7 +60,7 @@ public class NextCaptchaService : CustomAntiCaptchaService
                 AppAction = appAction,
             };
         }
-        
+
         var response = await HttpClient.PostJsonAsync<TaskCreationAntiCaptchaResponse>(
                 "createTask",
                 content,

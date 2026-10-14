@@ -6,7 +6,7 @@ internal class NineKwResponse
 {
     [JsonProperty("status")]
     public required NineKwStatus Status { get; set; }
-    
+
     [JsonProperty("error")]
     public string? Error { get; set; }
 }

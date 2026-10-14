@@ -7,7 +7,7 @@ internal class HCaptchaSolveCaptchaTaskSolution : SolveCaptchaTaskSolution
 {
     [JsonProperty("hCaptchaResponse")]
     public string? HCaptchaResponse { get; set; }
-    
+
     public override CaptchaResponse ToCaptchaResponse(string id)
     {
         return new StringResponse

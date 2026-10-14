@@ -13,13 +13,13 @@ public class SolveCaptchaTaskProxyless
     /// </summary>
     [JsonProperty("method")]
     public string? Method { get; set; }
-    
+
     /// <summary>
     /// The user agent to use.
     /// </summary>
     [JsonProperty("user_agent", NullValueHandling = NullValueHandling.Ignore)]
     public string? UserAgent { get; set; }
-    
+
     /// <summary>
     /// The cookies to use, formatted like "name1=value1; name2=value2".
     /// </summary>
@@ -35,9 +35,9 @@ public class SolveCaptchaTaskProxyless
         {
             return;
         }
-        
+
         UserAgent = sessionParams.UserAgent;
-        
+
         if (sessionParams.Cookies == null)
         {
             return;

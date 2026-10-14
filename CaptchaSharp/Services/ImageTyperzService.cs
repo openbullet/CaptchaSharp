@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
@@ -74,7 +74,7 @@ public class ImageTyperzService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var response = await HttpClient.PostToStringAsync(
             "Forms/UploadFileAndGetTextNEWToken.ashx",
             GetAuthAffiliatePair()
@@ -258,7 +258,7 @@ public class ImageTyperzService : CaptchaService
                 .Add(GetSessionParams(sessionParams)),
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestV4Response>(
             response, CaptchaType.GeeTestV4, cancellationToken).ConfigureAwait(false);
     }
@@ -273,11 +273,11 @@ public class ImageTyperzService : CaptchaService
         {
             throw new TaskCreationException(response);
         }
-        
+
         // If the response starts with a [, it's a JSON array
         if (response.StartsWith('['))
         {
-            var responses = response.Deserialize<ImageTyperzTaskCreatedResponse[]>(); 
+            var responses = response.Deserialize<ImageTyperzTaskCreatedResponse[]>();
             response = responses[0].CaptchaId.ToString();
         }
 
@@ -298,12 +298,12 @@ public class ImageTyperzService : CaptchaService
                 .Add("captchaid", task.Id),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (string.IsNullOrEmpty(responseJson))
         {
             throw new TaskSolutionException("Could not get the solution for the task");
         }
-        
+
         // For some reason, the response is an array with a single element
         var responses = responseJson.Deserialize<ImageTyperzResponse[]>();
         var response = responses[0];
@@ -319,17 +319,17 @@ public class ImageTyperzService : CaptchaService
         {
             throw new TaskSolutionException(response.Error);
         }
-        
+
         // GeeTestResponse needs GeeTest captcha type
         if (typeof(T) == typeof(GeeTestResponse))
         {
             if (task.Type is not CaptchaType.GeeTest)
             {
-                throw new TaskSolutionException("The task is not a GeeTest captcha");   
+                throw new TaskSolutionException("The task is not a GeeTest captcha");
             }
 
             var geeTestResponse = JObject.Parse(response.Response);
-            
+
             return new GeeTestResponse
             {
                 Id = task.Id,
@@ -338,18 +338,18 @@ public class ImageTyperzService : CaptchaService
                 SecCode = geeTestResponse["geetest_seccode"]!.Value<string>()!
             } as T;
         }
-        
+
         // TODO: Handle Capy response
 
         if (typeof(T) == typeof(CloudflareTurnstileResponse))
         {
             if (task.Type is not CaptchaType.CloudflareTurnstile)
             {
-                throw new TaskSolutionException("The task is not a Cloudflare Turnstile captcha");   
+                throw new TaskSolutionException("The task is not a Cloudflare Turnstile captcha");
             }
-            
+
             var cloudflareResponse = JObject.Parse(response.Response);
-            
+
             return new CloudflareTurnstileResponse
             {
                 Id = task.Id,
@@ -362,11 +362,11 @@ public class ImageTyperzService : CaptchaService
         {
             if (task.Type is not CaptchaType.GeeTestV4)
             {
-                throw new TaskSolutionException("The task is not a GeeTest v4 captcha");   
+                throw new TaskSolutionException("The task is not a GeeTest v4 captcha");
             }
-            
+
             var geeTestV4Response = JObject.Parse(response.Response);
-            
+
             return new GeeTestV4Response
             {
                 Id = task.Id,
@@ -383,7 +383,7 @@ public class ImageTyperzService : CaptchaService
         {
             throw new NotSupportedException("Only StringResponse and GeeTestResponse are supported");
         }
-        
+
         return new StringResponse { Id = task.Id, Response = response.Response } as T;
     }
     #endregion
@@ -409,7 +409,7 @@ public class ImageTyperzService : CaptchaService
     #endregion
 
     #region Private Methods
-    private StringPairCollection GetAuthPair() 
+    private StringPairCollection GetAuthPair()
         => new StringPairCollection().Add("token", ApiKey);
 
     private StringPairCollection GetAuthAffiliatePair()
@@ -439,14 +439,14 @@ public class ImageTyperzService : CaptchaService
         {
             return pairs;
         }
-        
+
         var proxy = sessionParams.Proxy;
-        
+
         if (proxy.Type != ProxyType.HTTP && proxy.Type != ProxyType.HTTPS)
         {
             throw new NotSupportedException("The api only supports HTTP proxies");
         }
-        
+
         pairs.AddRange(
         [
             ("proxytype", "HTTP"),
@@ -477,8 +477,8 @@ public class ImageTyperzService : CaptchaService
             return [];
         }
 
-        var capabilities = new List<(string, string)> 
-        { 
+        var capabilities = new List<(string, string)>
+        {
             ("iscase", options.CaseSensitive.ToString().ToLower()),
             ("isphrase", options.IsPhrase.ToString().ToLower()),
             ("ismath", options.RequiresCalculation.ToString().ToLower()),

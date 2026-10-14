@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using System;
@@ -52,7 +52,7 @@ public class NineKwService : CaptchaService
 
         if (IsError(response))
         {
-            throw new BadAuthenticationException(GetErrorMessage(response));   
+            throw new BadAuthenticationException(GetErrorMessage(response));
         }
 
         return Convert.ToDecimal(response.Credits);
@@ -62,7 +62,7 @@ public class NineKwService : CaptchaService
     #region Solve Methods
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveTextCaptchaAsync(
-        string text, TextCaptchaOptions? options = default, 
+        string text, TextCaptchaOptions? options = default,
         CancellationToken cancellationToken = default)
     {
         var response = await HttpClient.PostMultipartAsync<NineKwSubmitResponse>(
@@ -75,7 +75,7 @@ public class NineKwService : CaptchaService
                 .ToMultipartFormDataContent(),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.TextCaptcha, cancellationToken).ConfigureAwait(false);
     }
@@ -89,7 +89,7 @@ public class NineKwService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var response = await HttpClient.PostMultipartAsync<NineKwSubmitResponse>(
             "index.cgi",
             GetAuthPair()
@@ -150,7 +150,7 @@ public class NineKwService : CaptchaService
                 .Add(ConvertSessionParams(sessionParams)),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV3, cancellationToken).ConfigureAwait(false);
     }
@@ -228,7 +228,7 @@ public class NineKwService : CaptchaService
                 .Add("json", 1),
             cancellationToken)
             .ConfigureAwait(false);
-        
+
         // Not solved yet
         if (response.TryAgain is 1)
         {
@@ -241,7 +241,7 @@ public class NineKwService : CaptchaService
         {
             throw new TaskSolutionException("No workers available");
         }
-        
+
         if (IsError(response))
         {
             throw new TaskSolutionException(GetErrorMessage(response));
@@ -252,7 +252,7 @@ public class NineKwService : CaptchaService
         {
             throw new NotSupportedException();
         }
-        
+
         return new StringResponse { Id = task.Id, Response = response.Answer } as T;
     }
     #endregion
@@ -270,7 +270,7 @@ public class NineKwService : CaptchaService
                 .Add("correct", correct ? 1 : 2)
                 .Add("json", 1),
             cancellationToken).ConfigureAwait(false);
-        
+
         if (IsError(response))
         {
             throw new TaskReportException(GetErrorMessage(response));
@@ -299,19 +299,19 @@ public class NineKwService : CaptchaService
         }
 
         var pairs = new List<(string, string)>();
-        
+
         if (sessionParams.UserAgent is not null)
         {
             pairs.Add(("useragent", sessionParams.UserAgent));
         }
-        
+
         if (sessionParams.Cookies is not null)
         {
             pairs.Add(("cookies", sessionParams.GetCookieString()));
         }
-        
+
         var proxy = sessionParams.Proxy;
-        
+
         if (proxy is null)
         {
             return pairs;
@@ -323,14 +323,14 @@ public class NineKwService : CaptchaService
                 "9kw.eu does not support proxies with authentication.");
         }
 
-        if (proxy.Type is not ProxyType.HTTP && 
+        if (proxy.Type is not ProxyType.HTTP &&
             proxy.Type is not ProxyType.HTTPS &&
             proxy.Type is not ProxyType.SOCKS5)
         {
             throw new NotSupportedException(
                 "9kw.eu only supports HTTP, HTTPS and SOCKS5 proxies.");
         }
-        
+
         if (!string.IsNullOrEmpty(proxy.Host))
         {
             pairs.AddRange([

@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models;

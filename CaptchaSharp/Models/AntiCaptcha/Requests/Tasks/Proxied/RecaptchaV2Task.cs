@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Requests.Tasks.Proxied;
+namespace CaptchaSharp.Models.AntiCaptcha.Requests.Tasks.Proxied;
 
 internal class RecaptchaV2Task : AntiCaptchaTask
 {

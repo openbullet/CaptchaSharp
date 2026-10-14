@@ -12,7 +12,7 @@ public class CaptchaTaskEzCaptchaRequest : EzCaptchaRequest
     /// The task to solve.
     /// </summary>
     public EzCaptchaTaskProxyless Task { get; set; } = null!;
-    
+
     /// <summary>
     /// The soft ID to use. Default is 0.
     /// </summary>

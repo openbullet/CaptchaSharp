@@ -12,7 +12,7 @@ internal class LeminCroppedSolution
 {
     [JsonProperty("answer")]
     public required string Answer { get; set; }
-    
+
     [JsonProperty("challenge_id")]
     public required string ChallengeId { get; set; }
 

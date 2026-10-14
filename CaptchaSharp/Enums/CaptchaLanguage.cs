@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Enums;
+namespace CaptchaSharp.Enums;
 
 /// <summary></summary>
 public enum CaptchaLanguage

@@ -11,14 +11,14 @@ public class TwoCaptchaFixture : ServiceFixture
     public TwoCaptchaFixture()
     {
         Service = new TwoCaptchaService(Config.Credentials.TwoCaptchaApiKey);
-        
+
         Service.GetType().GetProperty("SoftId",
                 BindingFlags.NonPublic | BindingFlags.Instance)?
             .SetValue(Service, 0);
     }
 }
 
-public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper output) 
+public class TwoCaptchaServiceTests(TwoCaptchaFixture fixture, ITestOutputHelper output)
     : ServiceTests(fixture, output), IClassFixture<TwoCaptchaFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();

@@ -6,7 +6,7 @@ internal class ReCaptchaV2SEnterpriseTaskProxyless : EzCaptchaTaskProxyless
     public string? WebsiteKey { get; set; }
     public bool IsInvisible { get; set; }
     public string? DataS { get; set; }
-    
+
     public ReCaptchaV2SEnterpriseTaskProxyless()
     {
         Type = "ReCaptchaV2SEnterpriseTaskProxyless";

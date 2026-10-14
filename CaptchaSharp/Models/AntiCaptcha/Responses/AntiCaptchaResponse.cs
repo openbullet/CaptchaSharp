@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace CaptchaSharp.Models.AntiCaptcha.Responses;
 
@@ -11,12 +11,12 @@ public class AntiCaptchaResponse
     /// The ID of the error.
     /// </summary>
     public int ErrorId { get; set; }
-    
+
     /// <summary>
     /// The error code.
     /// </summary>
     public string? ErrorCode { get; set; }
-    
+
     /// <summary>
     /// The error description.
     /// </summary>

@@ -7,7 +7,7 @@ internal class MtCaptchaSolution : Solution
 {
     [JsonProperty("token")]
     public required string Token { get; set; }
-    
+
     public override CaptchaResponse ToCaptchaResponse(string id)
     {
         return new StringResponse

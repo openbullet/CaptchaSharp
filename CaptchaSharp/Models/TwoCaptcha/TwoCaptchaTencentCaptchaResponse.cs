@@ -12,13 +12,13 @@ internal class TencentCaptchaSolution
 {
     [JsonProperty("appid")]
     public required string AppId { get; init; }
-    
+
     [JsonProperty("ticket")]
     public required string Ticket { get; init; }
-    
+
     [JsonProperty("ret")]
     public required int ReturnCode { get; init; }
-    
+
     [JsonProperty("randstr")]
     public required string RandomString { get; init; }
 

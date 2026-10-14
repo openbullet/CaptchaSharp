@@ -13,8 +13,8 @@ public class BestCaptchaSolverFixture : ServiceFixture
     {
         Service = new BestCaptchaSolverService(
             Config.Credentials.BestCaptchaSolverApiKey);
-        
-        Service.GetType().GetProperty("AffiliateId", 
+
+        Service.GetType().GetProperty("AffiliateId",
                 BindingFlags.NonPublic | BindingFlags.Instance)?
             .SetValue(Service, "123");
     }
@@ -24,10 +24,10 @@ public class BestCaptchaSolverServiceTests(BestCaptchaSolverFixture fixture, ITe
     : ServiceTests(fixture, output), IClassFixture<BestCaptchaSolverFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();
-    
+
     // Do not abuse this method or you will be banned
     [Fact] public Task ReportSolution_NoException() => ReportImageSolutionTest(correct: false);
-    
+
     [Fact] public Task SolveImageCaptchaAsync_ValidCaptcha_ValidSolution() => ImageCaptchaTest();
     [Fact] public Task SolveRecaptchaV2Async_NoProxy_ValidSolution() => RecaptchaV2Test_NoProxy();
     [Fact] public Task SolveRecaptchaV2Async_WithProxy_ValidSolution() => RecaptchaV2Test_WithProxy();

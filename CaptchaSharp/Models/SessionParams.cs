@@ -16,14 +16,14 @@ public class SessionParams
     /// the IP address will be the same as the one you use.
     /// </summary>
     public Proxy? Proxy { get; set; }
-    
+
     /// <summary>
     /// The User-Agent to use, if any. This User-Agent will be used by
     /// the captcha service to make requests to the target website, so
     /// the User-Agent will be the same as the one you use.
     /// </summary>
     public string? UserAgent { get; set; }
-    
+
     /// <summary>
     /// The cookies to use, if any. These cookies will be used by the
     /// captcha service to make requests to the target website, for example
@@ -31,7 +31,7 @@ public class SessionParams
     /// is shown.
     /// </summary>
     public Dictionary<string, string>? Cookies { get; set; }
-    
+
     internal string GetCookieString()
         => Cookies != null ? string.Join("; ", Cookies.Select(c => $"{c.Key}={c.Value}")) : string.Empty;
 }

@@ -1,4 +1,4 @@
-﻿using CaptchaSharp.Enums;
+using CaptchaSharp.Enums;
 using CaptchaSharp.Exceptions;
 using CaptchaSharp.Models;
 using CaptchaSharp.Models.DeathByCaptcha.Tasks;
@@ -49,7 +49,7 @@ public class DeathByCaptchaService : CaptchaService
         CaptchaLanguage.Portuguese,
         CaptchaLanguage.Russian
     }.ToImmutableList();
-    
+
     /// <summary>
     /// Initializes a <see cref="DeathByCaptchaService"/>.
     /// </summary>
@@ -80,9 +80,9 @@ public class DeathByCaptchaService : CaptchaService
         {
             throw new BadAuthenticationException(GetErrorMessage(query));
         }
-        
+
         var balanceString = query["balance"];
-        
+
         if (balanceString == null)
         {
             throw new TaskCreationException("The server didn't return the balance");
@@ -102,7 +102,7 @@ public class DeathByCaptchaService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         using var response = await HttpClient.PostAsync(
             "captcha",
             GetAuthPair()
@@ -252,7 +252,7 @@ public class DeathByCaptchaService : CaptchaService
             Challenge = challenge,
             PageUrl = siteUrl,
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -260,12 +260,12 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("geetest_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.GeeTest, cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <inheritdoc/>
     public override async Task<CapyResponse> SolveCapyAsync(
         string siteKey, string siteUrl, SessionParams? sessionParams = null,
@@ -276,7 +276,7 @@ public class DeathByCaptchaService : CaptchaService
             CaptchaKey = siteKey,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -284,7 +284,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("capy_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<CapyResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.Capy, cancellationToken).ConfigureAwait(false);
@@ -304,13 +304,13 @@ public class DeathByCaptchaService : CaptchaService
         // The DBC API will use the User-Agent defined on this page
         // to solve the captcha, so the same one MUST be used to submit
         // the response: https://deathbycaptcha.com/api/datadome
-        
+
         var task = new DataDomeDbcTask
         {
             PageUrl = siteUrl,
             CaptchaUrl = captchaUrl
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -318,7 +318,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("datadome_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.DataDome, cancellationToken).ConfigureAwait(false);
@@ -334,14 +334,14 @@ public class DeathByCaptchaService : CaptchaService
             throw new ArgumentNullException(
                 nameof(sessionParams), "Cloudflare Turnstile captchas require a proxy");
         }
-        
+
         var task = new CloudflareTurnstileDbcTask
         {
             SiteKey = siteKey,
             PageUrl = siteUrl,
             Action = action,
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -349,7 +349,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("turnstile_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<CloudflareTurnstileResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.CloudflareTurnstile, cancellationToken).ConfigureAwait(false);
@@ -365,7 +365,7 @@ public class DeathByCaptchaService : CaptchaService
             CaptchaId = captchaId,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -373,7 +373,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("lemin_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<LeminCroppedResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.LeminCropped, cancellationToken).ConfigureAwait(false);
@@ -393,7 +393,7 @@ public class DeathByCaptchaService : CaptchaService
             ChallengeJs = challengeScript,
             CaptchaJs = captchaScript
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -401,12 +401,12 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("waf_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.AmazonWaf, cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveCyberSiAraAsync(
         string masterUrlId, string siteUrl, SessionParams? sessionParams = null,
@@ -416,14 +416,14 @@ public class DeathByCaptchaService : CaptchaService
         {
             throw new ArgumentException("A User-Agent is required for Cyber SiARA captchas.");
         }
-        
+
         var task = new CyberSiAraDbcTask
         {
             SlideUrlId = masterUrlId,
             PageUrl = siteUrl,
             UserAgent = sessionParams.UserAgent
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -431,7 +431,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("siara_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.CyberSiAra, cancellationToken).ConfigureAwait(false);
@@ -447,7 +447,7 @@ public class DeathByCaptchaService : CaptchaService
             SiteKey = siteKey,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -455,7 +455,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("mtcaptcha_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.MtCaptcha, cancellationToken).ConfigureAwait(false);
@@ -472,7 +472,7 @@ public class DeathByCaptchaService : CaptchaService
             ApiKey = apiKey,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -480,7 +480,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("cutcaptcha_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.CutCaptcha, cancellationToken).ConfigureAwait(false);
@@ -496,7 +496,7 @@ public class DeathByCaptchaService : CaptchaService
             SiteKey = siteKey,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -504,7 +504,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("friendly_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.FriendlyCaptcha, cancellationToken).ConfigureAwait(false);
@@ -516,12 +516,12 @@ public class DeathByCaptchaService : CaptchaService
         CancellationToken cancellationToken = default)
     {
         var language = options?.CaptchaLanguage ?? CaptchaLanguage.English;
-        
+
         if (!_supportedAudioLanguages.Contains(language))
         {
             throw new ArgumentException("The language is not supported by the service.");
         }
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -547,7 +547,7 @@ public class DeathByCaptchaService : CaptchaService
             CaptchaId = captchaId,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         using var response = await HttpClient.PostAsync(
                 "captcha",
                 GetAuthPair()
@@ -555,7 +555,7 @@ public class DeathByCaptchaService : CaptchaService
                     .Add("geetest_params", task.Serialize()),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestV4Response>(
             HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response).ConfigureAwait(false)),
             CaptchaType.GeeTestV4, cancellationToken).ConfigureAwait(false);
@@ -571,9 +571,9 @@ public class DeathByCaptchaService : CaptchaService
         {
             throw new TaskCreationException(GetErrorMessage(response));
         }
-        
+
         var captchaId = response["captcha"];
-        
+
         if (captchaId == null)
         {
             throw new TaskCreationException("The server didn't return the captcha ID");
@@ -593,7 +593,7 @@ public class DeathByCaptchaService : CaptchaService
         var query = HttpUtility.ParseQueryString(await DecodeIsoResponseAsync(response));
 
         var text = query["text"];
-        
+
         if (text is null or "")
         {
             return null;
@@ -617,7 +617,7 @@ public class DeathByCaptchaService : CaptchaService
                 SecCode = geeTestResponse.Seccode
             } as T;
         }
-        
+
         if (typeof(T) == typeof(CapyResponse))
         {
             var capyResponse = text.Deserialize<CapyDbcResponse>();
@@ -629,7 +629,7 @@ public class DeathByCaptchaService : CaptchaService
                 Answer = capyResponse.Answer
             } as T;
         }
-        
+
         if (typeof(T) == typeof(LeminCroppedResponse))
         {
             var leminCroppedResponse = text.Deserialize<LeminCroppedDbcResponse>();
@@ -640,7 +640,7 @@ public class DeathByCaptchaService : CaptchaService
                 ChallengeId = leminCroppedResponse.ChallengeId
             } as T;
         }
-        
+
         if (typeof(T) == typeof(CloudflareTurnstileResponse))
         {
             return new CloudflareTurnstileResponse
@@ -663,12 +663,12 @@ public class DeathByCaptchaService : CaptchaService
                 CaptchaOutput = geeTestV4Response.CaptchaOutput
             } as T;
         }
-        
+
         if (typeof(T) != typeof(StringResponse))
         {
             throw new NotSupportedException();
         }
-        
+
         return new StringResponse { Id = task.Id, Response = text } as T;
     }
     #endregion
@@ -705,7 +705,7 @@ public class DeathByCaptchaService : CaptchaService
         using var sr = new StreamReader(
             await response.Content.ReadAsStreamAsync().ConfigureAwait(false),
             Encoding.GetEncoding("iso-8859-1"));
-        
+
         return await sr.ReadToEndAsync();
     }
 

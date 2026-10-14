@@ -13,7 +13,7 @@ public class AycdFixture : ServiceFixture
     }
 }
 
-public class AycdServiceTests(AycdFixture fixture, ITestOutputHelper output) 
+public class AycdServiceTests(AycdFixture fixture, ITestOutputHelper output)
     : ServiceTests(fixture, output), IClassFixture<AycdFixture>
 {
     [Fact] public Task GetBalanceAsync_ValidKey_GetsBalance() => BalanceTest();

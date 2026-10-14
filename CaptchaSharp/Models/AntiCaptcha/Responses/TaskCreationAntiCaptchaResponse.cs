@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Responses;
+namespace CaptchaSharp.Models.AntiCaptcha.Responses;
 
 /// <summary>
 /// Represents the response from the AntiCaptcha API when creating a task.

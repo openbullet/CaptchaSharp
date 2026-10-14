@@ -23,7 +23,7 @@ public class NopechaService : CaptchaService
     /// Your secret api key.
     /// </summary>
     public string ApiKey { get; set; }
-    
+
     /// <summary>
     /// Initializes a <see cref="NopechaService"/>.
     /// </summary>
@@ -34,7 +34,7 @@ public class NopechaService : CaptchaService
         ApiKey = apiKey;
         HttpClient.BaseAddress = new Uri("https://api.nopecha.com");
     }
-    
+
     #region Getting the Balance
     /// <inheritdoc />
     public override async Task<decimal> GetBalanceAsync(
@@ -51,11 +51,11 @@ public class NopechaService : CaptchaService
         {
             throw new BadAuthenticationException(response.Message!);
         }
-        
+
         return Convert.ToDecimal(response.Credit);
     }
     #endregion
-    
+
     #region Solve Methods
     /// <inheritdoc />
     public override async Task<StringResponse> SolveImageCaptchaAsync(
@@ -66,7 +66,7 @@ public class NopechaService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var payload = new NopechaSolveImageRequest
         {
             ApiKey = ApiKey,
@@ -94,18 +94,18 @@ public class NopechaService : CaptchaService
             ApiKey = ApiKey,
             SiteKey = siteKey,
             Url = siteUrl,
-            DataS = string.IsNullOrEmpty(dataS) 
-                ? null 
+            DataS = string.IsNullOrEmpty(dataS)
+                ? null
                 : dataS.Deserialize<Dictionary<string, object>>(),
             Enterprise = enterprise
         }.WithSessionParams(sessionParams, siteUrl);
-        
+
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
             "token",
             payload,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV2, cancellationToken)
             .ConfigureAwait(false);
@@ -127,13 +127,13 @@ public class NopechaService : CaptchaService
             },
             Enterprise = enterprise
         }.WithSessionParams(sessionParams, siteUrl);
-        
+
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
                 response, CaptchaType.ReCaptchaV3, cancellationToken)
             .ConfigureAwait(false);
@@ -150,16 +150,16 @@ public class NopechaService : CaptchaService
             SiteKey = siteKey,
             Url = siteUrl,
             Data = string.IsNullOrEmpty(enterprisePayload)
-                ? null 
+                ? null
                 : JObject.Parse(enterprisePayload),
         }.WithSessionParams(sessionParams, siteUrl);
-        
+
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
                 response, CaptchaType.HCaptcha, cancellationToken)
             .ConfigureAwait(false);
@@ -170,18 +170,18 @@ public class NopechaService : CaptchaService
         string siteKey, string siteUrl, string? action = null, string? data = null,
         string? pageData = null, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
-        var dataDict = new Dictionary<string, object> {};
-        
+        var dataDict = new Dictionary<string, object> { };
+
         if (!string.IsNullOrEmpty(action))
         {
             dataDict["action"] = action;
         }
-        
+
         if (!string.IsNullOrEmpty(data))
         {
             dataDict["cdata"] = data;
         }
-        
+
         var payload = new NopechaSolveCloudflareTurnstileRequest
         {
             ApiKey = ApiKey,
@@ -189,19 +189,19 @@ public class NopechaService : CaptchaService
             Url = siteUrl,
             Data = dataDict,
         }.WithSessionParams(sessionParams, siteUrl);
-        
+
         var response = await HttpClient.PostJsonAsync<NopechaDataResponse>(
                 "token",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<CloudflareTurnstileResponse>(
                 response, CaptchaType.CloudflareTurnstile, cancellationToken)
             .ConfigureAwait(false);
     }
     #endregion
-    
+
     #region Getting the result
     private async Task<T> GetResultAsync<T>(
         NopechaDataResponse response, CaptchaType captchaType, CancellationToken cancellationToken)
@@ -211,7 +211,7 @@ public class NopechaService : CaptchaService
         {
             throw new TaskCreationException(response.Message!);
         }
-        
+
         var task = new CaptchaTask(response.Data!.ToString(), captchaType);
 
         return await GetResultAsync<T>(task, cancellationToken).ConfigureAwait(false);
@@ -236,7 +236,7 @@ public class NopechaService : CaptchaService
             {
                 return null;
             }
-            
+
             throw new TaskSolutionException(response.Message!);
         }
 
@@ -248,19 +248,19 @@ public class NopechaService : CaptchaService
                 Response = response.Data!.ToString()
             } as T;
         }
-        
+
         if (typeof(T) != typeof(StringResponse))
         {
             throw new NotSupportedException($"Type {typeof(T).Name} is not supported.");
         }
-        
+
         task.Completed = true;
-        
+
         // response.Data can be either a string or an array of strings (with 1 value)
         var result = response.Data!.Type == JTokenType.Array
             ? response.Data!.First!.ToString()
             : response.Data!.ToString();
-        
+
         return new StringResponse
         {
             Id = task.Id,

@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
+namespace CaptchaSharp.Models.AntiCaptcha.Requests.Tasks;
 
 /// <summary>
 /// A task that does not require a proxy.

@@ -24,7 +24,7 @@ public class BestCaptchaSolverService : CaptchaService
     public string ApiKey { get; set; }
 
     private string AffiliateId { get; set; } = "5e95fff9fe5f8247ff965ac3";
-    
+
     /// <summary>
     /// Initializes a new <see cref="BestCaptchaSolverService"/>.
     /// </summary>
@@ -35,7 +35,7 @@ public class BestCaptchaSolverService : CaptchaService
         ApiKey = apiKey;
         HttpClient.BaseAddress = new Uri("https://bcsapi.xyz/api/");
     }
-    
+
     #region Getting the Balance
     /// <inheritdoc/>
     public override async Task<decimal> GetBalanceAsync(CancellationToken cancellationToken = default)
@@ -51,11 +51,11 @@ public class BestCaptchaSolverService : CaptchaService
         {
             throw new BadAuthenticationException(response.Error!);
         }
-        
+
         return decimal.Parse(response.Balance!);
     }
     #endregion
-    
+
     #region Solve Methods
     /// <inheritdoc/>
     public override async Task<StringResponse> SolveImageCaptchaAsync(
@@ -66,7 +66,7 @@ public class BestCaptchaSolverService : CaptchaService
         {
             throw new ArgumentException("The image base64 string is null or empty", nameof(base64));
         }
-        
+
         var payload = new BcsSolveImageRequest
         {
             AccessToken = ApiKey,
@@ -90,7 +90,7 @@ public class BestCaptchaSolverService : CaptchaService
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.ImageCaptcha,
             cancellationToken: cancellationToken);
@@ -102,7 +102,7 @@ public class BestCaptchaSolverService : CaptchaService
         bool invisible = false, SessionParams? sessionParams = null, CancellationToken cancellationToken = default)
     {
         var type = invisible ? 2 : 1;
-        
+
         if (enterprise)
         {
             type = 4;
@@ -117,13 +117,13 @@ public class BestCaptchaSolverService : CaptchaService
             Type = type,
             DataS = dataS
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/recaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV2,
             cancellationToken: cancellationToken);
@@ -144,13 +144,13 @@ public class BestCaptchaSolverService : CaptchaService
             Action = action,
             MinScore = minScore
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/recaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.ReCaptchaV3,
             cancellationToken: cancellationToken);
@@ -170,13 +170,13 @@ public class BestCaptchaSolverService : CaptchaService
             SUrl = serviceUrl,
             Data = data,
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/funcaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.FunCaptcha,
             cancellationToken: cancellationToken);
@@ -196,13 +196,13 @@ public class BestCaptchaSolverService : CaptchaService
             Invisible = invisible,
             Payload = enterprisePayload
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/hcaptcha",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<StringResponse>(
             response, CaptchaType.HCaptcha,
             cancellationToken: cancellationToken);
@@ -222,13 +222,13 @@ public class BestCaptchaSolverService : CaptchaService
             Domain = siteUrl,
             ApiServer = string.IsNullOrEmpty(apiServer) ? null : apiServer
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/geetest",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestResponse>(
             response, CaptchaType.GeeTest,
             cancellationToken: cancellationToken);
@@ -245,13 +245,13 @@ public class BestCaptchaSolverService : CaptchaService
             SiteKey = siteKey,
             PageUrl = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/capy",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<CapyResponse>(
             response, CaptchaType.Capy,
             cancellationToken: cancellationToken);
@@ -271,13 +271,13 @@ public class BestCaptchaSolverService : CaptchaService
             Action = action,
             CData = data
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/turnstile",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<CloudflareTurnstileResponse>(
             response, CaptchaType.CloudflareTurnstile,
             cancellationToken: cancellationToken);
@@ -295,13 +295,13 @@ public class BestCaptchaSolverService : CaptchaService
             CaptchaId = captchaId,
             Domain = siteUrl
         }.WithSessionParams(sessionParams);
-        
+
         var response = await HttpClient.PostJsonAsync<BcsTaskCreatedResponse>(
                 "captcha/geetestv4",
                 payload,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         return await GetResultAsync<GeeTestV4Response>(
             response, CaptchaType.GeeTestV4,
             cancellationToken: cancellationToken)
@@ -309,7 +309,7 @@ public class BestCaptchaSolverService : CaptchaService
     }
 
     #endregion
-    
+
     #region Getting the result
     private async Task<T> GetResultAsync<T>(
         BcsTaskCreatedResponse response,
@@ -343,14 +343,14 @@ public class BestCaptchaSolverService : CaptchaService
         {
             throw new TaskSolutionException(response.Error!);
         }
-        
+
         if (response.Status is not "completed")
         {
             return null;
         }
-        
+
         task.Completed = true;
-        
+
         if (task.Type is CaptchaType.ImageCaptcha)
         {
             var imageResponse = json.Deserialize<BcsSolveImageResponse>();
@@ -370,7 +370,7 @@ public class BestCaptchaSolverService : CaptchaService
                 Response = recaptchaResponse.GResponse!
             } as T;
         }
-        
+
         if (task.Type is CaptchaType.FunCaptcha)
         {
             var funcaptchaResponse = json.Deserialize<BcsSolveFuncaptchaResponse>();
@@ -380,7 +380,7 @@ public class BestCaptchaSolverService : CaptchaService
                 Response = funcaptchaResponse.Solution!
             } as T;
         }
-        
+
         if (task.Type is CaptchaType.HCaptcha)
         {
             var hCaptchaResponse = json.Deserialize<BcsSolveHCaptchaResponse>();
@@ -390,7 +390,7 @@ public class BestCaptchaSolverService : CaptchaService
                 Response = hCaptchaResponse.Solution!
             } as T;
         }
-        
+
         if (task.Type is CaptchaType.GeeTest)
         {
             var geeTestResponse = json.Deserialize<BcsSolveGeeTestResponse>();
@@ -402,7 +402,7 @@ public class BestCaptchaSolverService : CaptchaService
                 SecCode = geeTestResponse.Solution!.SecCode
             } as T;
         }
-        
+
         if (task.Type is CaptchaType.Capy)
         {
             var capyResponse = json.Deserialize<BcsSolveCapyResponse>();
@@ -412,7 +412,7 @@ public class BestCaptchaSolverService : CaptchaService
                 Response = capyResponse.Solution!
             } as T;
         }
-        
+
         if (task.Type is CaptchaType.CloudflareTurnstile)
         {
             var cloudflareResponse = json.Deserialize<BcsSolveCloudflareTurnstileResponse>();
@@ -441,7 +441,7 @@ public class BestCaptchaSolverService : CaptchaService
         throw new NotImplementedException();
     }
     #endregion
-    
+
     #region Reporting the solution
     /// <inheritdoc/>
     public override async Task ReportSolutionAsync(
@@ -452,7 +452,7 @@ public class BestCaptchaSolverService : CaptchaService
             throw new ArgumentException(
                 "BestCaptchaSolver does not support reporting correct solutions.");
         }
-        
+
         var response = await HttpClient.PostJsonAsync<BcsResponse>(
                 $"captcha/bad/{id}",
                 new BcsRequest
@@ -461,7 +461,7 @@ public class BestCaptchaSolverService : CaptchaService
                 },
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
-        
+
         if (!response.Success)
         {
             throw new TaskReportException(response.Error!);

@@ -1,4 +1,4 @@
-﻿namespace CaptchaSharp.Models.AntiCaptcha.Responses;
+namespace CaptchaSharp.Models.AntiCaptcha.Responses;
 
 internal class GetBalanceAntiCaptchaResponse : AntiCaptchaResponse
 {

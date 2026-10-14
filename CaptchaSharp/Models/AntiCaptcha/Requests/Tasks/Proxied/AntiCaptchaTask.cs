@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +12,7 @@ internal class AntiCaptchaTask : AntiCaptchaTaskProxyless
     public string? ProxyLogin { get; set; }
     public string? ProxyPassword { get; set; }
     public string? UserAgent { get; set; }
-        
+
     // Format cookiename1=cookievalue1; cookiename2=cookievalue2
     public string? Cookies { get; set; }
 
@@ -20,18 +20,18 @@ internal class AntiCaptchaTask : AntiCaptchaTaskProxyless
     {
         UserAgent = sessionParams.UserAgent;
         SetCookies(sessionParams.Cookies);
-        
+
         var proxy = sessionParams.Proxy;
 
         if (proxy is null)
         {
             return this;
         }
-            
+
         if (!System.Net.IPAddress.TryParse(proxy.Host, out _))
         {
             throw new NotSupportedException(
-                "Only IP addresses are supported for the proxy host");   
+                "Only IP addresses are supported for the proxy host");
         }
 
         ProxyAddress = proxy.Host;
