@@ -2561,6 +2561,33 @@
             Creates a new <see cref="T:CaptchaSharp.Models.SolveCaptcha.Requests.CaptchaTaskSolveCaptchaRequest"/>.
             </summary>
         </member>
+        <member name="T:CaptchaSharp.Services.SolvechaService">
+            <summary>
+            The service provided by https://solvecha.com/
+            Only image (text) captchas are supported.
+            </summary>
+        </member>
+        <member name="P:CaptchaSharp.Services.SolvechaService.ApiKey">
+            <summary>
+            Your secret api key.
+            </summary>
+        </member>
+        <member name="M:CaptchaSharp.Services.SolvechaService.#ctor(System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a <see cref="T:CaptchaSharp.Services.SolvechaService"/>.
+            </summary>
+            <param name="apiKey">Your secret api key.</param>
+            <param name="httpClient">The <see cref="T:System.Net.Http.HttpClient"/> to use for requests. If null, a default one will be created.</param>
+        </member>
+        <member name="M:CaptchaSharp.Services.SolvechaService.GetBalanceAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.SolvechaService.SolveImageCaptchaAsync(System.String,CaptchaSharp.Models.CaptchaOptions.ImageCaptchaOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CaptchaSharp.Services.SolvechaService.CheckResultAsync``1(CaptchaSharp.Models.CaptchaTask,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:CaptchaSharp.Services.TrueCaptchaService">
             <summary>
             The service provided by https://apitruecaptcha.org/

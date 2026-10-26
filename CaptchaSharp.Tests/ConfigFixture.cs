@@ -60,6 +60,7 @@ public class Credentials
     public string NextCaptchaApiKey { get; set; } = string.Empty;
     public string NoCaptchaAiApiKey { get; set; } = string.Empty;
     public string NopechaApiKey { get; set; } = string.Empty;
+    public string SolvechaApiKey { get; set; } = string.Empty;
     public string BestCaptchaSolverApiKey { get; set; } = string.Empty;
     public string CaptchaAiApiKey { get; set; } = string.Empty;
     public string EzCaptchaApiKey { get; set; } = string.Empty;

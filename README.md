@@ -30,6 +30,7 @@ This library supports the following captcha solving services
 - [cap.guru](https://cap.guru/)
 - [aycd.io](https://aycd.io/)
 - [capsolver.com](https://capsolver.com/)
+- [solvecha.com](https://solvecha.com/) (image and text captchas only)
 
 ## Supported Captcha Types
 This library supports the following captcha types
